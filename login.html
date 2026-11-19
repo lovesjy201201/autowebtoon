@@ -23,6 +23,9 @@
   #gbtn { min-height:44px; margin-bottom:12px; }
   .msg { min-height:24px; margin:12px 0 0; font-size:16px; font-weight:600; }
   .msg.ok { color:var(--ok); } .msg.bad { color:var(--bad); }
+  .inst { display:none; margin:0 0 20px; padding:16px; border-radius:16px; background:var(--soft); box-shadow:inset 0 0 0 1px var(--line); }
+  .inst p { margin:0 0 10px; color:var(--sub); }
+  .inst a { display:block; padding:14px; border-radius:14px; background:var(--accent); color:#fff; font-weight:700; text-align:center; text-decoration:none; }
   .fine { color:var(--muted); font-size:14px; margin-top:28px; }
   .fine a { color:inherit; }
 </style>
@@ -32,6 +35,7 @@
   <a class="logo" href="./"><img src="icon-128.png" alt="">오토웹툰</a>
   <h1 id="h">무료로 시작하기</h1>
   <p class="lead" id="lead">구글 계정으로 로그인하면 10회차까지 무료로 써 볼 수 있어요. 확장 프로그램을 지우고 다시 깔아도 같은 계정이면 남은 회차가 이어져요.</p>
+  <div class="inst" id="inst"><p id="instMsg">이 브라우저에 오토웹툰이 아직 없어요. 먼저 설치한 뒤 이 페이지를 다시 열어 로그인해 주세요.</p><a id="instBtn" href="./#install">오토웹툰 설치하기</a></div>
   <div id="gbtn"></div>
   <p class="msg" id="msg" role="status"></p>
   <p class="fine" id="fine">저장하는 것은 구글 계정 번호를 알아볼 수 없게 바꾼 값과, 무료로 본 회차 주소를 바꾼 값뿐이에요. 이메일·이름은 저장하지 않아요. <a href="privacy.html">개인정보 처리방침</a></p>
@@ -44,7 +48,7 @@
   const T = EN ? {
     h: 'Start for free', lead: 'Sign in with Google to use AutoWebtoon free for 10 episodes. Reinstalling keeps your count on the same account.',
     fine: 'We only store a scrambled form of your Google account number and of the free episode addresses. No email or name. ',
-    pp: 'Privacy policy', wait: 'Checking…', noext: 'Signed in, but the AutoWebtoon extension was not found in this browser. Install it, then open this page again.',
+    pp: 'Privacy policy', inst: 'AutoWebtoon is not installed in this browser yet. Install it first, then open this page again to sign in.', instBtn: 'Install AutoWebtoon', wait: 'Checking…', noext: 'Signed in, but the AutoWebtoon extension was not found in this browser. Install it, then open this page again.',
     done: (n) => `Done! ${n} free episodes left. Go back to your comic tab and tap the page to start.`,
     fail: 'Could not sign in. Please try again.', net: 'Check your internet connection and try again.', notready: 'Sign-in is not ready yet. Please try again later.',
   } : {
@@ -58,6 +62,10 @@
     $('h').textContent = T.h; $('lead').textContent = T.lead;
     $('fine').innerHTML = ''; $('fine').append(T.fine); const a = document.createElement('a'); a.href = 'privacy.html'; a.textContent = T.pp; $('fine').append(a);
   }
+  if (EN) { $('instMsg').textContent = T.inst; $('instBtn').textContent = T.instBtn; }
+  // 확장(login-bridge.js)은 페이지가 뜨기 전에 data-aw-ext 를 붙인다 → 없으면 설치하기를 먼저 보여 준다
+  const showInst = () => { $('inst').style.display = 'block'; };
+  setTimeout(() => { if (document.documentElement.dataset.awExt !== '1') showInst(); }, 600);
   const say = (t, cls) => { $('msg').textContent = t; $('msg').className = 'msg ' + (cls || ''); };
 
   async function onCred(res) {
@@ -74,6 +82,7 @@
     // 확장이 받았다고 표시할 때까지 조금 기다린다
     for (let i = 0; i < 20 && root.dataset.awGot !== '1'; i++) await new Promise((ok) => setTimeout(ok, 100));
     say(root.dataset.awGot === '1' ? T.done(r.left) : T.noext, root.dataset.awGot === '1' ? 'ok' : 'bad');
+    if (root.dataset.awGot !== '1') showInst();
   }
 
   (async () => {
