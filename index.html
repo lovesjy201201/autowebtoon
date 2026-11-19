@@ -2,6 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
+<script>if (/[?&]lang=en(&|$)/.test(location.search)) location.replace('index-en.html' + location.hash);</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>오토웹툰 · 손 안 대고 보는 웹툰</title>
 <meta name="description" content="네이버웹툰·카카오웹툰 회차를 컷마다 화면에 맞게 세우고, 말풍선 글자 양만큼 기다렸다가 알아서 넘겨 주는 브라우저 확장. PC는 크롬, 폰은 파이어폭스. 10회차 무료, 그다음 한 번 결제.">
@@ -38,6 +39,10 @@
   header nav a:hover { color:var(--ink); }
   .pill { display:inline-flex; align-items:center; height:36px; padding:0 16px; border-radius:10px; background:var(--soft); color:var(--ink); font-size:14px; font-weight:600; text-decoration:none; transition:background-color .15s var(--ease); }
   .pill:hover { background:var(--line); }
+  .lang { display:inline-flex; align-items:center; gap:6px; margin-right:16px; font-size:13px; color:var(--muted); white-space:nowrap; }
+  .lang b { color:var(--ink); font-weight:600; }
+  .lang a { color:var(--sub); text-decoration:none; }
+  .lang a:hover { color:var(--ink); text-decoration:underline; }
 
   /* 첫 화면: 사진 */
   .hero { margin:0 16px; border-radius:28px; overflow:hidden; position:relative; height:min(calc(100vh - 80px), 860px); min-height:600px; background:#0b0b0e; }
@@ -189,6 +194,8 @@
     body { font-size:16px; }
     header nav { display:none; }
     header .pill { margin-left:auto; }
+    header .lang { margin-left:auto; margin-right:10px; font-size:12px; gap:4px; }
+    header .lang + .pill { margin-left:0; }
     .hero { margin:0 12px; border-radius:22px; height:auto; min-height:0; aspect-ratio:3/4.4; }
     .hero img.photo { object-position:68% 50%; }
     .hero::after { background:linear-gradient(0deg, rgba(5,5,8,.85) 0%, rgba(5,5,8,.4) 55%, rgba(5,5,8,0) 80%); }
@@ -217,6 +224,11 @@
     .last h2 { font-size:30px; }
     footer .top-row { flex-direction:column; align-items:flex-start; gap:16px; }
   }
+  @media (max-width: 420px) {
+    header.top .wrap { padding:0 16px; }
+    .logo { font-size:17px; gap:6px; }
+    header .pill { padding:0 12px; }
+  }
   @media (prefers-reduced-motion: reduce) { .strip { transition:none; } html { scroll-behavior:auto; } }
 </style>
 </head>
@@ -226,6 +238,7 @@
   <div class="wrap">
     <a class="logo" href="#"><img src="icon-128.png" alt="">오토웹툰</a>
     <nav><a href="#how">작동 방식</a><a href="#price">가격</a><a href="#install">설치</a><a href="#faq">자주 묻는 질문</a></nav>
+    <span class="lang"><b>한국어</b><span aria-hidden="true">·</span><a href="index-en.html" lang="en" hreflang="en">English</a></span>
     <a class="pill" href="#install">설치하기</a>
   </div>
 </header>
@@ -452,6 +465,8 @@
   const isFirefox = /Firefox\//.test(ua) && !/Seamonkey/i.test(ua);
   const inApp = /KAKAOTALK|NAVER\(inapp|Instagram|FBAN|FBAV|Line\/|DaumApps|everytimeApp/i.test(ua);
   const $ = (id) => document.getElementById(id);
+  // 언어를 바꿔도 보던 자리(#install 등)를 그대로
+  document.querySelectorAll('.lang a').forEach(a => a.addEventListener('click', () => { a.href = a.getAttribute('href').split('#')[0] + location.hash; }));
 
   // 스토어 버튼: 주소가 있으면 스토어로, 없으면 설치 칸으로
   if (CWS_URL) document.querySelectorAll('.store-cws').forEach(a => a.href = CWS_URL);

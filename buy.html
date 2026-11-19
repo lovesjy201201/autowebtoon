@@ -76,7 +76,7 @@
 
   const $ = (id) => document.getElementById(id);
   const q = new URLSearchParams(location.search);
-  let plan = PLANS[q.get('plan')] ? q.get('plan') : 'a';
+  let plan = ['m', 'p', 'a'].includes(q.get('plan')) ? q.get('plan') : 'a';
   if (q.get('code')) $('msg').textContent = '결제가 끝나지 않았어요: ' + (q.get('message') || q.get('code'));
 
   let widgets;
@@ -104,7 +104,7 @@
   })();
 
   $('pay').addEventListener('click', async () => {
-    // 주문번호 맨 앞 글자가 등급(m·a). 키 서버가 금액과 맞는지 다시 확인한다.
+    // 주문번호 맨 앞 글자가 등급(m·p·a). 키 서버가 금액과 맞는지 다시 확인한다.
     const rand = crypto.getRandomValues(new Uint8Array(9));
     const orderId = plan + '-' + Array.from(rand, (x) => x.toString(36).padStart(2, '0')).join('').slice(0, 16);
     try {

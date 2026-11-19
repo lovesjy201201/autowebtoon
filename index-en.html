@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AutoWebtoon · Read webtoons hands-free</title>
+<meta name="description" content="A browser extension that auto-scrolls WEBTOON (webtoons.com) episodes panel by panel: each panel fits your screen, and it waits just long enough to read the speech bubbles. Chrome on PC, Firefox on Android. 10 episodes free, then a one-time payment.">
+<meta property="og:title" content="AutoWebtoon · Read webtoons hands-free">
+<meta property="og:description" content="Fits each panel to your screen, waits while you read, then scrolls on by itself.">
+<meta property="og:image" content="hero.webp">
+<link rel="icon" href="icon-128.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+  :root {
+    --bg:#ffffff; --soft:#f4f4f6; --line:#e8e8ec; --ink:#191f28; --sub:#4e5968; --muted:#8b95a1;
+    --accent:#3B3FC4; --accent-ink:#fff; --ease:cubic-bezier(.22,1,.36,1);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#101013; --soft:#1a1a1f; --line:#2a2a31; --ink:#f2f3f5; --sub:#b0b8c1; --muted:#8b95a1; --accent:#7f83f2; --accent-ink:#0f1020; }
+  }
+  * { box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  html:lang(ko) body { word-break:keep-all; }
+  body { margin:0; background:var(--bg); color:var(--ink); -webkit-font-smoothing:antialiased;
+    font:400 17px/1.6 "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+  a { color:inherit; }
+  img { display:block; max-width:100%; }
+  [hidden] { display:none !important; }
+  .wrap { max-width:1200px; margin:0 auto; padding:0 24px; }
+
+  /* header */
+  header.top { position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter:blur(10px); }
+  header.top .wrap { height:64px; display:flex; align-items:center; }
+  .logo { display:flex; align-items:center; gap:8px; font-weight:700; font-size:19px; text-decoration:none; letter-spacing:-.01em; }
+  .logo img { width:28px; height:28px; border-radius:7px; }
+  header nav { display:flex; gap:36px; margin:0 auto; }
+  header nav a { text-decoration:none; color:var(--sub); font-size:15px; font-weight:500; transition:color .15s var(--ease); }
+  header nav a:hover { color:var(--ink); }
+  .pill { display:inline-flex; align-items:center; height:36px; padding:0 16px; border-radius:10px; background:var(--soft); color:var(--ink); font-size:14px; font-weight:600; text-decoration:none; transition:background-color .15s var(--ease); }
+  .pill:hover { background:var(--line); }
+  .lang { display:inline-flex; align-items:center; gap:6px; margin-right:16px; font-size:13px; color:var(--muted); white-space:nowrap; }
+  .lang b { color:var(--ink); font-weight:600; }
+  .lang a { color:var(--sub); text-decoration:none; }
+  .lang a:hover { color:var(--ink); text-decoration:underline; }
+
+  /* hero photo */
+  .hero { margin:0 16px; border-radius:28px; overflow:hidden; position:relative; height:min(calc(100vh - 80px), 860px); min-height:600px; background:#0b0b0e; }
+  .hero img.photo { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:60% 50%; }
+  .hero::after { content:""; position:absolute; inset:0; background:linear-gradient(90deg, rgba(5,5,8,.72) 0%, rgba(5,5,8,.3) 40%, rgba(5,5,8,0) 60%); }
+  .hero .inner { position:absolute; z-index:1; left:0; right:0; bottom:0; padding:0 64px 72px; color:#fff; }
+  .hero h1 { font-size:64px; line-height:1.14; font-weight:700; letter-spacing:-.035em; margin:0 0 20px; }
+  .hero p { font-size:19px; color:rgba(255,255,255,.82); margin:0 0 36px; max-width:24rem; }
+  .stores { display:flex; gap:12px; flex-wrap:wrap; }
+  .store { display:inline-flex; align-items:center; gap:12px; height:60px; padding:0 22px 0 16px; border-radius:14px; background:#fff; color:#191f28; text-decoration:none;
+    transition:transform .12s var(--ease), background-color .15s var(--ease); }
+  .store:hover { background:#f0f0f3; }
+  .store:active { transform:scale(.98); }
+  .store svg { width:32px; height:32px; flex:none; }
+  .store small { display:block; font-size:12px; color:#6b7684; line-height:1.2; }
+  .store b { display:block; font-size:17px; font-weight:700; line-height:1.25; }
+  .store.dark { background:rgba(255,255,255,.14); color:#fff; backdrop-filter:blur(6px); }
+  .store.dark small { color:rgba(255,255,255,.7); }
+  .store.dark:hover { background:rgba(255,255,255,.22); }
+  .store.off { opacity:.55; pointer-events:none; }
+
+  /* feature: copy + phone */
+  .feature { padding:160px 0 0; }
+  .feature .wrap { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; }
+  .feature.rev .copy { order:2; }
+  .eyebrow { color:var(--accent); font-size:17px; font-weight:700; margin:0 0 16px; }
+  .feature h2, .center h2 { font-size:52px; line-height:1.25; font-weight:700; letter-spacing:-.03em; margin:0 0 24px; }
+  .feature p.desc { font-size:20px; line-height:1.7; color:var(--sub); margin:0; max-width:30rem; }
+  .formula { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:32px; font-size:16px; color:var(--sub); }
+  .formula span.k { background:var(--soft); color:var(--ink); border-radius:10px; padding:8px 14px; font-weight:600; font-variant-numeric:tabular-nums; }
+  .shot { display:grid; place-items:center; background:var(--soft); border-radius:32px; padding:56px 0; }
+
+  /* phone mockup */
+  .phone { width:300px; height:620px; border-radius:46px; background:#0d0d10; padding:12px; box-shadow:0 2px 4px rgba(0,0,0,.08), 0 30px 60px rgba(25,31,40,.22); position:relative; }
+  .phone::before { content:""; position:absolute; top:22px; left:50%; width:84px; height:24px; margin-left:-42px; border-radius:12px; background:#0d0d10; z-index:3; }
+  .screen { position:relative; width:100%; height:100%; border-radius:36px; overflow:hidden; background:#fff; }
+  .strip { position:absolute; left:0; right:0; top:0; transition:transform .75s var(--ease); will-change:transform; }
+  .panel { position:relative; margin:0 0 36px; }
+  .panel img { width:100%; height:100%; object-fit:cover; }
+  .bubble { position:absolute; background:#fff; color:#111; border:2.5px solid #111; border-radius:50%/46%; padding:14px 18px; font-size:14px; font-weight:700; line-height:1.35; text-align:center; }
+  .bubble::after { content:""; position:absolute; bottom:-12px; left:40%; width:16px; height:16px; background:#fff; border-right:2.5px solid #111; border-bottom:2.5px solid #111; transform:skewX(-20deg) rotate(45deg); }
+  .hud { position:absolute; left:12px; right:12px; bottom:14px; z-index:2; display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:12px;
+    background:rgba(18,18,22,.86); color:#fff; font-size:12px; font-weight:500; font-variant-numeric:tabular-nums; }
+  .hud .track { flex:1; height:4px; border-radius:2px; background:rgba(255,255,255,.18); overflow:hidden; }
+  .hud .fill { height:100%; background:#9ea1f6; transform-origin:left; transform:scaleX(0); }
+  .bar { position:absolute; left:12px; right:12px; bottom:14px; z-index:2; padding:12px 14px; border-radius:16px; background:rgba(28,28,34,.92); color:#fff; font-size:13px; font-variant-numeric:tabular-nums; }
+  .bar .r { display:flex; align-items:center; gap:10px; height:30px; }
+  .bar .r span:first-child { width:30px; color:rgba(255,255,255,.7); }
+  .bar .r b { width:22px; text-align:center; font-weight:600; }
+  .bar .r em { font-style:normal; width:34px; text-align:center; }
+  .bar .rr { display:flex; justify-content:space-between; }
+  .bar .rr .r { gap:4px; }
+  .bar .rr .r span:first-child { width:auto; margin-right:2px; }
+  .bar .rr .r b { width:16px; }
+  .bar .rr .r em { width:28px; }
+  .bar .now { display:flex; align-items:center; gap:10px; height:26px; margin-bottom:4px; color:#fff; font-weight:600; }
+  .bar .now .track { flex:1; height:4px; border-radius:2px; background:rgba(255,255,255,.18); overflow:hidden; }
+  .bar .now .fill { height:100%; background:#9ea1f6; transform-origin:left; transform:scaleX(0); }
+  .bar .ctl { display:flex; justify-content:space-between; margin-top:8px; padding-top:10px; border-top:1px solid rgba(255,255,255,.12); }
+  .bar .ctl svg { width:20px; height:20px; fill:#fff; }
+
+  /* wide photo */
+  .wide { padding:160px 0 0; }
+  .wide .frame { position:relative; border-radius:32px; overflow:hidden; height:560px; }
+  .wide .frame img { width:100%; height:100%; object-fit:cover; object-position:60% 35%; }
+  .wide .frame::after { content:""; position:absolute; inset:0; background:linear-gradient(0deg, rgba(5,5,8,.62), rgba(5,5,8,0) 55%); }
+  .wide .cap { position:absolute; z-index:1; left:56px; bottom:52px; color:#fff; }
+  .wide .cap h2 { font-size:48px; line-height:1.25; font-weight:700; letter-spacing:-.03em; margin:0 0 12px; }
+  .wide .cap p { margin:0; font-size:19px; color:rgba(255,255,255,.85); }
+
+  /* numbers */
+  .center { padding:160px 0 0; text-align:center; }
+  .center .sub { font-size:20px; color:var(--sub); margin:0 auto 64px; max-width:36rem; }
+  .zeros { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+  .zero { background:var(--soft); border-radius:24px; padding:48px 24px; }
+  .zero b { display:block; font-size:64px; font-weight:700; letter-spacing:-.03em; line-height:1; font-variant-numeric:tabular-nums; }
+  .zero span { display:block; margin-top:16px; font-size:18px; color:var(--sub); }
+
+  /* install */
+  .install { padding:160px 0 0; }
+  .plats { display:grid; grid-template-columns:1.2fr 1.2fr 1fr; gap:24px; margin-top:64px; text-align:left; }
+  .plat { border:1px solid var(--line); border-radius:24px; padding:32px; display:flex; flex-direction:column; }
+  .plat .tag { font-size:15px; color:var(--muted); font-weight:500; }
+  .plat h3 { font-size:26px; font-weight:700; letter-spacing:-.02em; margin:6px 0 10px; }
+  .plat p { font-size:16px; color:var(--sub); margin:0 0 28px; }
+  .plat .go { margin-top:auto; }
+  .plat .store { background:var(--ink); color:var(--bg); width:100%; justify-content:center; }
+  .plat .store small { color:color-mix(in srgb, var(--bg) 65%, var(--ink)); }
+  .qrbox { display:flex; gap:20px; align-items:center; margin-top:auto; }
+  #qr { width:112px; height:112px; padding:8px; background:#fff; border-radius:12px; border:1px solid var(--line); flex:none; }
+  #qr img, #qr canvas { width:96px !important; height:96px !important; }
+  .qrbox span { font-size:14px; color:var(--muted); }
+
+  /* phone install steps */
+  .mflow { display:grid; gap:12px; margin-top:40px; text-align:left; }
+  .mstep { background:var(--soft); border-radius:20px; padding:24px; }
+  .mstep.off { opacity:.45; }
+  .mstep .head { display:flex; align-items:center; gap:10px; font-weight:700; font-size:18px; }
+  .mstep .num { width:28px; height:28px; border-radius:50%; background:var(--ink); color:var(--bg); display:grid; place-items:center; font-size:14px; flex:none; }
+  .mstep.done .num { background:#16a34a; color:#fff; }
+  .mstep p { margin:8px 0 0; color:var(--sub); font-size:16px; }
+  .btn { display:flex; align-items:center; justify-content:center; width:100%; height:56px; margin-top:16px; border-radius:14px; border:0; background:var(--accent); color:var(--accent-ink);
+    font:inherit; font-weight:700; font-size:17px; text-decoration:none; cursor:pointer; }
+  .btn.ghost { background:var(--bg); color:var(--ink); box-shadow:inset 0 0 0 1px var(--line); }
+  .btn.off { opacity:.45; pointer-events:none; }
+  .row { display:flex; gap:8px; } .row .btn { flex:1; }
+
+  /* pricing + FAQ */
+  .price .plans { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; max-width:1000px; margin:0 auto; }
+  .plan { background:var(--soft); border-radius:24px; padding:40px 28px; display:flex; flex-direction:column; align-items:center; gap:8px; }
+  .plan.best { box-shadow:inset 0 0 0 2px var(--accent); }
+  .plan .pname { font-size:18px; font-weight:600; color:var(--sub); }
+  .plan .pprice { font-size:48px; font-weight:700; letter-spacing:-.03em; line-height:1.1; font-variant-numeric:tabular-nums; }
+  .plan p { margin:0 0 16px; color:var(--sub); font-size:16px; }
+  .plan .btn { width:100%; }
+  .pnote { margin:24px 0 0; color:var(--muted); font-size:15px; }
+  footer .biz a { color:inherit; }
+  @media (max-width:720px) { .price .plans { grid-template-columns:1fr; } .plan .pprice { font-size:40px; } }
+  .faq { padding:160px 0 0; }
+  .faq .wrap { max-width:880px; }
+  .faq h2 { font-size:44px; font-weight:700; letter-spacing:-.03em; margin:0 0 40px; text-align:center; }
+  details { border-bottom:1px solid var(--line); }
+  summary { list-style:none; cursor:pointer; padding:26px 4px; font-size:19px; font-weight:600; display:flex; justify-content:space-between; gap:16px; }
+  summary::-webkit-details-marker { display:none; }
+  summary::after { content:""; width:10px; height:10px; margin-top:6px; border-right:2px solid var(--muted); border-bottom:2px solid var(--muted); transform:rotate(45deg); transition:transform .18s var(--ease); flex:none; }
+  details[open] summary::after { transform:rotate(225deg); }
+  details p { margin:0 4px 26px; color:var(--sub); font-size:17px; }
+
+  /* closing + footer */
+  .last { margin:160px 16px 0; border-radius:28px; background:#191f28; color:#fff; padding:120px 64px; position:relative; overflow:hidden; }
+  .last > img { position:absolute; top:0; right:0; height:100%; width:68%; object-fit:cover; object-position:60% 40%;
+    -webkit-mask-image:linear-gradient(90deg, transparent 0%, #000 30%); mask-image:linear-gradient(90deg, transparent 0%, #000 30%); }
+  .last::before { content:""; position:absolute; inset:0; z-index:1; background:linear-gradient(90deg, rgba(25,31,40,.9) 0%, rgba(25,31,40,.3) 40%, rgba(25,31,40,0) 55%); }
+  .last > *:not(img) { position:relative; z-index:2; }
+  .last .stores { justify-content:flex-start; }
+  .last h2 { font-size:52px; font-weight:700; letter-spacing:-.03em; line-height:1.25; margin:0 0 16px; }
+  .last p { font-size:20px; color:rgba(255,255,255,.7); margin:0 0 40px; }
+  .last .stores { justify-content:center; }
+  footer { padding:64px 0 80px; color:var(--muted); font-size:14px; }
+  footer .top-row { display:flex; justify-content:space-between; align-items:center; padding-bottom:28px; border-bottom:1px solid var(--line); margin-bottom:28px; }
+  footer .links { display:flex; gap:28px; }
+  footer .links a { text-decoration:none; color:var(--sub); font-weight:500; }
+  footer .links a:hover { color:var(--ink); }
+  footer p { margin:0 0 6px; line-height:1.7; }
+  a:focus-visible, summary:focus-visible, button:focus-visible { outline:2px solid var(--accent); outline-offset:3px; border-radius:6px; }
+
+  /* phone width */
+  @media (max-width: 899px) {
+    body { font-size:16px; }
+    header nav { display:none; }
+    header .pill { margin-left:auto; }
+    header .lang { margin-left:auto; margin-right:10px; font-size:12px; gap:4px; }
+    header .lang + .pill { margin-left:0; }
+    .hero { margin:0 12px; border-radius:22px; height:auto; min-height:0; aspect-ratio:3/4.4; }
+    .hero img.photo { object-position:68% 50%; }
+    .hero::after { background:linear-gradient(0deg, rgba(5,5,8,.85) 0%, rgba(5,5,8,.4) 55%, rgba(5,5,8,0) 80%); }
+    .hero .inner { padding:0 24px 28px; }
+    .hero h1 { font-size:38px; }
+    .hero p { font-size:16px; margin-bottom:24px; }
+    .store { height:54px; }
+    .feature, .wide, .center, .install, .faq { padding-top:96px; }
+    .feature .wrap { grid-template-columns:1fr; gap:40px; }
+    .feature.rev .copy { order:0; }
+    .feature h2, .center h2 { font-size:32px; }
+    .feature p.desc, .center .sub { font-size:17px; }
+    .shot { padding:40px 0; border-radius:24px; }
+    .phone { transform:scale(.92); }
+    .wide .frame { height:420px; border-radius:22px; }
+    .wide .cap { left:24px; bottom:28px; right:24px; }
+    .wide .cap h2 { font-size:30px; }
+    .zeros { grid-template-columns:1fr; gap:12px; }
+    .zero { padding:32px 20px; } .zero b { font-size:48px; }
+    .plats { grid-template-columns:1fr; }
+    .faq h2 { font-size:30px; text-align:left; }
+    summary { font-size:17px; }
+    .last { margin:96px 12px 0; padding:300px 20px 32px; border-radius:22px; }
+    .last > img { width:100%; -webkit-mask-image:none; mask-image:none; object-position:62% 30%; }
+    .last::before { background:linear-gradient(0deg, rgba(10,12,18,.8) 0%, rgba(10,12,18,.3) 50%, rgba(10,12,18,0) 75%); }
+    .last h2 { font-size:30px; }
+    footer .top-row { flex-direction:column; align-items:flex-start; gap:16px; }
+  }
+  @media (max-width: 420px) {
+    header.top .wrap { padding:0 16px; }
+    .logo { font-size:17px; gap:6px; }
+    header .pill { padding:0 12px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .strip { transition:none; } html { scroll-behavior:auto; } }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="#"><img src="icon-128.png" alt="">AutoWebtoon</a>
+    <nav><a href="#how">How it works</a><a href="#price">Pricing</a><a href="#install">Install</a><a href="#faq">FAQ</a></nav>
+    <span class="lang"><a href="index.html" lang="ko" hreflang="ko">한국어</a><span aria-hidden="true">·</span><b>English</b></span>
+    <a class="pill" href="#install">Install</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <img class="photo" src="hero.webp" alt="Someone lying in bed at night reading a webtoon on a phone">
+    <div class="inner">
+      <h1>Read webtoons<br>hands-free</h1>
+      <p>It fits each panel to your screen, waits long enough for you to read the lines, then moves on by itself.</p>
+      <div class="stores">
+        <a class="store store-cws" href="#install">
+          <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="#DB4437"/><path d="M24 2a22 22 0 0 1 19.05 11H24a11 11 0 0 0-9.53 5.5L5.05 13A22 22 0 0 1 24 2z" fill="#DB4437"/><path d="M43.05 13A22 22 0 0 1 24 46l9.53-16.5A11 11 0 0 0 33.53 18.5 11 11 0 0 0 35 24c0-2-.53-3.87-1.47-5.5z" fill="#FFCD40"/><path d="M5.05 13l9.42 16.5A11 11 0 0 0 33.53 29.5L24 46A22 22 0 0 1 5.05 13z" fill="#0F9D58"/><circle cx="24" cy="24" r="9" fill="#fff"/><circle cx="24" cy="24" r="7" fill="#4285F4"/></svg>
+          <span><small>PC · Chrome Web Store</small><b>Add to Chrome</b></span>
+        </a>
+        <a class="store dark store-amo" href="#install">
+          <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="21" fill="#FF7139"/><circle cx="26" cy="26" r="13" fill="#592ACB"/><path d="M8 18c3-9 13-14 22-11-6 0-9 4-9 8 7-1 13 3 13 10" fill="none" stroke="#FFBD4F" stroke-width="5" stroke-linecap="round"/></svg>
+          <span><small>Android phone · Firefox</small><b>Add to Firefox</b></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="feature" id="how">
+    <div class="wrap">
+      <div class="copy">
+        <p class="eyebrow">Panel fit</p>
+        <h2>One whole panel,<br>never cut off</h2>
+        <p class="desc">It reads the gaps between drawings to find where each panel starts and ends, then stops with the panel in the middle of your screen. A panel taller than the screen is shown in two steps, top then bottom.</p>
+      </div>
+      <div class="shot">
+        <div class="phone"><div class="screen">
+          <div class="strip" id="strip">
+            <div class="panel" style="height:276px"><img src="toon/c1.webp" alt=""><div class="bubble" style="left:14px;top:18px">The rain<br>won't stop</div></div>
+            <div class="panel" style="height:276px"><img src="toon/c2.webp" alt=""></div>
+            <div class="panel" style="height:276px"><img src="toon/c3.webp" alt=""><div class="bubble" style="right:16px;top:20px">All alone<br>too?</div></div>
+            <div class="panel" style="height:345px"><img src="toon/c4.webp" alt=""><div class="bubble" style="right:14px;top:22px">Come on,<br>let's go home</div></div>
+          </div>
+          <div class="hud"><span id="hudText">15 chars · 3.0s</span><div class="track"><div class="fill" id="fill"></div></div></div>
+        </div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="feature rev">
+    <div class="wrap">
+      <div class="copy">
+        <p class="eyebrow">Reading time</p>
+        <h2>More text, longer stop.<br>Art only, shorter.</h2>
+        <p class="desc">It counts the characters in the speech bubbles to decide how long to stay on a panel. You can change the timing whenever you like to match your reading speed.</p>
+        <div class="formula"><span class="k">Art 1.2s</span>+<span class="k">1.2s per 10 characters</span><span>default</span></div>
+      </div>
+      <div class="shot">
+        <div class="phone"><div class="screen">
+          <div class="strip" id="strip2">
+            <div class="panel" style="height:386px"><img src="toon/c4t.webp" alt=""><div class="bubble" style="right:8px;top:22px">Come on,<br>let's go home</div></div>
+            <div class="panel" style="height:345px"><img src="toon/c5.webp" alt=""><div class="bubble" style="left:12px;top:20px">Cold? Let's<br>dry you off</div></div>
+            <div class="panel" style="height:276px"><img src="toon/c6.webp" alt=""></div>
+            <div class="panel" style="height:276px"><img src="toon/c7.webp" alt=""><div class="bubble" style="left:20px;top:22px">Eat slowly</div></div>
+            <div class="panel" style="height:276px"><img src="toon/c9.webp" alt=""><div class="bubble" style="left:10px;top:40px">Rain<br>stopped</div></div>
+            <div class="panel" style="height:276px"><img src="toon/c8.webp" alt=""><div class="bubble" style="right:14px;top:24px">Good night</div></div>
+            <div class="panel" style="height:276px"><img src="toon/c10.webp" alt=""><div class="bubble" style="right:10px;top:14px">You're family<br>now</div></div>
+          </div>
+          <div class="bar">
+            <div class="now"><span id="now2">16 chars · 3.1s</span><div class="track"><div class="fill" id="fill2"></div></div></div>
+            <div class="rr"><div class="r"><span>Art</span><b>−</b><em>1.2</em><b>+</b></div><div class="r"><span>Text</span><b>−</b><em>1.2</em><b>+</b></div></div>
+          </div>
+        </div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wide">
+    <div class="wrap">
+      <div class="frame">
+        <img src="wide.webp" alt="Someone on the subway smiling at a webtoon on their phone">
+        <div class="cap"><h2>Episode over? On to the next</h2><p>After the last panel it gives you a short heads-up, then carries on with the next episode. Tap the screen to stop.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="center">
+    <div class="wrap">
+      <p class="eyebrow">Private by design</p>
+      <h2>Nobody knows what you read</h2>
+      <p class="sub">Finding panels and counting characters all happens on your own device. No images are saved, and no email or name is kept. Your Google account is used only to count your free episodes.</p>
+      <div class="zeros">
+        <div class="zero"><b>0</b><span>images saved</span></div>
+        <div class="zero"><b>0</b><span>emails or names kept</span></div>
+        <div class="zero"><b>10</b><span>free episodes to try</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="center price" id="price">
+    <div class="wrap">
+      <p class="eyebrow">Pricing</p>
+      <h2>10 episodes free,<br>then pay just once</h2>
+      <p class="sub">No subscription. Buy it once with PayPal and keep using it. You get a key right after payment; paste it into the AutoWebtoon prompt to unlock.</p>
+      <div class="plans">
+        <div class="plan">
+          <span class="pname">Phone</span>
+          <b class="pprice">$2.99</b>
+          <p>For Firefox on an Android phone.</p>
+          <a class="btn" href="buy-en.html?plan=m">Buy for phone</a>
+        </div>
+        <div class="plan">
+          <span class="pname">PC</span>
+          <b class="pprice">$2.99</b>
+          <p>For Chrome on a PC.</p>
+          <a class="btn" href="buy-en.html?plan=p">Buy for PC</a>
+        </div>
+        <div class="plan best">
+          <span class="pname">Phone + PC</span>
+          <b class="pprice">$3.99</b>
+          <p>For both Firefox on your phone and Chrome on your PC.</p>
+          <a class="btn" href="buy-en.html?plan=a">Buy phone + PC</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="center install" id="install">
+    <div class="wrap">
+      <p class="eyebrow">Install</p>
+      <h2>Install it for your device</h2>
+      <p class="sub" style="margin-bottom:0">Install it, open an episode on WEBTOON (webtoons.com), and it starts working right away.</p>
+
+      <div class="plats" id="pc" hidden>
+        <div class="plat">
+          <div class="tag">PC</div>
+          <h3>Chrome</h3>
+          <p>Click "Add to Chrome" in the Chrome Web Store and you're done.</p>
+          <div class="go"><a class="store store-cws" id="addCws" href="#"><span><small>Chrome Web Store</small><b>Add to Chrome</b></span></a></div>
+        </div>
+        <div class="plat">
+          <div class="tag">Android phone</div>
+          <h3>Firefox</h3>
+          <p>Scan the QR code with your phone camera to open this page; it walks you through the steps.</p>
+          <div class="qrbox"><div id="qr"></div><span>Scan with your<br>phone camera</span></div>
+        </div>
+        <div class="plat">
+          <div class="tag">iPhone</div>
+          <h3>Not yet</h3>
+          <p>iPhone needs a separately built browser extension, so it isn't available yet.</p>
+        </div>
+      </div>
+
+      <div class="mflow" id="android" hidden>
+        <div class="mstep" id="s1">
+          <div class="head"><span class="num">1</span><span id="s1title">Open in Firefox</span></div>
+          <p id="s1text">On a phone, AutoWebtoon runs in the Firefox browser. Tap the button to open Firefox; if you don't have it, you'll be taken to the Play Store.</p>
+          <a class="btn" id="openFx" href="#">Open in Firefox</a>
+          <button class="btn ghost" id="copy" type="button" style="margin-top:8px">Copy address</button>
+        </div>
+        <div class="mstep off" id="s2">
+          <div class="head"><span class="num">2</span><span>Add AutoWebtoon</span></div>
+          <p>Tap the button, then tap "Add to Firefox" and "Add".</p>
+          <a class="btn" id="addFx" href="#">Add AutoWebtoon</a>
+        </div>
+        <div class="mstep off" id="s3">
+          <div class="head"><span class="num">3</span><span>Read a webtoon</span></div>
+          <p>Open an episode in Firefox and tap the comic once to start. Tap again to stop.</p>
+          <div class="row"><a class="btn ghost" href="https://www.webtoons.com/en/">Open WEBTOON</a></div>
+        </div>
+      </div>
+
+      <div class="mflow" id="ios" hidden>
+        <div class="mstep"><div class="head"><span class="num">!</span><span>iPhone isn't supported yet</span></div>
+          <p>iPhone needs a separately built browser extension, and we're still working on it. Please use an Android phone or Chrome on a PC for now.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq" id="faq">
+    <div class="wrap">
+      <h2>Frequently asked questions</h2>
+      <details><summary>How much does it cost?</summary><p>Sign in with your Google account and your first 10 different episodes are free. After that, pay once and keep using it: $2.99 for phone, $2.99 for PC, or $3.99 for phone + PC, paid with PayPal. It is not a subscription, and you don't need to sign in to pay.</p></details>
+      <details><summary>I lost my key, or I want a refund</summary><p>You can get a refund within 7 days of payment. <a href="privacy.html#en">Contact us</a> with your order ID. If you lost your key, enter your order ID under <a href="buy-en.html#again">Get my key again</a> and it is shown again right away.</p></details>
+      <details><summary>Which sites does it work on?</summary><p>It turns on automatically on episode pages of WEBTOON (webtoons.com). Naver Webtoon and Kakao Webtoon, the Korean sites, are supported too. AutoWebtoon is not an official product of any of these companies, and it does not unlock paid episodes.</p></details>
+      <details><summary>How do I pause or change the speed?</summary><p>Tap the comic once to pause; a control bar appears. Adjust the art time and the text time, then tap again to continue. On a PC the space bar works too.</p></details>
+      <details><summary>Does it work in the WEBTOON app?</summary><p>No. Apps don't let other programs read their screen. On a phone, open the webtoon site in Firefox instead.</p></details>
+      <details><summary>Do you collect my data or what I read?</summary><p>No. The only thing saved is your own timing settings, and they are not sent anywhere. See the <a href="privacy.html#en">privacy policy</a> for details.</p></details>
+      <details><summary>When will iPhone be supported?</summary><p>There is no date yet. For now it works in Chrome on PC and Firefox on Android.</p></details>
+    </div>
+  </section>
+
+  <section class="last">
+    <img src="morning.webp" alt="" loading="lazy">
+    <h2>Weekend mornings,<br>lying back, hands free</h2>
+    <p>Try it free for 10 episodes</p>
+    <div class="stores">
+      <a class="store store-cws" href="#install"><span><small>PC · Chrome Web Store</small><b>Add to Chrome</b></span></a>
+      <a class="store dark store-amo" href="#install"><span><small>Android phone · Firefox</small><b>Add to Firefox</b></span></a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="top-row">
+      <a class="logo" href="#"><img src="icon-128.png" alt="">AutoWebtoon</a>
+      <div class="links"><a href="terms-en.html">Terms</a><a href="privacy.html#en">Privacy</a><a href="privacy.html#en">Contact</a></div>
+    </div>
+    <p>AutoWebtoon is not an official product of WEBTOON, Naver Webtoon or Kakao Webtoon and is not affiliated with those companies. Site names and trademarks belong to their respective owners.</p>
+    <p class="biz">Seller: Rhythm Hero (리듬히어로) · Representative: Shin Jin-yong (신진용) · Business registration no. 780-66-00795 · Mail-order business report no. 2026-서울서대문-1196<br>
+    Address: 60-5 Geobukgol-ro 18-gil, Seodaemun-gu, Seoul, Republic of Korea · Phone: +82 507-1439-7995 · <a href="privacy.html#en">Contact</a></p>
+    <p>City scene photos: Unsplash</p>
+    <p>© 2026 AutoWebtoon</p>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+  // ---- Store URLs, filled in at launch (empty = jump to the install section). Keep in sync with index.html ----
+  const AMO_URL = '';   // e.g. https://addons.mozilla.org/ko/android/addon/autowebtoon/
+  const CWS_URL = '';   // e.g. https://chromewebstore.google.com/detail/<id>
+  const FX_PACKAGE = 'org.mozilla.firefox';
+  const FX_PLAY = 'https://play.google.com/store/apps/details?id=' + FX_PACKAGE;
+
+  const ua = navigator.userAgent;
+  const isAndroid = /Android/i.test(ua);
+  const isIOS = /iPhone|iPad|iPod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const isFirefox = /Firefox\//.test(ua) && !/Seamonkey/i.test(ua);
+  const inApp = /KAKAOTALK|NAVER\(inapp|Instagram|FBAN|FBAV|Line\/|DaumApps|everytimeApp/i.test(ua);
+  const $ = (id) => document.getElementById(id);
+  // keep the current section (#install etc.) when switching language
+  document.querySelectorAll('.lang a').forEach(a => a.addEventListener('click', () => { a.href = a.getAttribute('href').split('#')[0] + location.hash; }));
+
+  // store buttons: go to the store if a URL is set, otherwise to the install section
+  if (CWS_URL) document.querySelectorAll('.store-cws').forEach(a => a.href = CWS_URL);
+  if (AMO_URL && isAndroid) document.querySelectorAll('.store-amo').forEach(a => a.href = AMO_URL);
+  if (!CWS_URL) { const a = $('addCws'); a.removeAttribute('href'); a.classList.add('off'); a.querySelector('b').textContent = 'Coming soon'; }
+
+  if (isIOS) {
+    $('ios').hidden = false;
+  } else if (isAndroid) {
+    $('android').hidden = false;
+    if (isFirefox) {
+      $('s1').classList.add('done');
+      $('s1title').textContent = 'You are in Firefox';
+      $('s1text').textContent = 'Now add AutoWebtoon below.';
+      $('openFx').hidden = true; $('copy').hidden = true;
+      $('s2').classList.remove('off'); $('s3').classList.remove('off');
+    } else {
+      const here = location.href.replace(/^https?:\/\//, '').replace(/#.*$/, '');
+      $('openFx').href = 'intent://' + here + '#Intent;scheme=https;package=' + FX_PACKAGE
+        + ';S.browser_fallback_url=' + encodeURIComponent(FX_PLAY) + ';end';
+      if (inApp) $('s1text').textContent = 'The button may not work inside another app (Instagram, Facebook, LINE, KakaoTalk…). Open the menu at the top right and choose "Open in browser", or copy the address and paste it into Firefox.';
+    }
+    if (AMO_URL) $('addFx').href = AMO_URL; else { $('addFx').removeAttribute('href'); $('addFx').classList.add('off'); $('addFx').textContent += ' (coming soon)'; }
+  } else {
+    $('pc').hidden = false;
+    try { new QRCode($('qr'), { text: location.href.replace(/#.*$/, ''), width: 96, height: 96, correctLevel: QRCode.CorrectLevel.M }); } catch (e) {}
+  }
+  $('copy').addEventListener('click', async (e) => {
+    try { await navigator.clipboard.writeText(location.href.replace(/#.*$/, '')); e.target.textContent = 'Copied. Paste it into the Firefox address bar'; }
+    catch { e.target.textContent = location.href.replace(/#.*$/, ''); }
+  });
+
+  // ---- phone demo: stop with each panel centred, stay according to its character count ----
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // centre each panel on the screen (lift stays 0)
+  function demo(strip, fill, hud, CHARS, lift) {
+    const panels = [...strip.children];
+    let k = 0;
+    function run() {
+      const p = panels[k], H = strip.parentElement.clientHeight;
+      strip.style.transform = `translateY(${Math.round(H / 2 - lift - (p.offsetTop + p.offsetHeight / 2))}px)`;
+      const secs = Math.round((1.2 + CHARS[k] / 10 * 1.2) * 10) / 10;
+      hud.textContent = CHARS[k] ? `${CHARS[k]} chars · ${secs.toFixed(1)}s` : `Art only · ${secs.toFixed(1)}s`;
+      if (still) { fill.style.transform = 'scaleX(1)'; return; }
+      fill.style.transition = 'none'; fill.style.transform = 'scaleX(0)';
+      requestAnimationFrame(() => requestAnimationFrame(() => { fill.style.transition = `transform ${secs}s linear`; fill.style.transform = 'scaleX(1)'; }));
+      setTimeout(() => { k = (k + 1) % panels.length; run(); }, secs * 1000 + 900);
+    }
+    run();
+  }
+  demo($('strip'), $('fill'), $('hudText'), [15, 0, 11, 16], 0);
+  demo($('strip2'), $('fill2'), $('now2'), [16, 17, 0, 9, 11, 9, 14], 0);
+</script>
+</body>
+</html>

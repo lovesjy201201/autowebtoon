@@ -39,7 +39,7 @@
 </head>
 <body>
 <main>
-  <a class="logo" href="./"><img src="icon-128.png" alt="">AutoWebtoon</a>
+  <a class="logo" href="index-en.html"><img src="icon-128.png" alt="">AutoWebtoon</a>
   <h1>Get a license</h1>
   <p class="lead">Pay once, use it forever. No subscription. Your key appears right after payment.</p>
 
@@ -62,7 +62,7 @@
   <p class="fine">Sold by Rhythm Hero (Republic of Korea, business registration 780-66-00795).
     Digital license, nothing is shipped: the key is shown on screen right after payment. Full refund within 7 days of purchase.
     Payments are processed by PayPal. Prices in US dollars.
-    <a href="terms.html">Terms &amp; refunds</a> · <a href="privacy.html">Privacy</a></p>
+    <a href="terms-en.html">Terms &amp; refunds</a> · <a href="privacy.html#en">Privacy</a></p>
 </main>
 
 <script>
@@ -109,6 +109,8 @@
           if (r.orderId) { location.href = KEY_SERVER + '/key?lang=en&orderId=' + encodeURIComponent(r.orderId); return; }
           $('msg').textContent = r.error === 'capture' && r.detail === 'INSTRUMENT_DECLINED'
             ? 'Your payment method was declined. Please try another one.'
+            : r.error === 'pending'
+            ? 'PayPal is still reviewing this payment. Your key will be ready once PayPal completes it — please contact us with your PayPal receipt (order ' + data.orderID + ').'
             : 'The payment did not go through. If you were charged, contact us with your PayPal receipt.';
         },
         onCancel: () => { $('msg').textContent = 'Payment canceled.'; },
