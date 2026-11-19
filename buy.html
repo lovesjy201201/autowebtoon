@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>오토웹툰 결제</title>
-<meta name="description" content="오토웹툰 이용권 결제. 폰 2,900원, 폰+PC 3,900원. 한 번만 결제.">
+<meta name="description" content="오토웹툰 이용권 결제. 폰 2,900원, PC 2,900원, 폰+PC 3,900원. 한 번만 결제.">
 <link rel="icon" href="icon-128.png">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
@@ -20,7 +20,8 @@
   .logo img { width:26px; height:26px; border-radius:7px; }
   h1 { font-size:28px; letter-spacing:-.02em; margin:28px 0 6px; }
   .lead { color:var(--sub); margin:0 0 20px; }
-  .plans { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:20px; }
+  .plans { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:20px; }
+  @media (max-width:420px) { .plan { padding:12px 10px; } .plan b { font-size:20px; } .plan span { font-size:13px; } }
   .plan { all:unset; cursor:pointer; padding:16px; border-radius:16px; background:var(--soft); box-shadow:inset 0 0 0 1px var(--line); }
   .plan[aria-pressed="true"] { box-shadow:inset 0 0 0 2px var(--accent); }
   .plan b { display:block; font-size:24px; letter-spacing:-.02em; }
@@ -47,6 +48,7 @@
 
   <div class="plans" role="group" aria-label="이용권 고르기">
     <button class="plan" data-plan="m" aria-pressed="false"><span>폰</span><b>2,900원</b><span>안드로이드 파이어폭스</span></button>
+    <button class="plan" data-plan="p" aria-pressed="false"><span>PC</span><b>2,900원</b><span>PC 크롬</span></button>
     <button class="plan" data-plan="a" aria-pressed="true"><span>폰 + PC</span><b>3,900원</b><span>파이어폭스 + PC 크롬</span></button>
   </div>
 
@@ -70,7 +72,7 @@
   // 토스 결제위젯 클라이언트 키 (리듬히어로 라이브 키. 시험용은 test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm)
   const CLIENT_KEY = 'live_gck_c19znga62iMNJg0Zo2hq8R6wrcTwQQuK94';
   const KEY_SERVER = 'https://autowebtoon-key.lovesjy201.workers.dev';   // 결제 확인 + 키 발급 서버
-  const PLANS = { m: { amount: 2900, name: '오토웹툰 이용권 (폰)' }, a: { amount: 3900, name: '오토웹툰 이용권 (폰+PC)' } };
+  const PLANS = { m: { amount: 2900, name: '오토웹툰 이용권 (폰)' }, p: { amount: 2900, name: '오토웹툰 이용권 (PC)' }, a: { amount: 3900, name: '오토웹툰 이용권 (폰+PC)' } };
 
   const $ = (id) => document.getElementById(id);
   const q = new URLSearchParams(location.search);

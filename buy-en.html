@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AutoWebtoon Checkout</title>
-<meta name="description" content="AutoWebtoon license. Phone $2.99, Phone + PC $3.99. Pay once with PayPal.">
+<meta name="description" content="AutoWebtoon license. Phone $2.99, PC $2.99, Phone + PC $3.99. Pay once with PayPal.">
 <link rel="icon" href="icon-128.png">
 <style>
   :root { --bg:#ffffff; --soft:#f4f4f6; --line:#e8e8ec; --ink:#191f28; --sub:#4e5968; --muted:#8b95a1; --accent:#3B3FC4; --accent-ink:#fff; }
@@ -19,7 +19,8 @@
   .logo img { width:26px; height:26px; border-radius:7px; }
   h1 { font-size:28px; letter-spacing:-.02em; margin:28px 0 6px; }
   .lead { color:var(--sub); margin:0 0 20px; }
-  .plans { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:20px; }
+  .plans { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:20px; }
+  @media (max-width:420px) { .plan { padding:12px 10px; } .plan b { font-size:20px; } .plan span { font-size:13px; } }
   .plan { all:unset; cursor:pointer; padding:16px; border-radius:16px; background:var(--soft); box-shadow:inset 0 0 0 1px var(--line); }
   .plan[aria-pressed="true"] { box-shadow:inset 0 0 0 2px var(--accent); }
   .plan b { display:block; font-size:24px; letter-spacing:-.02em; }
@@ -44,6 +45,7 @@
 
   <div class="plans" role="group" aria-label="Choose a license">
     <button class="plan" data-plan="m" aria-pressed="false"><span>Phone</span><b>$2.99</b><span>Firefox for Android</span></button>
+    <button class="plan" data-plan="p" aria-pressed="false"><span>PC</span><b>$2.99</b><span>Chrome on PC</span></button>
     <button class="plan" data-plan="a" aria-pressed="true"><span>Phone + PC</span><b>$3.99</b><span>Firefox + Chrome on PC</span></button>
   </div>
 
@@ -67,7 +69,7 @@
   const KEY_SERVER = 'https://autowebtoon-key.lovesjy201.workers.dev';   // PayPal order + key server
   const $ = (id) => document.getElementById(id);
   const q = new URLSearchParams(location.search);
-  let plan = q.get('plan') === 'm' ? 'm' : 'a';
+  let plan = ['m', 'p', 'a'].includes(q.get('plan')) ? q.get('plan') : 'a';
 
   function pick(p) {
     plan = p;
