@@ -55,7 +55,7 @@
   <p class="msg" id="msg" role="status"></p>
 
   <h2 id="again">키 다시 받기</h2>
-  <form class="again" action="https://autowebtoon-key.lovesjy201201.workers.dev/key" method="get">
+  <form class="again" action="https://autowebtoon-key.lovesjy201.workers.dev/key" method="get">
     <input name="orderId" placeholder="주문번호 (예: a-1x2y3z...)" required autocomplete="off" spellcheck="false" aria-label="주문번호">
     <button type="submit">받기</button>
   </form>
@@ -69,7 +69,7 @@
 <script>
   // ---- 정식 키를 받으면 바꿀 곳 ----
   const CLIENT_KEY = 'test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm';   // 토스 결제위젯 클라이언트 키 (지금은 토스 문서의 시험용 키)
-  const KEY_SERVER = 'https://autowebtoon-key.lovesjy201201.workers.dev';   // 결제 확인 + 키 발급 서버
+  const KEY_SERVER = 'https://autowebtoon-key.lovesjy201.workers.dev';   // 결제 확인 + 키 발급 서버
   const PLANS = { m: { amount: 2900, name: '오토웹툰 이용권 (폰)' }, a: { amount: 3900, name: '오토웹툰 이용권 (폰+PC)' } };
 
   const $ = (id) => document.getElementById(id);
