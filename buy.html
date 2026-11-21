@@ -76,7 +76,10 @@
 
   const $ = (id) => document.getElementById(id);
   const q = new URLSearchParams(location.search);
-  let plan = ['m', 'p', 'a'].includes(q.get('plan')) ? q.get('plan') : 'a';
+  const PHONE_READY = false;   // 폰판(AMO) 나오면 true로 (index.html AMO_URL과 함께)
+  const OPEN = PHONE_READY ? ['m', 'p', 'a'] : ['p'];
+  if (!PHONE_READY) document.querySelectorAll('.plan').forEach((b) => { if (!OPEN.includes(b.dataset.plan)) { b.disabled = true; b.style.opacity = '.45'; b.style.cursor = 'default'; b.lastElementChild.textContent = '출시 예정'; } });
+  let plan = OPEN.includes(q.get('plan')) ? q.get('plan') : (PHONE_READY ? 'a' : 'p');
   if (q.get('code')) $('msg').textContent = '결제가 끝나지 않았어요: ' + (q.get('message') || q.get('code'));
 
   let widgets;

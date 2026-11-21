@@ -473,6 +473,11 @@
   if (CWS_URL) document.querySelectorAll('.store-cws').forEach(a => a.href = CWS_URL);
   if (AMO_URL && isAndroid) document.querySelectorAll('.store-amo').forEach(a => a.href = AMO_URL);
   if (!CWS_URL) { const a = $('addCws'); a.removeAttribute('href'); a.classList.add('off'); a.querySelector('b').textContent = '준비 중'; }
+  // 폰판(AMO) 나오기 전: 폰 버튼은 "출시 예정", 폰용·폰+PC 구매는 잠금. AMO_URL만 넣으면 풀린다(buy.html의 PHONE_READY도 true로).
+  if (!AMO_URL) {
+    document.querySelectorAll('.store-amo').forEach(a => { a.removeAttribute('href'); a.classList.add('off'); a.querySelector('b').textContent = '출시 예정'; });
+    document.querySelectorAll('a.btn[href*="plan=m"], a.btn[href*="plan=a"]').forEach(a => { a.removeAttribute('href'); a.classList.add('off'); a.textContent = '출시 예정'; });
+  }
 
   if (isIOS) {
     $('ios').hidden = false;
@@ -490,7 +495,7 @@
         + ';S.browser_fallback_url=' + encodeURIComponent(FX_PLAY) + ';end';
       if (inApp) $('s1text').textContent = '카카오톡·네이버 앱 안에서는 버튼이 안 될 수 있어요. 오른쪽 위 메뉴에서 "다른 브라우저로 열기"를 누르거나, 주소를 복사해 파이어폭스에 붙여 넣으세요.';
     }
-    if (AMO_URL) $('addFx').href = AMO_URL; else { $('addFx').removeAttribute('href'); $('addFx').classList.add('off'); $('addFx').textContent += ' (준비 중)'; }
+    if (AMO_URL) $('addFx').href = AMO_URL; else { $('addFx').removeAttribute('href'); $('addFx').classList.add('off'); $('addFx').textContent += ' (출시 예정)'; }
   } else {
     $('pc').hidden = false;
     try { new QRCode($('qr'), { text: location.href.replace(/#.*$/, ''), width: 96, height: 96, correctLevel: QRCode.CorrectLevel.M }); } catch (e) {}
