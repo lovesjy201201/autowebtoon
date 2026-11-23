@@ -69,7 +69,7 @@
   const KEY_SERVER = 'https://autowebtoon-key.lovesjy201.workers.dev';   // PayPal order + key server
   const $ = (id) => document.getElementById(id);
   const q = new URLSearchParams(location.search);
-  const PHONE_READY = false;   // set true when the phone (AMO) version is out, together with AMO_URL in index-en.html
+  const PHONE_READY = true;   // set true when the phone (AMO) version is out, together with AMO_URL in index-en.html
   const OPEN = PHONE_READY ? ['m', 'p', 'a'] : ['p'];
   if (!PHONE_READY) document.querySelectorAll('.plan').forEach((b) => { if (!OPEN.includes(b.dataset.plan)) { b.disabled = true; b.style.opacity = '.45'; b.style.cursor = 'default'; b.lastElementChild.textContent = 'Coming soon'; } });
   let plan = OPEN.includes(q.get('plan')) ? q.get('plan') : (PHONE_READY ? 'a' : 'p');
