@@ -69,6 +69,7 @@
   const KEY_SERVER = 'https://autowebtoon-key.lovesjy201.workers.dev';   // PayPal order + key server
   const $ = (id) => document.getElementById(id);
   const q = new URLSearchParams(location.search);
+  const BACK = q.get('back') || '';   // the webtoon episode the purchase started from (passed by the extension)
   const PHONE_READY = true;   // set true when the phone (AMO) version is out, together with AMO_URL in index-en.html
   const OPEN = PHONE_READY ? ['m', 'p', 'a'] : ['p'];
   if (!PHONE_READY) document.querySelectorAll('.plan').forEach((b) => { if (!OPEN.includes(b.dataset.plan)) { b.disabled = true; b.style.opacity = '.45'; b.style.cursor = 'default'; b.lastElementChild.textContent = 'Coming soon'; } });
@@ -109,7 +110,7 @@
         onApprove: async (data) => {
           $('msg').textContent = 'Finishing your payment…';
           const r = await post('/paypal/capture', { id: data.orderID });
-          if (r.orderId) { location.href = KEY_SERVER + '/key?lang=en&orderId=' + encodeURIComponent(r.orderId); return; }
+          if (r.orderId) { location.href = KEY_SERVER + '/key?lang=en&orderId=' + encodeURIComponent(r.orderId) + (BACK ? '&back=' + encodeURIComponent(BACK) : ''); return; }
           $('msg').textContent = r.error === 'capture' && r.detail === 'INSTRUMENT_DECLINED'
             ? 'Your payment method was declined. Please try another one.'
             : r.error === 'pending'
