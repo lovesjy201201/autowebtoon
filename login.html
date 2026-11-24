@@ -89,6 +89,8 @@
     // 확장이 받았다고 표시할 때까지 조금 기다린다
     for (let i = 0; i < 20 && root.dataset.awGot !== '1'; i++) await new Promise((ok) => setTimeout(ok, 100));
     say(root.dataset.awGot === '1' ? T.done(r.left) : T.noext, root.dataset.awGot === '1' ? 'ok' : 'bad');
+    // 끝났으면 로그인 버튼을 치워서 또 누를 일이 없게 한다
+    if (root.dataset.awGot === '1') { $('gbtn').style.display = 'none'; $('nbtn').style.display = 'none'; $('lead').style.display = 'none'; try { google.accounts.id.cancel(); } catch {} }
   }
 
   // 네이버 로그인: 네이버 화면으로 갔다가 ?code=&state= 를 달고 이 페이지로 돌아온다
