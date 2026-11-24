@@ -102,7 +102,7 @@
   function naverGo(naverId) {
     const st = Array.from(crypto.getRandomValues(new Uint8Array(16)), (x) => x.toString(16).padStart(2, '0')).join('');
     ss('aw_nstate', st); ss('aw_nlang', EN ? 'en' : 'ko');
-    const url = 'https://nid.naver.com/oauth2.0/authorize?' + new URLSearchParams({ response_type: 'code', client_id: naverId, redirect_uri: NAVER_BACK, state: st });
+    const url = 'https://nid.naver.com/oauth2.0/authorize?' + new URLSearchParams({ response_type: 'code', client_id: naverId, redirect_uri: NAVER_BACK, state: st, ...(QS.has('reprompt') ? { auth_type: 'reprompt' } : {}) });
     const w = window.open(url, 'awnaver', 'width=480,height=720');
     if (!w) location.href = url;   // 팝업이 막히면 이 탭에서
   }
