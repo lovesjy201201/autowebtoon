@@ -89,6 +89,16 @@
     background:rgba(18,18,22,.86); color:#fff; font-size:12px; font-weight:500; font-variant-numeric:tabular-nums; }
   .hud .track { flex:1; height:4px; border-radius:2px; background:rgba(255,255,255,.18); overflow:hidden; }
   .hud .fill { height:100%; background:#9ea1f6; transform-origin:left; transform:scaleX(0); }
+  /* PC 크롬 창 그림 */
+  .pcwin { width:calc(100% - 48px); max-width:540px; border-radius:14px; overflow:hidden; background:#fff; box-shadow:0 2px 4px rgba(0,0,0,.08), 0 30px 60px rgba(25,31,40,.22); }
+  .pcwin .tb { height:34px; background:#dee1e6; display:flex; align-items:center; gap:7px; padding:0 12px; }
+  .pcwin .tb i { width:11px; height:11px; border-radius:50%; background:#c3c7ce; }
+  .pcwin .tb span { flex:1; height:20px; margin-left:10px; border-radius:10px; background:#fff; font-size:11px; color:#8b95a1; line-height:20px; padding-left:12px; }
+  .pcwin .pg { position:relative; height:360px; background:#1d1d22; overflow:hidden; }
+  .pcwin .col { position:absolute; left:50%; top:22px; width:250px; margin-left:-125px; }
+  .pcwin .col img { display:block; width:250px; height:250px; object-fit:cover; }
+  .pcwin .col .bubble { padding:10px 14px; font-size:13px; }
+  .pcwin .hud { left:50%; right:auto; width:250px; margin-left:-125px; bottom:22px; }
   .bar { position:absolute; left:12px; right:12px; bottom:14px; z-index:2; padding:12px 14px; border-radius:16px; background:rgba(28,28,34,.92); color:#fff; font-size:13px; font-variant-numeric:tabular-nums; }
   .bar .r { display:flex; align-items:center; gap:10px; height:30px; }
   .bar .r span:first-child { width:30px; color:rgba(255,255,255,.7); }
@@ -308,6 +318,24 @@
             <div class="rr"><div class="r"><span>Art</span><b>−</b><em>1.2</em><b>+</b></div><div class="r"><span>Text</span><b>−</b><em>1.2</em><b>+</b></div></div>
           </div>
         </div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="feature" id="pc">
+    <div class="wrap">
+      <div class="copy">
+        <p class="eyebrow">On PC too</p>
+        <h2>Works the same<br>in Chrome on PC</h2>
+        <p class="desc">Even on a big monitor, each panel stops in the middle of the screen and waits until you finish reading, then moves to the next. No slow, endless scrolling.</p>
+      </div>
+      <div class="shot">
+        <div class="pcwin"><div class="tb"><i></i><i></i><i></i><span>webtoons.com</span></div>
+          <div class="pg">
+            <div class="col"><img src="toon/c8.webp" alt=""><div class="bubble" style="right:14px;top:18px">Good night</div></div>
+            <div class="hud"><span>10 letters · 2.4s</span><div class="track"><div class="fill" style="transform:scaleX(.55)"></div></div></div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
