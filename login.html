@@ -90,7 +90,11 @@
     for (let i = 0; i < 20 && root.dataset.awGot !== '1'; i++) await new Promise((ok) => setTimeout(ok, 100));
     say(root.dataset.awGot === '1' ? T.done(r.left) : T.noext, root.dataset.awGot === '1' ? 'ok' : 'bad');
     // 끝났으면 로그인 버튼을 치워서 또 누를 일이 없게 한다
-    if (root.dataset.awGot === '1') { $('gbtn').style.display = 'none'; $('nbtn').style.display = 'none'; $('lead').style.display = 'none'; try { google.accounts.id.cancel(); } catch {} }
+    if (root.dataset.awGot === '1') {
+      $('gbtn').style.display = 'none'; $('nbtn').style.display = 'none'; $('lead').style.display = 'none'; try { google.accounts.id.cancel(); } catch {}
+      // 이 페이지는 만화 탭에서 새 탭으로 열린 것이라 할 일이 끝나면 닫는다 (브라우저가 막으면 그대로 둔다)
+      setTimeout(() => { try { window.close(); } catch {} }, 1500);
+    }
   }
 
   // 네이버 로그인: 네이버 화면으로 갔다가 ?code=&state= 를 달고 이 페이지로 돌아온다
@@ -98,10 +102,21 @@
   function naverGo(naverId) {
     const st = Array.from(crypto.getRandomValues(new Uint8Array(16)), (x) => x.toString(16).padStart(2, '0')).join('');
     ss('aw_nstate', st); ss('aw_nlang', EN ? 'en' : 'ko');
-    location.href = 'https://nid.naver.com/oauth2.0/authorize?' + new URLSearchParams({ response_type: 'code', client_id: naverId, redirect_uri: NAVER_BACK, state: st });
+    const url = 'https://nid.naver.com/oauth2.0/authorize?' + new URLSearchParams({ response_type: 'code', client_id: naverId, redirect_uri: NAVER_BACK, state: st });
+    const w = window.open(url, 'awnaver', 'width=480,height=720');
+    if (!w) location.href = url;   // 팝업이 막히면 이 탭에서
   }
+  // 팝업이 돌아오면 code를 여기로 넘기고 팝업은 닫힌다
+  window.awNaverBack = (code, st) => {
+    const want = ss('aw_nstate'); ss('aw_nstate', null);
+    if (!code || !st || st !== want) { say(T.fail, 'bad'); return; }
+    start('/free/naver', { code, state: st });
+  };
   async function naverBack() {
-    const code = QS.get('code'), st = QS.get('state'), want = ss('aw_nstate');
+    const code = QS.get('code'), st = QS.get('state');
+    let op = null; try { op = window.opener && !window.opener.closed && window.opener.awNaverBack ? window.opener : null; } catch {}
+    if (op) { op.awNaverBack(code, st); window.close(); return; }
+    const want = ss('aw_nstate');
     ss('aw_nstate', null);
     history.replaceState(null, '', location.pathname + (EN ? '?lang=en' : ''));
     if (!code || !st || st !== want) { say(T.fail, 'bad'); return; }
@@ -112,7 +127,7 @@
     let clientId = '', naverId = '';
     try { const c = await (await fetch(KEY_SERVER + '/free/config')).json(); clientId = c.clientId; naverId = c.naverId || ''; } catch {}
     if (naverId) { $('nlabel').textContent = T.naver; $('nbtn').style.display = 'block'; $('nbtn').onclick = () => naverGo(naverId); }
-    if (QS.has('code') || QS.has('error')) { if (QS.has('error')) { history.replaceState(null, '', location.pathname + (EN ? '?lang=en' : '')); say(T.fail, 'bad'); } else await naverBack(); }
+    if (QS.has('code') || QS.has('error')) { if (QS.has('error')) { try { if (window.opener && window.opener.awNaverBack) { window.close(); return; } } catch {} history.replaceState(null, '', location.pathname + (EN ? '?lang=en' : '')); say(T.fail, 'bad'); } else await naverBack(); }
     if (!clientId) { if (!naverId) say(T.notready, 'bad'); return; }
     const s = document.createElement('script');
     s.src = 'https://accounts.google.com/gsi/client'; s.async = true;
