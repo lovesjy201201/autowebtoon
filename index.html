@@ -94,10 +94,13 @@
   .hud .track { flex:1; height:4px; border-radius:2px; background:rgba(255,255,255,.18); overflow:hidden; }
   .hud .fill { height:100%; background:#9ea1f6; transform-origin:left; transform:scaleX(0); }
   /* PC 크롬 창 그림 */
-  .pcwin { width:calc(100% - 48px); max-width:540px; border-radius:14px; overflow:hidden; background:#fff; box-shadow:0 2px 4px rgba(0,0,0,.08), 0 30px 60px rgba(25,31,40,.22); }
+  .pcwin { width:calc(100% - 48px); max-width:none; border-radius:14px; overflow:hidden; background:#fff; box-shadow:0 2px 4px rgba(0,0,0,.08), 0 30px 60px rgba(25,31,40,.22); }
   .pcwin .tb { height:34px; background:#dee1e6; display:flex; align-items:center; gap:7px; padding:0 12px; }
   .pcwin .tb i { width:11px; height:11px; border-radius:50%; background:#c3c7ce; }
   .pcwin .tb span { flex:1; height:20px; margin-left:10px; border-radius:10px; background:#fff; font-size:11px; color:#8b95a1; line-height:20px; padding-left:12px; }
+  #pc .wrap { grid-template-columns:.8fr 1.2fr; gap:56px; }
+  #pc .shot { padding:48px 0; }
+  .pcwin img.real { display:block; width:100%; height:auto; }
   .pcwin .pg { position:relative; height:360px; background:#1d1d22; overflow:hidden; }
   .pcwin .col { position:absolute; left:50%; top:22px; width:250px; margin-left:-125px; }
   .pcwin .col img { display:block; width:250px; height:250px; object-fit:cover; }
@@ -219,7 +222,7 @@
     .hero p { font-size:16px; margin-bottom:24px; }
     .store { height:54px; }
     .feature, .wide, .center, .install, .faq { padding-top:96px; }
-    .feature .wrap { grid-template-columns:1fr; gap:40px; }
+    .feature .wrap, #pc .wrap { grid-template-columns:1fr; gap:40px; }
     .feature.rev .copy { order:0; }
     .feature h2, .center h2 { font-size:32px; }
     .feature p.desc, .center .sub { font-size:17px; }
@@ -336,10 +339,7 @@
       </div>
       <div class="shot">
         <div class="pcwin"><div class="tb"><i></i><i></i><i></i><span>comic.naver.com</span></div>
-          <div class="pg">
-            <div class="col"><img src="toon/c8.webp" alt=""><div class="bubble" style="right:14px;top:18px">잘 자</div></div>
-            <div class="hud"><span>글자 2자 · 1.4초</span><div class="track"><div class="fill" style="transform:scaleX(.55)"></div></div></div>
-          </div>
+          <img class="real" src="pc_real.webp" alt="PC 크롬에서 오토웹툰이 네이버웹툰 컷을 화면 가운데에 멈춰 세운 모습" width="1600" height="900">
         </div>
       </div>
     </div>
