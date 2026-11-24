@@ -70,6 +70,8 @@
   const $ = (id) => document.getElementById(id);
   const q = new URLSearchParams(location.search);
   const BACK = q.get('back') || '';   // the webtoon episode the purchase started from (passed by the extension)
+  // ad/influencer tag the visitor arrived with (?ref=, kept 30 days); the key server stores it with the order
+  const REF = (() => { try { const r = q.get('ref'); if (r && /^[a-z0-9_-]{1,24}$/i.test(r)) return r.toLowerCase(); const o = JSON.parse(localStorage.getItem('aw_ref') || 'null'); return o && Date.now() - o.t < 30 * 864e5 ? o.r : ''; } catch (e) { return ''; } })();
   const PHONE_READY = true;   // set true when the phone (AMO) version is out, together with AMO_URL in index-en.html
   const OPEN = PHONE_READY ? ['m', 'p', 'a'] : ['p'];
   if (!PHONE_READY) document.querySelectorAll('.plan').forEach((b) => { if (!OPEN.includes(b.dataset.plan)) { b.disabled = true; b.style.opacity = '.45'; b.style.cursor = 'default'; b.lastElementChild.textContent = 'Coming soon'; } });
@@ -103,7 +105,7 @@
         style: { layout: 'vertical', shape: 'rect', label: 'pay' },
         createOrder: async () => {
           $('msg').textContent = '';
-          const o = await post('/paypal/create', { plan });   // server sets the price; the page only says which plan
+          const o = await post('/paypal/create', { plan, ref: REF });   // server sets the price; the page only says which plan
           if (!o.id) throw new Error('create');
           return o.id;
         },

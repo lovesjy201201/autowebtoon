@@ -77,6 +77,8 @@
   const $ = (id) => document.getElementById(id);
   const q = new URLSearchParams(location.search);
   const BACK = q.get('back') || '';   // 결제를 시작한 웹툰 회차(확장이 넘김)
+  // 홈페이지에 ?ref=로 들어온 꼬리표(30일). 키 서버가 주문 기록에 같이 적는다
+  const REF = (() => { try { const r = q.get('ref'); if (r && /^[a-z0-9_-]{1,24}$/i.test(r)) return r.toLowerCase(); const o = JSON.parse(localStorage.getItem('aw_ref') || 'null'); return o && Date.now() - o.t < 30 * 864e5 ? o.r : ''; } catch (e) { return ''; } })();
   const PHONE_READY = true;   // 폰판(AMO) 나오면 true로 (index.html AMO_URL과 함께)
   const OPEN = PHONE_READY ? ['m', 'p', 'a'] : ['p'];
   if (!PHONE_READY) document.querySelectorAll('.plan').forEach((b) => { if (!OPEN.includes(b.dataset.plan)) { b.disabled = true; b.style.opacity = '.45'; b.style.cursor = 'default'; b.lastElementChild.textContent = '출시 예정'; } });
@@ -115,7 +117,7 @@
       await widgets.requestPayment({
         orderId,
         orderName: PLANS[plan].name,
-        successUrl: KEY_SERVER + '/confirm' + (BACK ? '?back=' + encodeURIComponent(BACK) : ''),   // 키 화면에서 "키 복사" 뒤 이 회차로 돌아간다
+        successUrl: KEY_SERVER + '/confirm?' + new URLSearchParams(Object.assign({}, BACK && { back: BACK }, REF && { ref: REF })),   // 키 화면에서 "키 복사" 뒤 이 회차로 돌아간다
         failUrl: location.origin + location.pathname + '?plan=' + plan + (BACK ? '&back=' + encodeURIComponent(BACK) : ''),
       });
     } catch (e) {
