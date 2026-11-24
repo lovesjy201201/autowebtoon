@@ -6,7 +6,7 @@
 <script>/* 방문자 세기(사장님만 봄): 브라우저마다 하루 한 번 */try{var d=new Date(Date.now()+324e5).toISOString().slice(0,10);if(localStorage.getItem('aw_v')!==d){localStorage.setItem('aw_v',d);navigator.sendBeacon('https://autowebtoon-key.lovesjy201.workers.dev/visit?p=en&ref='+encodeURIComponent(new URLSearchParams(location.search).get('ref')||''))}}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AutoWebtoon - Webtoon Auto Scroll · Read webtoons hands-free</title>
-<meta name="description" content="Webtoon auto scroll extension that scrolls WEBTOON (webtoons.com) episodes panel by panel: each panel fits your screen, and it waits just long enough to read the speech bubbles. Chrome on PC, Firefox on Android. 10 episodes free, then a one-time payment.">
+<meta name="description" content="Webtoon auto scroll extension that scrolls WEBTOON (webtoons.com) episodes panel by panel: each panel fits your screen, and it waits just long enough to read the speech bubbles. Chrome on PC, Firefox on Android.">
 <meta property="og:title" content="AutoWebtoon · Read webtoons hands-free">
 <meta property="og:description" content="Fits each panel to your screen, waits while you read, then scrolls on by itself.">
 <meta property="og:image" content="hero.webp">
@@ -96,7 +96,7 @@
   .pcwin .tb span { flex:1; height:20px; margin-left:10px; border-radius:10px; background:#fff; font-size:11px; color:#8b95a1; line-height:20px; padding-left:12px; }
   #pc .wrap { grid-template-columns:.8fr 1.2fr; gap:56px; }
   #pc .shot { padding:48px 0; }
-  .pcwin img.real { display:block; width:100%; height:auto; }
+  .pcwin .real { display:block; width:100%; height:auto; aspect-ratio:16/9; background:#fff; }
   .pcwin .pg { position:relative; height:360px; background:#1d1d22; overflow:hidden; }
   .pcwin .col { position:absolute; left:50%; top:22px; width:250px; margin-left:-125px; }
   .pcwin .col img { display:block; width:250px; height:250px; object-fit:cover; }
@@ -251,7 +251,7 @@
 <header class="top">
   <div class="wrap">
     <a class="logo" href="#"><img src="icon-128.png" alt="">AutoWebtoon</a>
-    <nav><a href="#how">How it works</a><a href="#price">Pricing</a><a href="#install">Install</a><a href="#faq">FAQ</a></nav>
+    <nav><a href="#how">How it works</a><a href="#install">Install</a><a href="#faq">FAQ</a></nav>
     <span class="lang"><a href="index.html" lang="ko" hreflang="ko">한국어</a><span aria-hidden="true">·</span><b>English</b></span>
     <a class="pill" href="#install">Install</a>
   </div>
@@ -272,6 +272,21 @@
           <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="21" fill="#FF7139"/><circle cx="26" cy="26" r="13" fill="#592ACB"/><path d="M8 18c3-9 13-14 22-11-6 0-9 4-9 8 7-1 13 3 13 10" fill="none" stroke="#FFBD4F" stroke-width="5" stroke-linecap="round"/></svg>
           <span><small>Android phone · Firefox</small><b>Add to Firefox</b></span>
         </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="feature" id="pc">
+    <div class="wrap">
+      <div class="copy">
+        <p class="eyebrow">On PC too</p>
+        <h2>Works the same<br>in Chrome on PC</h2>
+        <p class="desc">Even on a big monitor, each panel stops in the middle of the screen and waits until you finish reading, then moves to the next. No slow, endless scrolling.</p>
+      </div>
+      <div class="shot">
+        <div class="pcwin"><div class="tb"><i></i><i></i><i></i><span>webtoons.com</span></div>
+          <video class="real" src="pc_demo_en.mp4" poster="pc_demo_en.jpg" autoplay muted loop playsinline preload="metadata" width="1280" height="720" aria-label="AutoWebtoon in Chrome on PC, stopping on each panel of a real WEBTOON episode"></video>
+        </div>
       </div>
     </div>
   </section>
@@ -325,21 +340,6 @@
     </div>
   </section>
 
-  <section class="feature" id="pc">
-    <div class="wrap">
-      <div class="copy">
-        <p class="eyebrow">On PC too</p>
-        <h2>Works the same<br>in Chrome on PC</h2>
-        <p class="desc">Even on a big monitor, each panel stops in the middle of the screen and waits until you finish reading, then moves to the next. No slow, endless scrolling.</p>
-      </div>
-      <div class="shot">
-        <div class="pcwin"><div class="tb"><i></i><i></i><i></i><span>webtoons.com</span></div>
-          <img class="real" src="pc_real_en.webp" alt="AutoWebtoon in Chrome on PC, stopping a webtoon panel in the middle of the screen" width="1600" height="900">
-        </div>
-      </div>
-    </div>
-  </section>
-
   <section class="wide">
     <div class="wrap">
       <div class="frame">
@@ -362,31 +362,13 @@
     </div>
   </section>
 
-  <section class="center price" id="price">
-    <div class="wrap">
-      <p class="eyebrow">Pricing</p>
-      <h2>10 episodes free,<br>then pay just once</h2>
-      <p class="sub">No subscription. Buy it once with PayPal and keep using it. You get a key right after payment; paste it into the AutoWebtoon prompt to unlock.</p>
-      <div class="plans">
-        <div class="plan">
-          <span class="pname">Phone</span>
-          <b class="pprice">$2.99</b>
-          <p>For Firefox on an Android phone.</p>
-          <a class="btn" href="buy-en.html?plan=m">Buy for phone</a>
-        </div>
-        <div class="plan">
-          <span class="pname">PC</span>
-          <b class="pprice">$2.99</b>
-          <p>For Chrome on a PC.</p>
-          <a class="btn" href="buy-en.html?plan=p">Buy for PC</a>
-        </div>
-        <div class="plan best">
-          <span class="pname">Phone + PC</span>
-          <b class="pprice">$3.99</b>
-          <p>For both Firefox on your phone and Chrome on your PC.</p>
-          <a class="btn" href="buy-en.html?plan=a">Buy phone + PC</a>
-        </div>
-      </div>
+  <section class="last">
+    <img src="morning.webp" alt="" loading="lazy">
+    <h2>Weekend mornings,<br>lying back, hands free</h2>
+    <p>Try it free for 10 episodes</p>
+    <div class="stores">
+      <a class="store store-cws" href="#install"><span><small>PC · Chrome Web Store</small><b>Add to Chrome</b></span></a>
+      <a class="store dark store-amo" href="#install"><span><small>Android phone · Firefox</small><b>Add to Firefox</b></span></a>
     </div>
   </section>
 
@@ -445,24 +427,41 @@
   <section class="faq" id="faq">
     <div class="wrap">
       <h2>Frequently asked questions</h2>
-      <details><summary>How much does it cost?</summary><p>Sign in with your Google account and your first 10 episodes are free. Watching an episode again does not count. After that, pay once and keep using it: $2.99 for phone, $2.99 for PC, or $3.99 for phone + PC, paid with PayPal. It is not a subscription, and you don't need to sign in to pay.</p></details>
-      <details><summary>I lost my key, or I want a refund</summary><p>You can get a refund within 7 days of payment. <a href="privacy.html#en">Contact us</a> with your order ID. If you lost your key, enter your order ID under <a href="buy-en.html#again">Get my key again</a> and it is shown again right away.</p></details>
       <details><summary>Which sites does it work on?</summary><p>It turns on automatically on episode pages of WEBTOON (webtoons.com). Naver Webtoon and Kakao Webtoon, the Korean sites, are supported too. AutoWebtoon is not an official product of any of these companies, and it does not unlock paid episodes.</p></details>
       <details><summary>Does it work in other browsers like Brave?</summary><p>On a PC, please use Chrome. In Brave, full screen doesn't turn on and panels don't line up. Other browsers haven't been checked yet.</p></details>
       <details><summary>How do I pause or change the speed?</summary><p>Tap the comic once to pause; a control bar appears. Adjust the art time and the text time, then tap again to continue. On a PC the space bar works too.</p></details>
       <details><summary>Does it work in the WEBTOON app?</summary><p>No. Apps don't let other programs read their screen. On a phone, open the webtoon site in Firefox instead.</p></details>
       <details><summary>Do you collect my data or what I read?</summary><p>No. The only thing saved is your own timing settings, and they are not sent anywhere. See the <a href="privacy.html#en">privacy policy</a> for details.</p></details>
       <details><summary>When will iPhone be supported?</summary><p>There is no date yet. For now it works in Chrome on PC and Firefox on Android.</p></details>
+      <details><summary>What if I lose my key?</summary><p><a href="privacy.html#en">Contact us</a> with your order ID. If you lost your key, enter your order ID under <a href="buy-en.html#again">Get my key again</a> and it is shown again right away.</p></details>
     </div>
   </section>
 
-  <section class="last">
-    <img src="morning.webp" alt="" loading="lazy">
-    <h2>Weekend mornings,<br>lying back, hands free</h2>
-    <p>Try it free for 10 episodes</p>
-    <div class="stores">
-      <a class="store store-cws" href="#install"><span><small>PC · Chrome Web Store</small><b>Add to Chrome</b></span></a>
-      <a class="store dark store-amo" href="#install"><span><small>Android phone · Firefox</small><b>Add to Firefox</b></span></a>
+  <section class="center price" id="price">
+    <div class="wrap">
+      <p class="eyebrow">Pricing</p>
+      <h2>10 episodes free,<br>then pay just once</h2>
+      <p class="sub">No subscription. Buy it once with PayPal and keep using it. You get a key right after payment; paste it into the AutoWebtoon prompt to unlock.</p>
+      <div class="plans">
+        <div class="plan">
+          <span class="pname">Phone</span>
+          <b class="pprice">$2.99</b>
+          <p>For Firefox on an Android phone.</p>
+          <a class="btn" href="buy-en.html?plan=m">Buy for phone</a>
+        </div>
+        <div class="plan">
+          <span class="pname">PC</span>
+          <b class="pprice">$2.99</b>
+          <p>For Chrome on a PC.</p>
+          <a class="btn" href="buy-en.html?plan=p">Buy for PC</a>
+        </div>
+        <div class="plan best">
+          <span class="pname">Phone + PC</span>
+          <b class="pprice">$3.99</b>
+          <p>For both Firefox on your phone and Chrome on your PC.</p>
+          <a class="btn" href="buy-en.html?plan=a">Buy phone + PC</a>
+        </div>
+      </div>
     </div>
   </section>
 </main>
