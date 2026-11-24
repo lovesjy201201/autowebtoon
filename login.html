@@ -80,6 +80,7 @@
       r = await (await fetch(KEY_SERVER + path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })).json();
     } catch { say(T.net, 'bad'); return; }
     if (!r.ok) { say(T.fail, 'bad'); return; }
+    if (r.nick) $('h').textContent = EN ? `Hi, ${r.nick}!` : `${r.nick}님, 반가워요!`;
     const root = document.documentElement;
     if (!hasExt()) { say(T.toInst, 'ok'); setTimeout(() => { location.href = './' + (EN ? '?lang=en' : '') + '#install'; }, 1200); return; }
     root.dataset.awFree = r.token;
