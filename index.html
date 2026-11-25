@@ -170,7 +170,10 @@
   .row { display:flex; gap:8px; } .row .btn { flex:1; }
 
   /* 자주 묻는 질문 */
-  .price .plans { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; max-width:1200px; margin:0 auto; }
+  .price .plans { display:grid; grid-template-columns:repeat(5,1fr); gap:16px; max-width:1240px; margin:0 auto; }
+  .price .plan { padding:36px 20px; }
+  .price .plan .pprice { font-size:40px; }
+  @media (max-width:1180px) { .price .plans { grid-template-columns:repeat(3,1fr); } }
   .plan { background:var(--soft); border-radius:24px; padding:40px 28px; display:flex; flex-direction:column; align-items:center; gap:8px; }
   .plan.best { box-shadow:inset 0 0 0 2px var(--accent); }
   .plan .pname { font-size:18px; font-weight:600; color:var(--sub); }
@@ -473,6 +476,12 @@
           <b class="pprice">3,900원</b>
           <p>안드로이드 폰 파이어폭스와 PC 크롬 모두에서 써요.</p>
           <a class="btn" href="buy.html?plan=a">안드로이드 폰+PC 사기</a>
+        </div>
+        <div class="plan">
+          <span class="pname">아이폰 + PC</span>
+          <b class="pprice">3,900원</b>
+          <p>아이폰 사파리와 PC 크롬 모두에서 써요. 앱 안에서 '크롬 + 아이폰'으로 사요.</p>
+          <a class="btn" href="https://apps.apple.com/app/id6838214464">App Store에서 받기</a>
         </div>
       </div>
     </div>
