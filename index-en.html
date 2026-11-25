@@ -6,7 +6,7 @@
 <script>/* 방문자 세기(사장님만 봄): 브라우저마다 하루 한 번 */try{var d=new Date(Date.now()+324e5).toISOString().slice(0,10);if(localStorage.getItem('aw_v')!==d){localStorage.setItem('aw_v',d);navigator.sendBeacon('https://autowebtoon-key.lovesjy201.workers.dev/visit?p=en&ref='+encodeURIComponent(new URLSearchParams(location.search).get('ref')||''))}}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AutoWebtoon - Webtoon Auto Scroll · Read webtoons hands-free</title>
-<meta name="description" content="Webtoon auto scroll extension that scrolls WEBTOON (webtoons.com) episodes panel by panel: each panel fits your screen, and it waits just long enough to read the speech bubbles. Chrome on PC, Firefox on Android.">
+<meta name="description" content="Webtoon auto scroll extension that scrolls WEBTOON (webtoons.com) episodes panel by panel: each panel fits your screen, and it waits just long enough to read the speech bubbles. Chrome on PC, Firefox on Android, App Store on iPhone.">
 <meta property="og:title" content="AutoWebtoon · Read webtoons hands-free">
 <meta property="og:description" content="Fits each panel to your screen, waits while you read, then scrolls on by itself.">
 <meta property="og:image" content="hero.webp">
@@ -95,8 +95,8 @@
   .pcwin .tb { height:34px; background:#dee1e6; display:flex; align-items:center; gap:7px; padding:0 12px; }
   .pcwin .tb i { width:11px; height:11px; border-radius:50%; background:#c3c7ce; }
   .pcwin .tb span { flex:1; height:20px; margin-left:10px; border-radius:10px; background:#fff; font-size:11px; color:#8b95a1; line-height:20px; padding-left:12px; }
-  #pc .wrap { grid-template-columns:.8fr 1.2fr; gap:56px; }
-  #pc .shot { padding:48px 0; }
+  #pcdemo .wrap { grid-template-columns:.8fr 1.2fr; gap:56px; }
+  #pcdemo .shot { padding:48px 0; }
   .pcwin .real { display:block; width:100%; height:auto; aspect-ratio:16/9; background:#fff; }
   .pcwin .pg { position:relative; height:360px; background:#1d1d22; overflow:hidden; }
   .pcwin .col { position:absolute; left:50%; top:22px; width:250px; margin-left:-125px; }
@@ -166,15 +166,16 @@
   .row { display:flex; gap:8px; } .row .btn { flex:1; }
 
   /* pricing + FAQ */
-  .price .plans { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; max-width:1000px; margin:0 auto; }
+  .price .plans { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; max-width:1200px; margin:0 auto; }
   .plan { background:var(--soft); border-radius:24px; padding:40px 28px; display:flex; flex-direction:column; align-items:center; gap:8px; }
   .plan.best { box-shadow:inset 0 0 0 2px var(--accent); }
   .plan .pname { font-size:18px; font-weight:600; color:var(--sub); }
   .plan .pprice { font-size:48px; font-weight:700; letter-spacing:-.03em; line-height:1.1; font-variant-numeric:tabular-nums; }
   .plan p { margin:0 0 16px; color:var(--sub); font-size:16px; }
-  .plan .btn { width:100%; }
+  .plan .btn { width:100%; margin-top:auto; }
   .pnote { margin:24px 0 0; color:var(--muted); font-size:15px; }
   footer .biz a { color:inherit; }
+  @media (max-width:1000px) { .price .plans { grid-template-columns:1fr 1fr; } }
   @media (max-width:720px) { .price .plans { grid-template-columns:1fr; } .plan .pprice { font-size:40px; } }
   .faq { padding:160px 0 0; }
   .faq .wrap { max-width:880px; }
@@ -219,7 +220,7 @@
     .hero p { font-size:16px; margin-bottom:24px; }
     .store { height:54px; }
     .feature, .wide, .center, .install, .faq { padding-top:96px; }
-    .feature .wrap, #pc .wrap { grid-template-columns:1fr; gap:40px; }
+    .feature .wrap, #pcdemo .wrap { grid-template-columns:1fr; gap:40px; }
     .feature.rev .copy { order:0; }
     .feature h2, .center h2 { font-size:32px; }
     .feature p.desc, .center .sub { font-size:17px; }
@@ -273,11 +274,15 @@
           <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="21" fill="#FF7139"/><circle cx="26" cy="26" r="13" fill="#592ACB"/><path d="M8 18c3-9 13-14 22-11-6 0-9 4-9 8 7-1 13 3 13 10" fill="none" stroke="#FFBD4F" stroke-width="5" stroke-linecap="round"/></svg>
           <span><small>Android phone · Firefox</small><b>Add to Firefox</b></span>
         </a>
+        <a class="store dark store-ios" href="https://apps.apple.com/app/id6838214464">
+          <svg viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="11" fill="#111"/><path d="M31.2 25.3c0-3.4 2.8-5 2.9-5.1-1.6-2.3-4-2.6-4.9-2.7-2.1-.2-4 1.2-5.1 1.2-1 0-2.7-1.2-4.4-1.1-2.3 0-4.4 1.3-5.5 3.3-2.4 4.1-.6 10.2 1.7 13.5 1.1 1.6 2.5 3.4 4.2 3.4 1.7-.1 2.3-1.1 4.4-1.1 2 0 2.6 1.1 4.4 1.1 1.8 0 3-1.6 4.1-3.3 1.3-1.9 1.8-3.7 1.8-3.8-.1 0-3.6-1.4-3.6-5.4zM27.9 15.4c.9-1.1 1.6-2.7 1.4-4.2-1.3.1-3 .9-3.9 2-.9 1-1.6 2.6-1.4 4.1 1.5.1 3-.8 3.9-1.9z" fill="#fff"/></svg>
+          <span><small>iPhone · App Store</small><b>Get it on the App Store</b></span>
+        </a>
       </div>
     </div>
   </section>
 
-  <section class="feature" id="pc">
+  <section class="feature" id="pcdemo">
     <div class="wrap">
       <div class="copy">
         <p class="eyebrow">Chrome on PC</p>
@@ -352,6 +357,7 @@
     <div class="stores">
       <a class="store store-cws" href="#install"><span><small>PC · Chrome Web Store</small><b>Add to Chrome</b></span></a>
       <a class="store dark store-amo" href="#install"><span><small>Android phone · Firefox</small><b>Add to Firefox</b></span></a>
+      <a class="store dark store-ios" href="https://apps.apple.com/app/id6838214464"><span><small>iPhone · App Store</small><b>Get it on the App Store</b></span></a>
     </div>
   </section>
 
@@ -376,8 +382,9 @@
         </div>
         <div class="plat">
           <div class="tag">iPhone</div>
-          <h3>Not yet</h3>
-          <p>iPhone needs a separately built browser extension, so it isn't available yet.</p>
+          <h3>Safari</h3>
+          <p>Get AutoWebtoon on the App Store, then turn it on in Settings → Apps → Safari → Extensions.</p>
+          <div class="go"><a class="store store-ios" href="https://apps.apple.com/app/id6838214464"><span><small>App Store</small><b>Get it on the App Store</b></span></a></div>
         </div>
       </div>
 
@@ -401,8 +408,20 @@
       </div>
 
       <div class="mflow" id="ios" hidden>
-        <div class="mstep"><div class="head"><span class="num">!</span><span>iPhone isn't supported yet</span></div>
-          <p>iPhone needs a separately built browser extension, and we're still working on it. Please use an Android phone or Chrome on a PC for now.</p></div>
+        <div class="mstep">
+          <div class="head"><span class="num">1</span><span>Get it on the App Store</span></div>
+          <p>Download AutoWebtoon from the App Store.</p>
+          <a class="btn" href="https://apps.apple.com/app/id6838214464">Get it on the App Store</a>
+        </div>
+        <div class="mstep">
+          <div class="head"><span class="num">2</span><span>Turn it on in Safari</span></div>
+          <p>Settings → Apps → Safari → Extensions → AutoWebtoon: turn it on and set the webtoon sites to "Allow".</p>
+        </div>
+        <div class="mstep">
+          <div class="head"><span class="num">3</span><span>Read</span></div>
+          <p>Open an episode in Safari and tap the comic once to start. Tap again to pause.</p>
+          <div class="row"><a class="btn ghost" href="https://m.webtoons.com/en/">WEBTOON</a></div>
+        </div>
       </div>
     </div>
   </section>
@@ -415,7 +434,7 @@
       <details><summary>How do I pause or change the speed?</summary><p>Tap the comic once to pause; a control bar appears. Adjust the art time and the text time, then tap again to continue. On a PC the space bar works too.</p></details>
       <details><summary>Does it work in the WEBTOON app?</summary><p>No. Apps don't let other programs read their screen. On a phone, open the webtoon site in Firefox instead.</p></details>
       <details><summary>Do you collect my data or what I read?</summary><p>No. The only thing saved is your own timing settings, and they are not sent anywhere. See the <a href="privacy.html#en">privacy policy</a> for details.</p></details>
-      <details><summary>When will iPhone be supported?</summary><p>There is no date yet. For now it works in Chrome on PC and Firefox on Android.</p></details>
+      <details><summary>Does it work on iPhone?</summary><p>Yes. Get <a href="https://apps.apple.com/app/id6838214464">AutoWebtoon on the App Store</a>, turn it on in Settings → Apps → Safari → Extensions, then read webtoons in Safari.</p></details>
       <details><summary>What if I lose my key?</summary><p><a href="privacy.html#en">Contact us</a> with your order ID. If you lost your key, enter your order ID under <a href="buy-en.html#again">Get my key again</a> and it is shown again right away.</p></details>
     </div>
   </section>
@@ -427,22 +446,28 @@
       <p class="sub">No subscription. Buy it once with PayPal and keep using it. You get a key right after payment; paste it into the AutoWebtoon prompt to unlock.</p>
       <div class="plans">
         <div class="plan">
-          <span class="pname">Phone</span>
-          <b class="pprice">$2.99</b>
-          <p>For Firefox on an Android phone.</p>
-          <a class="btn" href="buy-en.html?plan=m">Buy for phone</a>
-        </div>
-        <div class="plan">
           <span class="pname">PC</span>
-          <b class="pprice">$2.99</b>
+          <b class="pprice">$1.99</b>
           <p>For Chrome on a PC.</p>
           <a class="btn" href="buy-en.html?plan=p">Buy for PC</a>
         </div>
+        <div class="plan">
+          <span class="pname">Android phone</span>
+          <b class="pprice">$1.99</b>
+          <p>For Firefox on an Android phone.</p>
+          <a class="btn" href="buy-en.html?plan=m">Buy for Android</a>
+        </div>
+        <div class="plan">
+          <span class="pname">iPhone</span>
+          <b class="pprice">$1.99</b>
+          <p>For Safari on iPhone. Buy inside the app with Apple.</p>
+          <a class="btn" href="https://apps.apple.com/app/id6838214464">Get it on the App Store</a>
+        </div>
         <div class="plan best">
-          <span class="pname">Phone + PC</span>
-          <b class="pprice">$3.99</b>
+          <span class="pname">Android + PC</span>
+          <b class="pprice">$2.99</b>
           <p>For both Firefox on your phone and Chrome on your PC.</p>
-          <a class="btn" href="buy-en.html?plan=a">Buy phone + PC</a>
+          <a class="btn" href="buy-en.html?plan=a">Buy Android + PC</a>
         </div>
       </div>
     </div>
