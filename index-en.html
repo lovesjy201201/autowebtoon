@@ -79,6 +79,7 @@
   /* phone mockup */
   .phone { width:300px; height:620px; border-radius:46px; background:#0d0d10; padding:12px; box-shadow:0 2px 4px rgba(0,0,0,.08), 0 30px 60px rgba(25,31,40,.22); position:relative; }
   .phone::before { content:""; position:absolute; top:22px; left:50%; width:84px; height:24px; margin-left:-42px; border-radius:12px; background:#0d0d10; z-index:3; }
+  .screen .pvid { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
   .screen { position:relative; width:100%; height:100%; border-radius:36px; overflow:hidden; background:#fff; }
   .strip { position:absolute; left:0; right:0; top:0; transition:transform .75s var(--ease); will-change:transform; }
   .panel { position:relative; margin:0 0 36px; }
@@ -280,7 +281,7 @@
     <div class="wrap">
       <div class="copy">
         <p class="eyebrow">Chrome on PC</p>
-        <h2>One panel at a time<br>in Chrome on PC</h2>
+        <h2>Here's how it looks<br>in Chrome on PC</h2>
         <p class="desc">Even on a big monitor, each panel stops in the middle of the screen and waits until you finish reading, then moves to the next. No slow, endless scrolling.</p>
       </div>
       <div class="shot">
@@ -300,13 +301,7 @@
       </div>
       <div class="shot">
         <div class="phone"><div class="screen">
-          <div class="strip" id="strip">
-            <div class="panel" style="height:276px"><img src="toon/c1.webp" alt=""><div class="bubble" style="left:14px;top:18px">The rain<br>won't stop</div></div>
-            <div class="panel" style="height:276px"><img src="toon/c2.webp" alt=""></div>
-            <div class="panel" style="height:276px"><img src="toon/c3.webp" alt=""><div class="bubble" style="right:16px;top:20px">All alone<br>too?</div></div>
-            <div class="panel" style="height:345px"><img src="toon/c4.webp" alt=""><div class="bubble" style="right:14px;top:22px">Come on,<br>let's go home</div></div>
-          </div>
-          <div class="hud"><span id="hudText">15 chars · 3.0s</span><div class="track"><div class="fill" id="fill"></div></div></div>
+          <video class="pvid" src="phone_demo1_en.mp4" poster="phone_demo1_en.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Tap anywhere in Firefox on Android and a real WEBTOON episode (Lookism) starts, stopping on each panel"></video>
         </div></div>
       </div>
     </div>
@@ -322,19 +317,7 @@
       </div>
       <div class="shot">
         <div class="phone"><div class="screen">
-          <div class="strip" id="strip2">
-            <div class="panel" style="height:386px"><img src="toon/c4t.webp" alt=""><div class="bubble" style="right:8px;top:22px">Come on,<br>let's go home</div></div>
-            <div class="panel" style="height:345px"><img src="toon/c5.webp" alt=""><div class="bubble" style="left:12px;top:20px">Cold? Let's<br>dry you off</div></div>
-            <div class="panel" style="height:276px"><img src="toon/c6.webp" alt=""></div>
-            <div class="panel" style="height:276px"><img src="toon/c7.webp" alt=""><div class="bubble" style="left:20px;top:22px">Eat slowly</div></div>
-            <div class="panel" style="height:276px"><img src="toon/c9.webp" alt=""><div class="bubble" style="left:10px;top:40px">Rain<br>stopped</div></div>
-            <div class="panel" style="height:276px"><img src="toon/c8.webp" alt=""><div class="bubble" style="right:14px;top:24px">Good night</div></div>
-            <div class="panel" style="height:276px"><img src="toon/c10.webp" alt=""><div class="bubble" style="right:10px;top:14px">You're family<br>now</div></div>
-          </div>
-          <div class="bar">
-            <div class="now"><span id="now2">16 chars · 3.1s</span><div class="track"><div class="fill" id="fill2"></div></div></div>
-            <div class="rr"><div class="r"><span>Art</span><b>−</b><em>1.2</em><b>+</b></div><div class="r"><span>Text</span><b>−</b><em>1.2</em><b>+</b></div></div>
-          </div>
+          <video class="pvid" src="phone_demo2_en.mp4" poster="phone_demo2_en.jpg" autoplay muted loop playsinline preload="metadata" aria-label="A real WEBTOON episode on a phone, waiting on each panel as long as the dialogue needs"></video>
         </div></div>
       </div>
     </div>
@@ -551,8 +534,8 @@
     }
     run();
   }
-  demo($('strip'), $('fill'), $('hudText'), [15, 0, 11, 16], 0);
-  demo($('strip2'), $('fill2'), $('now2'), [16, 17, 0, 9, 11, 9, 14], 0);
+  if ($('strip')) demo($('strip'), $('fill'), $('hudText'), [15, 0, 11, 16], 0);
+  if ($('strip2')) demo($('strip2'), $('fill2'), $('now2'), [16, 17, 0, 9, 11, 9, 14], 0);
 </script>
 </body>
 </html>

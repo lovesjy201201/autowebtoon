@@ -83,6 +83,7 @@
   /* 폰 모양 */
   .phone { width:300px; height:620px; border-radius:46px; background:#0d0d10; padding:12px; box-shadow:0 2px 4px rgba(0,0,0,.08), 0 30px 60px rgba(25,31,40,.22); position:relative; }
   .phone::before { content:""; position:absolute; top:22px; left:50%; width:84px; height:24px; margin-left:-42px; border-radius:12px; background:#0d0d10; z-index:3; }
+  .screen .pvid { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
   .screen { position:relative; width:100%; height:100%; border-radius:36px; overflow:hidden; background:#fff; }
   .strip { position:absolute; left:0; right:0; top:0; transition:transform .75s var(--ease); will-change:transform; }
   .panel { position:relative; margin:0 0 36px; }
@@ -285,7 +286,7 @@
     <div class="wrap">
       <div class="copy">
         <p class="eyebrow">PC 크롬</p>
-        <h2>PC 크롬에서<br>컷마다 딱 멈춰요</h2>
+        <h2>PC 크롬에서<br>이렇게 넘어가요</h2>
         <p class="desc">큰 모니터에서도 컷을 화면 가운데에 맞춰 세우고, 대사를 다 읽을 만큼 기다렸다가 다음 컷으로 넘깁니다. 스크롤이 천천히 흘러내리지 않아요.</p>
       </div>
       <div class="shot">
@@ -305,13 +306,7 @@
       </div>
       <div class="shot">
         <div class="phone"><div class="screen">
-          <div class="strip" id="strip">
-            <div class="panel" style="height:276px"><img src="toon/c1.webp" alt=""><div class="bubble" style="left:14px;top:18px">비가 그칠 생각을<br>안 하네</div></div>
-            <div class="panel" style="height:276px"><img src="toon/c2.webp" alt=""></div>
-            <div class="panel" style="height:276px"><img src="toon/c3.webp" alt=""><div class="bubble" style="right:16px;top:20px">너도<br>혼자야?</div></div>
-            <div class="panel" style="height:345px"><img src="toon/c4.webp" alt=""><div class="bubble" style="right:14px;top:22px">같이 가자,<br>우리 집으로</div></div>
-          </div>
-          <div class="hud"><span id="hudText">글자 7자 · 2.0초</span><div class="track"><div class="fill" id="fill"></div></div></div>
+          <video class="pvid" src="phone_demo1.mp4" poster="phone_demo1.jpg" autoplay muted loop playsinline preload="metadata" aria-label="폰 파이어폭스에서 실제 네이버웹툰을 누르면 시작되고 컷마다 멈춰 넘어가는 모습"></video>
         </div></div>
       </div>
     </div>
@@ -327,19 +322,7 @@
       </div>
       <div class="shot">
         <div class="phone"><div class="screen">
-          <div class="strip" id="strip2">
-            <div class="panel" style="height:386px"><img src="toon/c4t.webp" alt=""><div class="bubble" style="right:8px;top:22px">같이 가자,<br>우리 집으로</div></div>
-            <div class="panel" style="height:345px"><img src="toon/c5.webp" alt=""><div class="bubble" style="left:12px;top:20px">춥지? 금방<br>말려 줄게</div></div>
-            <div class="panel" style="height:276px"><img src="toon/c6.webp" alt=""></div>
-            <div class="panel" style="height:276px"><img src="toon/c7.webp" alt=""><div class="bubble" style="left:20px;top:22px">천천히 먹어</div></div>
-            <div class="panel" style="height:276px"><img src="toon/c9.webp" alt=""><div class="bubble" style="left:10px;top:40px">비<br>그쳤다</div></div>
-            <div class="panel" style="height:276px"><img src="toon/c8.webp" alt=""><div class="bubble" style="right:14px;top:24px">잘 자</div></div>
-            <div class="panel" style="height:276px"><img src="toon/c10.webp" alt=""><div class="bubble" style="right:10px;top:14px">오늘부터<br>우리 가족이야</div></div>
-          </div>
-          <div class="bar">
-            <div class="now"><span id="now2">글자 9자 · 2.3초</span><div class="track"><div class="fill" id="fill2"></div></div></div>
-            <div class="rr"><div class="r"><span>그림</span><b>−</b><em>1.2</em><b>+</b></div><div class="r"><span>글자</span><b>−</b><em>1.2</em><b>+</b></div></div>
-          </div>
+          <video class="pvid" src="phone_demo2.mp4" poster="phone_demo2.jpg" autoplay muted loop playsinline preload="metadata" aria-label="폰에서 실제 네이버웹툰 컷마다 대사 길이만큼 머물렀다 넘어가는 모습"></video>
         </div></div>
       </div>
     </div>
@@ -556,8 +539,8 @@
     }
     run();
   }
-  demo($('strip'), $('fill'), $('hudText'), [10, 0, 5, 9], 0);
-  demo($('strip2'), $('fill2'), $('now2'), [9, 8, 0, 5, 4, 2, 10], 0);
+  if ($('strip')) demo($('strip'), $('fill'), $('hudText'), [10, 0, 5, 9], 0);
+  if ($('strip2')) demo($('strip2'), $('fill2'), $('now2'), [9, 8, 0, 5, 4, 2, 10], 0);
 </script>
 </body>
 </html>
