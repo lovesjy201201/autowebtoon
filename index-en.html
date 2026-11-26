@@ -598,7 +598,91 @@
   if ($('strip')) demo($('strip'), $('fill'), $('hudText'), [15, 0, 11, 16], 0);
   if ($('strip2')) demo($('strip2'), $('fill2'), $('now2'), [16, 17, 0, 9, 11, 9, 14], 0);
 </script>
-<!-- 점검 공지(사장님 2026-11-27): 크롬 웹 스토어만 그대로. 아이폰·안드로이드·파이어폭스로 가는 단추는 '점검 중' 창. 끝나면 이 덩어리를 지운다 -->
+<!-- Android step sheet (2026-11-27, same as index.html aflow): Chrome 1 Get Firefox -> 2 Open in Firefox (?go=fx) -> Firefox 3 Install -> installed sheet (#awInst) -->
+<style>
+  .aflow{position:fixed;inset:0;z-index:998;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center}
+  .aflow[hidden]{display:none}
+  .acard{width:100%;max-width:480px;background:#fff;color:#191f28;border-radius:20px 20px 0 0;padding:22px 20px 26px;box-sizing:border-box}
+  .adots{display:flex;gap:6px;margin-bottom:14px}.adots i{width:28px;height:4px;border-radius:2px;background:#e5e8eb}.adots i.on{background:#3B3FC4}
+  .acard h3{margin:0 0 8px;font-size:20px;color:#191f28}.acard p{margin:0 0 10px;font-size:16px;line-height:1.55;color:#4e5968}
+  .acard ol{margin:0 0 18px;padding-left:34px;font-size:30px;font-weight:800;line-height:1.4;color:#191f28}.acard ol li{margin-bottom:4px}
+  .abtn{display:block;width:100%;box-sizing:border-box;text-align:center;padding:16px;border:0;border-radius:14px;background:#3B3FC4;color:#fff;font:700 17px inherit;text-decoration:none;cursor:pointer}
+  .abtn[hidden],.aok[hidden]{display:none}
+  .aok{display:block;width:100%;box-sizing:border-box;padding:15px;border:2px solid #3B3FC4;border-radius:14px;background:#fff;color:#3B3FC4;font:700 17px inherit;cursor:pointer}
+  .awarn{margin:0 0 12px;padding:10px 12px;border-radius:10px;background:#fff0f0;color:#d22030;font-size:15px;line-height:1.5}.awarn[hidden]{display:none}
+  .alink{display:block;width:100%;margin-top:10px;padding:8px;border:0;background:none;color:#8b95a1;font:inherit;font-size:14px;cursor:pointer}
+</style>
+<div class="aflow" id="aflow" hidden>
+  <div class="acard">
+    <div class="adots"></div>
+    <section data-f="a" data-s="1"><h3>1. Get Firefox</h3><p>AutoWebtoon works in Firefox on your phone.</p>
+      <ol><li>[Get Firefox] &gt; [Install] &gt; [Back] twice</li></ol>
+      <a class="abtn" id="aFxGet" href="#">Get Firefox</a><button type="button" class="alink" data-to="2">I already have Firefox</button></section>
+    <section data-f="a" data-s="2"><h3>2. Open in Firefox</h3><p>Now open this page in Firefox.</p>
+      <ol><li>[Open in Firefox] &gt; [Continue] &gt; [Cancel] &gt; [Not now]</li></ol>
+      <p class="awarn" id="aWrong" hidden>This opened in Chrome again. Pick <b>[Firefox]</b> in the chooser.</p>
+      <a class="abtn" id="aOpenFx" href="#">Open in Firefox</a></section>
+    <section data-f="a" data-s="3"><h3>3. Install AutoWebtoon</h3><p>You are in Firefox. Now add AutoWebtoon.</p>
+      <ol><li>[Add to Firefox] &gt; [Add]</li></ol>
+      <a class="abtn" id="aInstall" href="#">Install AutoWebtoon</a></section>
+    <section data-f="k" data-s="1"><h3>1. Open in Chrome</h3><p>You can't install inside KakaoTalk. Move to Chrome.</p>
+      <ol><li>[Open in Chrome]</li><li>Didn't open? ⋮ &gt; [Open in another browser]</li></ol>
+      <a class="abtn" id="kOpen" href="#">Open in Chrome</a></section>
+    <section data-f="n" data-s="1"><h3>1. Open in a browser</h3><p>You can't install inside this app. Move to Chrome.</p>
+      <ol><li>⋮ menu &gt; [Open in browser] or [Open in Chrome]</li><li>No menu? [Copy link] &gt; paste into Chrome</li></ol>
+      <button type="button" class="abtn" id="nCopy">Copy link</button></section>
+    <button type="button" class="alink" id="aClose">Close</button>
+  </div>
+</div>
+<script>(function(){
+  var AMO='https://addons.mozilla.org/en-US/android/addon/autowebtoon/', FX='org.mozilla.firefox', FXP='https://play.google.com/store/apps/details?id='+FX;
+  var ua=navigator.userAgent, isAndroid=/Android/i.test(ua), isFx=/Firefox\//.test(ua), inApp=/KAKAOTALK|NAVER\(inapp|Instagram|FBAN|FBAV|Line\/|DaumApps|everytimeApp/i.test(ua);
+  if(!isAndroid)return;
+  var $=function(i){return document.getElementById(i)}, fl=$('aflow'), QS=new URLSearchParams(location.search), page=location.origin+location.pathname;
+  var F=inApp?(/KAKAOTALK/i.test(ua)?'k':'n'):'a', LAST=F==='a'?3:1;
+  var ls=function(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}};
+  fl.querySelector('.adots').innerHTML=new Array(LAST+1).join('<i></i>');
+  function show(n){
+    fl.querySelectorAll('.aok').forEach(function(b){b.hidden=false;b.nextElementSibling.hidden=true});
+    fl.hidden=false;
+    fl.querySelectorAll('section').forEach(function(s){s.hidden=!(s.dataset.f===F&&s.dataset.s===String(n))});
+    fl.querySelectorAll('.adots i').forEach(function(d,i){d.classList.toggle('on',i<n)});
+  }
+  function done(){fl.hidden=true;ls('aw_astep','done');var w=$('awInst');if(w)w.style.display='flex'}
+  fl.querySelectorAll('section .abtn').forEach(function(a){
+    var ok=document.createElement('button'),n=a.closest('section').querySelectorAll('ol li').length;
+    ok.type='button';ok.className='aok';ok.textContent=n>1?"I've read the steps above":"I've read the step above";
+    ok.addEventListener('click',function(){ok.hidden=true;a.hidden=false;a.click()});
+    a.before(ok);
+  });
+  fl.querySelectorAll('[data-to]').forEach(function(b){b.addEventListener('click',function(){show(Number(b.dataset.to))})});
+  $('aClose').addEventListener('click',function(){fl.hidden=true});
+  var startUrl=page+'?start=1';
+  $('kOpen').href='kakaotalk://web/openExternal?url='+encodeURIComponent(startUrl);
+  $('nCopy').addEventListener('click',function(e){try{navigator.clipboard.writeText(startUrl).then(function(){e.target.textContent='Copied. Paste it into Chrome'})}catch(_){e.target.textContent=startUrl}});
+  $('aFxGet').href=FXP;
+  var left=false; $('aFxGet').addEventListener('click',function(){left=true});
+  function back(){if(isFx&&ls('aw_astep')==='amo')done()}
+  document.addEventListener('visibilitychange',function(){if(document.visibilityState!=='visible')return;if(left){left=false;show(2)}else back()});
+  window.addEventListener('pageshow',back);
+  var go=QS.get('go');
+  if(isFx){
+    $('aInstall').href=AMO;
+    $('aInstall').addEventListener('click',function(){ls('aw_astep','amo')});
+    if(go==='fx'||go==='amo'){history.replaceState(null,'',page);ls('aw_astep','3');show(3)}
+  }else{
+    if(go==='fx'||go==='amo'){history.replaceState(null,'',page);$('aWrong').hidden=false;show(2)}
+    $('aOpenFx').href='intent://'+page.replace(/^https?:\/\//,'')+'?go=fx#Intent;scheme=https;package='+FX+';S.browser_fallback_url='+encodeURIComponent(FXP)+';end';
+  }
+  if(QS.get('start')==='1'){history.replaceState(null,'',page);if(!isFx)show(1)}
+  // phone buttons open the sheet (Chrome: from step 1, Firefox: step 3)
+  document.addEventListener('click',function(e){
+    var a=e.target.closest&&e.target.closest('.store-amo,#addFx,#openFx'); if(!a)return;
+    if(a.closest('.aflow'))return;
+    e.preventDefault();e.stopImmediatePropagation(); show(isFx&&F==='a'?3:1);
+  },true);
+})();</script>
+<!-- 점검 공지(사장님 2026-11-27): 아이폰만 '점검 중' 창(1.0.4 통과하면 지운다). 안드로이드는 11-27 다시 엶 -->
 <style>
   .mbar{background:#191f28;color:#fff;text-align:center;font-size:14px;line-height:1.4;padding:9px 16px}
   .mwrap{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:16px}
@@ -607,16 +691,16 @@
   .mcard h3{margin:0 0 10px;font-size:20px}.mcard p{margin:0 0 18px;font-size:16px;line-height:1.6;color:#4e5968}
   .mcard button{display:block;width:100%;padding:15px;border:0;border-radius:14px;background:#3B3FC4;color:#fff;font:700 17px inherit;cursor:pointer}
 </style>
-<div class="mwrap" id="maint" hidden role="dialog" aria-modal="true"><div class="mcard"><h3>iPhone and Android are under maintenance</h3><p>We are making setup easier. When it is done you can get it right here.<br>For now, AutoWebtoon works in <b>Chrome on PC</b>.</p><button type="button" id="maintOk">OK</button></div></div>
+<div class="mwrap" id="maint" hidden role="dialog" aria-modal="true"><div class="mcard"><h3>iPhone is under maintenance</h3><p>We are making setup easier. When it is done you can get it right here.<br>For now, AutoWebtoon works in <b>Chrome on PC</b> and <b>Firefox on Android</b>.</p><button type="button" id="maintOk">OK</button></div></div>
 <script>(function(){
-  var ua=navigator.userAgent, phone=/Android|iPhone|iPad|iPod/i.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
-  var bar=document.createElement('div'); bar.className='mbar'; bar.textContent='Notice · iPhone and Android are under maintenance. Chrome on PC works now.'; document.body.insertBefore(bar, document.body.firstChild);
+  var ua=navigator.userAgent, phone=/iPhone|iPad|iPod/i.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  var bar=document.createElement('div'); bar.className='mbar'; bar.textContent='Notice · iPhone is under maintenance. Chrome on PC and Android work now.'; document.body.insertBefore(bar, document.body.firstChild);
   var w=document.getElementById('maint'); document.getElementById('maintOk').onclick=function(){w.hidden=true};
   function stop(e){e.preventDefault();e.stopImmediatePropagation();w.hidden=false}
   document.addEventListener('click',function(e){
     var a=e.target.closest&&e.target.closest('a,button'); if(!a)return;
     var h=a.getAttribute('href')||'';
-    if(/apps\.apple\.com|addons\.mozilla\.org|play\.google\.com|^intent:|^kakaotalk:/.test(h)||a.classList.contains('store-amo')||a.classList.contains('store-ios')||a.id==='addFx'||a.id==='openFx'||a.id==='qrOpen')return stop(e);
+    if(/apps\.apple\.com/.test(h)||a.classList.contains('store-ios'))return stop(e);
     if(phone&&(a.id==='ctaStart'||a.closest('.aflow')&&a.id!=='aClose'))return stop(e);
   },true);
 })();</script>
