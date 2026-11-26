@@ -73,6 +73,8 @@
   // 로그인이 끝나면 창을 닫지 않고 바로 첫 웹툰을 연다(사장님 2026-11-27: 깔고 → 로그인 → 바로 시작). 네이버를 다녀와도 기억하게 sessionStorage에 적는다.
   if (QS.get('from') === 'ios') ss('aw_ios', '1');
   const IOS = ss('aw_ios') === '1';
+  // 안드로이드 앱 안(사장님 2026-11-27): 구글은 앱 안 화면 로그인을 막으므로 네이버만, 로그인 끝나면 바로 첫 웹툰
+  const APP = /AutoWebtoonAndroid/.test(navigator.userAgent);
   const FIRST = EN ? 'https://www.webtoons.com/en/action/eleceed/episode-1/viewer?title_no=1571&episode_no=1' : 'https://m.comic.naver.com/webtoon/detail?titleId=769209&no=1';
   if (IOS && !hasExt()) {
     $('h').textContent = EN ? 'Allow AutoWebtoon first' : '오토웹툰을 먼저 허용해 주세요';
@@ -105,7 +107,7 @@
     // 끝났으면 로그인 버튼을 치워서 또 누를 일이 없게 한다
     if (root.dataset.awGot === '1') {
       $('gbtn').style.display = 'none'; $('nbtn').style.display = 'none'; $('lead').style.display = 'none'; try { google.accounts.id.cancel(); } catch {}
-      if (IOS) { ss('aw_ios', null); say(EN ? 'Done! Opening a webtoon… tap the page to start.' : '됐어요! 웹툰을 엽니다… 화면을 누르면 시작해요.', 'ok'); setTimeout(() => { location.href = FIRST; }, 1500); return; }
+      if (IOS || APP) { ss('aw_ios', null); say(EN ? 'Done! Opening a webtoon… tap the page to start.' : '됐어요! 웹툰을 엽니다… 화면을 누르면 시작해요.', 'ok'); setTimeout(() => { location.href = FIRST; }, 1500); return; }
       // 이 페이지는 만화 탭에서 새 탭으로 열린 것이라 할 일이 끝나면 닫는다 (브라우저가 막으면 그대로 둔다)
       setTimeout(() => { try { window.close(); } catch {} }, 1500);
     }
@@ -117,7 +119,7 @@
     const st = Array.from(crypto.getRandomValues(new Uint8Array(16)), (x) => x.toString(16).padStart(2, '0')).join('');
     ss('aw_nstate', st); ss('aw_nlang', EN ? 'en' : 'ko');
     const url = 'https://nid.naver.com/oauth2.0/authorize?' + new URLSearchParams({ response_type: 'code', client_id: naverId, redirect_uri: NAVER_BACK, state: st, ...(QS.has('reprompt') ? { auth_type: 'reprompt' } : {}) });
-    const w = window.open(url, 'awnaver', 'width=480,height=720');
+    const w = APP ? null : window.open(url, 'awnaver', 'width=480,height=720');
     if (!w) location.href = url;   // 팝업이 막히면 이 탭에서
   }
   // 팝업이 돌아오면 code를 여기로 넘기고 팝업은 닫힌다
@@ -144,6 +146,7 @@
     try { const c = await (await fetch(KEY_SERVER + '/free/config')).json(); clientId = c.clientId; naverId = c.naverId || ''; } catch {}
     if (naverId) { $('nlabel').textContent = T.naver; $('nbtn').style.display = 'block'; $('nbtn').onclick = () => naverGo(naverId); }
     if (QS.has('code') || QS.has('error')) { if (QS.has('error')) { try { if (window.opener && window.opener.awNaverBack) { window.close(); return; } } catch {} history.replaceState(null, '', location.pathname + (EN ? '?lang=en' : '')); say(T.fail, 'bad'); } else await naverBack(); }
+    if (APP) { $('gbtn').style.display = 'none'; $('lead').textContent = EN ? 'Sign in with Naver to read 10 episodes free.' : '네이버 계정으로 로그인하면 10회차까지 무료예요.'; return; }
     if (!clientId) { if (!naverId) say(T.notready, 'bad'); return; }
     const s = document.createElement('script');
     s.src = 'https://accounts.google.com/gsi/client'; s.async = true;
