@@ -95,6 +95,7 @@
   .pcwin .tb { height:34px; background:#dee1e6; display:flex; align-items:center; gap:7px; padding:0 12px; }
   .pcwin .tb i { width:11px; height:11px; border-radius:50%; background:#c3c7ce; }
   .pcwin .tb span { flex:1; height:20px; margin-left:10px; border-radius:10px; background:#fff; font-size:11px; color:#8b95a1; line-height:20px; padding-left:12px; }
+  .cmpvid { display:block; width:320px; max-width:calc(100vw - 96px); aspect-ratio:9/16; height:auto; border-radius:22px; background:#0b0d1a; box-shadow:0 2px 4px rgba(0,0,0,.08), 0 30px 60px rgba(25,31,40,.22); }
   #pcdemo .wrap { grid-template-columns:.8fr 1.2fr; gap:56px; }
   #pcdemo .shot { padding:48px 0; }
   .pcwin .real { display:block; width:100%; height:auto; aspect-ratio:16/9; background:#fff; }
@@ -282,6 +283,19 @@
           <svg viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="11" fill="#111"/><path d="M31.2 25.3c0-3.4 2.8-5 2.9-5.1-1.6-2.3-4-2.6-4.9-2.7-2.1-.2-4 1.2-5.1 1.2-1 0-2.7-1.2-4.4-1.1-2.3 0-4.4 1.3-5.5 3.3-2.4 4.1-.6 10.2 1.7 13.5 1.1 1.6 2.5 3.4 4.2 3.4 1.7-.1 2.3-1.1 4.4-1.1 2 0 2.6 1.1 4.4 1.1 1.8 0 3-1.6 4.1-3.3 1.3-1.9 1.8-3.7 1.8-3.8-.1 0-3.6-1.4-3.6-5.4zM27.9 15.4c.9-1.1 1.6-2.7 1.4-4.2-1.3.1-3 .9-3.9 2-.9 1-1.6 2.6-1.4 4.1 1.5.1 3-.8 3.9-1.9z" fill="#fff"/></svg>
           <span><small>iPhone · App Store</small><b>Get it on the App Store</b></span>
         </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="feature" id="cmp">
+    <div class="wrap">
+      <div class="copy">
+        <p class="eyebrow">Side by side</p>
+        <h2>Is every auto-scroll<br>the same?</h2>
+        <p class="desc">Same episode, same 20 seconds, side by side. A regular auto-scroll slides past the speech bubbles before you can read them. AutoWebtoon stops on each panel and waits for the dialogue. Real speed, not sped up.</p>
+      </div>
+      <div class="shot">
+        <video class="cmpvid" src="cmp_demo_en.mp4" poster="cmp_demo_en.jpg" autoplay muted loop playsinline preload="metadata" width="540" height="960" aria-label="A regular auto-scroll and AutoWebtoon playing the same webtoon side by side"></video>
       </div>
     </div>
   </section>

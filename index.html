@@ -106,6 +106,7 @@
   .pcwin .tb { height:34px; background:#dee1e6; display:flex; align-items:center; gap:7px; padding:0 12px; }
   .pcwin .tb i { width:11px; height:11px; border-radius:50%; background:#c3c7ce; }
   .pcwin .tb span { flex:1; height:20px; margin-left:10px; border-radius:10px; background:#fff; font-size:11px; color:#8b95a1; line-height:20px; padding-left:12px; }
+  .cmpvid { display:block; width:320px; max-width:calc(100vw - 96px); aspect-ratio:9/16; height:auto; border-radius:22px; background:#0b0d1a; box-shadow:0 2px 4px rgba(0,0,0,.08), 0 30px 60px rgba(25,31,40,.22); }
   #pcdemo .wrap { grid-template-columns:.8fr 1.2fr; gap:56px; }
   #pcdemo .shot { padding:48px 0; }
   .pcwin .real { display:block; width:100%; height:auto; aspect-ratio:16/9; background:#fff; }
@@ -284,6 +285,19 @@
         <a class="cta2" href="https://www.youtube.com/@autowebtoon/shorts" target="_blank" rel="noopener">▶ 사용법 영상</a>
       </div>
       <p class="where">PC 크롬 · 안드로이드 파이어폭스 · 아이폰 사파리에서 써요 · <a href="#install">설치 방법</a></p>
+    </div>
+  </section>
+
+  <section class="feature" id="cmp">
+    <div class="wrap">
+      <div class="copy">
+        <p class="eyebrow">보통 자동 스크롤과 비교</p>
+        <h2>자동 스크롤,<br>다 똑같을까?</h2>
+        <p class="desc">같은 웹툰을 같은 20초 동안 나란히 틀었습니다. 보통 자동 스크롤은 말풍선을 읽기도 전에 지나가고, 오토웹툰은 컷마다 멈춰 대사만큼 기다렸다가 넘어갑니다. 빨리 감기 없는 실제 속도예요.</p>
+      </div>
+      <div class="shot">
+        <video class="cmpvid" src="cmp_demo.mp4" poster="cmp_demo.jpg" autoplay muted loop playsinline preload="metadata" width="540" height="960" aria-label="보통 자동 스크롤과 오토웹툰을 같은 웹툰으로 나란히 비교한 영상"></video>
+      </div>
     </div>
   </section>
 
