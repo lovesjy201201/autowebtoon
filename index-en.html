@@ -648,7 +648,7 @@
     fl.querySelectorAll('section').forEach(function(s){s.hidden=!(s.dataset.f===F&&s.dataset.s===String(n))});
     fl.querySelectorAll('.adots i').forEach(function(d,i){d.classList.toggle('on',i<n)});
   }
-  function done(){ls('aw_astep','done');location.href='https://www.webtoons.com/en/action/eleceed/episode-1/viewer?title_no=1571&episode_no=1'}
+  function done(){ls('aw_astep','done');location.href='https://www.webtoons.com/en/originals'}
   fl.querySelectorAll('section .abtn').forEach(function(a){
     var ok=document.createElement('button'),n=a.closest('section').querySelectorAll('ol li').length;
     ok.type='button';ok.className='aok';ok.textContent=n>1?"I've read the steps above":"I've read the step above";
@@ -719,6 +719,6 @@ navigator.sendBeacon('https://autowebtoon-key.lovesjy201.workers.dev/tap?b='+b+'
     <button type="button" onclick="document.getElementById('awInst').style.display='none'" style="display:block;width:100%;margin-top:10px;padding:8px;border:0;background:none;color:#8b95a1;font:inherit;font-size:14px">Close</button>
   </div>
 </div>
-<script>if(new URLSearchParams(location.search).get('installed')==='1'){history.replaceState(null,'',location.pathname);location.replace('https://www.webtoons.com/en/action/eleceed/episode-1/viewer?title_no=1571&episode_no=1')}</script>
+<script>if(new URLSearchParams(location.search).get('installed')==='1'){history.replaceState(null,'',location.pathname);location.replace('https://www.webtoons.com/en/originals')}</script>
 </body>
 </html>
