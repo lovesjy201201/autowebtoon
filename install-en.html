@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<script>/* remember an ad/influencer tag (?ref=) for 30 days so the purchase records it */try{var r=new URLSearchParams(location.search).get('ref');if(r&&/^[a-z0-9_-]{1,24}$/i.test(r))localStorage.setItem('aw_ref',JSON.stringify({r:r.toLowerCase(),t:Date.now()}))}catch(e){}</script>
+<script>/* 방문자 세기(사장님만 봄): 브라우저마다 하루 한 번. 들어온 곳(리퍼러) 같이 보냄. 자동 브라우저(webdriver)·?me=1로 표시한 사장님 브라우저는 안 셈 */try{var q=new URLSearchParams(location.search);if(q.get('me')==='1')localStorage.setItem('aw_me','1');var d=new Date(Date.now()+324e5).toISOString().slice(0,10);if(!navigator.webdriver&&localStorage.getItem('aw_me')!=='1'&&localStorage.getItem('aw_v')!==d){var f='';try{f=new URL(document.referrer).hostname;if(f===location.hostname)f=''}catch(e){}localStorage.setItem('aw_v',d);navigator.sendBeacon('https://autowebtoon-key.lovesjy201.workers.dev/visit?p=en&ref='+encodeURIComponent(q.get('ref')||'')+'&from='+encodeURIComponent(f))}}catch(e){}</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to install AutoWebtoon · Webtoon auto scroll for Chrome, Android and iPhone</title>
+<meta name="description" content="Step-by-step: install AutoWebtoon, the webtoon auto scroll that stops on each panel and waits while you read. Chrome on PC, Firefox on Android, Safari on iPhone.">
+<meta property="og:title" content="How to install AutoWebtoon">
+<meta property="og:description" content="Read webtoons hands-free. Install steps for PC, Android and iPhone.">
+<meta property="og:image" content="hero.webp">
+<link rel="icon" href="icon-128.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+  :root { --bg:#fff; --soft:#f4f4f6; --line:#e8e8ec; --ink:#191f28; --sub:#4e5968; --muted:#8b95a1; --accent:#3B3FC4; --accent-ink:#fff; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#101013; --soft:#1a1a1f; --line:#2a2a31; --ink:#f2f3f5; --sub:#b0b8c1; --muted:#8b95a1; --accent:#7f83f2; --accent-ink:#0f1020; }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); -webkit-font-smoothing:antialiased;
+    font:400 18px/1.75 "Pretendard Variable", Pretendard, -apple-system, sans-serif; }
+  a { color:var(--accent); }
+  img { display:block; max-width:100%; height:auto; border-radius:14px; border:1px solid var(--line); margin:8px auto 32px; }
+  header { border-bottom:1px solid var(--line); }
+  header .in { max-width:760px; margin:0 auto; padding:14px 16px; display:flex; align-items:center; gap:10px; }
+  header img { width:30px; height:30px; margin:0; border:0; border-radius:8px; }
+  header a { color:var(--ink); text-decoration:none; font-weight:700; }
+  main { max-width:760px; margin:0 auto; padding:36px 16px 80px; }
+  h1 { font-size:34px; line-height:1.3; margin:0 0 18px; letter-spacing:-.02em; }
+  .lead { font-size:20px; color:var(--sub); margin:0 0 28px; }
+  h2 { font-size:26px; line-height:1.35; margin:64px 0 18px; letter-spacing:-.01em; }
+  h3 { font-size:21px; margin:40px 0 12px; }
+  p { margin:0 0 20px; }
+  ul { padding-left:22px; margin:0 0 24px; } li { margin:0 0 8px; }
+  ol { padding-left:24px; margin:0 0 20px; } ol li { margin:0 0 12px; }
+  .box { background:var(--soft); border-radius:16px; padding:22px 22px 6px; margin:0 0 24px; }
+  .go { display:inline-block; background:var(--accent); color:var(--accent-ink); text-decoration:none; font-weight:700;
+    padding:12px 20px; border-radius:12px; margin:4px 0 20px; }
+  .note { color:var(--sub); font-size:16px; }
+  .phone { max-width:330px; }
+  footer { border-top:1px solid var(--line); color:var(--muted); font-size:15px; }
+  footer .in { max-width:760px; margin:0 auto; padding:24px 16px 40px; }
+  @media (max-width:600px) { h1 { font-size:28px; } h2 { font-size:23px; } body { font-size:17px; } }
+</style>
+</head>
+<body>
+<header><div class="in"><img src="icon-128.png" alt=""><a href="index-en.html">AutoWebtoon</a></div></header>
+<main>
+  <h1>How to install AutoWebtoon: webtoon auto scroll for PC, Android and iPhone</h1>
+  <p class="lead">Scrolling with one hand while you eat, or holding your phone up in bed, gets old fast. AutoWebtoon scrolls for you, one panel at a time.</p>
+
+  <img src="pc_real_en.webp" alt="AutoWebtoon stopping on a panel on webtoons.com">
+
+  <h2>How is it different from a normal auto scroll?</h2>
+  <p>A normal auto scroll moves down at one speed. Panels get cut in half, and a panel full of dialogue slides away before you finish reading it.</p>
+  <p>AutoWebtoon stops on each panel:</p>
+  <ul>
+    <li>It stops with the panel centered on your screen, so nothing is cut off.</li>
+    <li>A panel taller than your screen is shown in parts, one after another.</li>
+    <li>It stays longer on panels with a lot of text and moves quickly past panels with only art.</li>
+    <li>When the episode ends, it goes to the next one (you can turn this off).</li>
+    <li>Tap the screen to pause, tap again to keep going.</li>
+  </ul>
+  <p>You can change how long it waits so it matches your reading speed.</p>
+
+  <h2>Where does it work?</h2>
+  <p>WEBTOON (webtoons.com), Naver Webtoon and Kakao Webtoon. Use Chrome on a PC, Firefox on an Android phone, or the App Store app on an iPhone.</p>
+
+  <h2>Install on a PC (Chrome)</h2>
+  <div class="box"><ol>
+    <li>Open Chrome on your computer.</li>
+    <li>Go to the Chrome Web Store page for AutoWebtoon (button below).</li>
+    <li>Click the blue <b>Add to Chrome</b> button, then <b>Add extension</b>.</li>
+    <li>Open any episode on webtoons.com. It starts scrolling on its own. Press the space bar or click the page to pause.</li>
+  </ol></div>
+  <a class="go" href="https://chromewebstore.google.com/detail/ablmhcbfaihfaddjblphaomffanfolkp">Open the Chrome Web Store</a>
+
+  <h2>Install on an Android phone (Firefox)</h2>
+  <p>On Android it runs inside the Firefox browser. Chrome for Android does not support extensions, and it does not work inside the WEBTOON app.</p>
+  <div class="box"><ol>
+    <li>Install <b>Firefox</b> from the Play Store.</li>
+    <li>Open this page in Firefox, or open <b>addons.mozilla.org</b> in Firefox and search for <b>AutoWebtoon</b>.</li>
+    <li>Tap the blue <b>Add to Firefox</b> button, then <b>Add</b>.</li>
+    <li>In Firefox, open an episode on webtoons.com and tap the comic once. It starts scrolling.</li>
+  </ol></div>
+  <a class="go" href="https://play.google.com/store/apps/details?id=org.mozilla.firefox">Get Firefox</a>
+  <a class="go" href="https://addons.mozilla.org/en-US/android/addon/autowebtoon/">AutoWebtoon for Firefox</a>
+  <p class="note">If you tap the add-on link in Chrome, you will only see "Download Firefox". Open the link in Firefox to see the Add button.</p>
+
+  <h2>Install on an iPhone (Safari)</h2>
+  <p>On iPhone it runs in Safari.</p>
+  <div class="box"><ol>
+    <li>Search for <b>autowebtoon</b> in the App Store and tap <b>Get</b>.</li>
+    <li>Open the iPhone <b>Settings</b> app and scroll down to <b>Apps</b>.</li>
+    <li>Tap <b>Safari</b>, then <b>Extensions</b>.</li>
+    <li>Tap <b>AutoWebtoon</b> and turn on <b>Allow Extension</b>.</li>
+    <li>Set webtoons.com (and the other webtoon sites listed) to <b>Allow</b>.</li>
+    <li>In Safari, open an episode on webtoons.com and tap the comic once. It starts scrolling.</li>
+  </ol></div>
+  <a class="go" href="https://apps.apple.com/app/id6838214464">Open the App Store</a>
+
+  <img class="phone" src="phone_demo1_en.jpg" alt="AutoWebtoon on a phone">
+
+  <h2>Questions</h2>
+  <h3>Does it send what I read anywhere?</h3>
+  <p>No. The panel and text counting all happens on your own device. It does not save the art or keep a list of what you read.</p>
+  <h3>Is it made by WEBTOON?</h3>
+  <p>No. It is made by one independent developer and is not affiliated with WEBTOON, Naver or Kakao.</p>
+
+  <h2>One last thing</h2>
+  <p>Every series draws its panels a little differently, so on some series a panel may stop in an odd spot. If you see one, leave the series name in a review on the store where you got it, and I will fix it.</p>
+  <p><a href="index-en.html">Back to the AutoWebtoon home page</a></p>
+</main>
+<footer><div class="in">AutoWebtoon · <a href="terms-en.html">Terms</a> · <a href="privacy.html">Privacy</a></div></footer>
+</body>
+</html>
