@@ -69,7 +69,20 @@
   // 확장(login-bridge.js)은 페이지가 뜨기 전에 data-aw-ext 를 붙인다.
   // 없으면 "구글 계정으로 설치하기": 로그인 → 바로 홈페이지 설치 칸으로. 설치 뒤 확장에서 이 페이지를 다시 열면 같은 계정으로 저절로 로그인돼 무료 표가 넘어간다.
   const hasExt = () => document.documentElement.dataset.awExt === '1';
-  if (!hasExt()) { $('h').textContent = T.hInst; $('lead').textContent = T.leadInst; }
+  // 아이폰 앱 2단계에서 온 손님(?from=ios): 확장이 이 페이지에서 안 돌면 로그인 대신 허용 방법을 알려 준다.
+  // 로그인이 끝나면 창을 닫지 않고 바로 첫 웹툰을 연다(사장님 2026-11-27: 깔고 → 로그인 → 바로 시작). 네이버를 다녀와도 기억하게 sessionStorage에 적는다.
+  if (QS.get('from') === 'ios') ss('aw_ios', '1');
+  const IOS = ss('aw_ios') === '1';
+  const FIRST = EN ? 'https://www.webtoons.com/en/action/eleceed/episode-1/viewer?title_no=1571&episode_no=1' : 'https://m.comic.naver.com/webtoon/detail?titleId=769209&no=1';
+  if (IOS && !hasExt()) {
+    $('h').textContent = EN ? 'Allow AutoWebtoon first' : '오토웹툰을 먼저 허용해 주세요';
+    $('lead').textContent = EN ? 'Tap the "aA" (or puzzle) button left of the address bar → AutoWebtoon → Always Allow on Every Website, then reload this page.'
+      : '주소창 왼쪽 "가A"(또는 퍼즐) 단추 → 오토웹툰 → "모든 웹사이트에서 항상 허용"을 누르고 이 페이지를 새로고침해 주세요.';
+    $('gbtn').style.display = 'none';
+    const b = document.createElement('button'); b.type = 'button'; b.id = 'rl'; b.textContent = EN ? 'Reload' : '새로고침';
+    b.style.cssText = 'width:300px;max-width:100%;height:44px;border:0;border-radius:22px;background:var(--accent);color:#fff;font:inherit;font-weight:600';
+    b.onclick = () => location.reload(); $('gbtn').after(b);
+  } else if (!hasExt()) { $('h').textContent = T.hInst; $('lead').textContent = T.leadInst; }
   const say = (t, cls) => { $('msg').textContent = t; $('msg').className = 'msg ' + (cls || ''); };
 
   async function onCred(res) { await start('/free/start', { credential: res.credential }); }
@@ -92,6 +105,7 @@
     // 끝났으면 로그인 버튼을 치워서 또 누를 일이 없게 한다
     if (root.dataset.awGot === '1') {
       $('gbtn').style.display = 'none'; $('nbtn').style.display = 'none'; $('lead').style.display = 'none'; try { google.accounts.id.cancel(); } catch {}
+      if (IOS) { ss('aw_ios', null); say(EN ? 'Done! Opening a webtoon… tap the page to start.' : '됐어요! 웹툰을 엽니다… 화면을 누르면 시작해요.', 'ok'); setTimeout(() => { location.href = FIRST; }, 1500); return; }
       // 이 페이지는 만화 탭에서 새 탭으로 열린 것이라 할 일이 끝나면 닫는다 (브라우저가 막으면 그대로 둔다)
       setTimeout(() => { try { window.close(); } catch {} }, 1500);
     }
@@ -125,6 +139,7 @@
   }
 
   (async () => {
+    if (IOS && !hasExt() && !QS.has('code')) return;   // 허용 안내만 보인다(로그인해도 표를 받을 곳이 없음)
     let clientId = '', naverId = '';
     try { const c = await (await fetch(KEY_SERVER + '/free/config')).json(); clientId = c.clientId; naverId = c.naverId || ''; } catch {}
     if (naverId) { $('nlabel').textContent = T.naver; $('nbtn').style.display = 'block'; $('nbtn').onclick = () => naverGo(naverId); }
