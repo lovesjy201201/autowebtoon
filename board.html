@@ -147,6 +147,11 @@
   let suggest = '';
   const sget = (k) => { try { return sessionStorage.getItem(k); } catch (e) { return null; } };
   const sset = (k, v) => { try { v == null ? sessionStorage.removeItem(k) : sessionStorage.setItem(k, v); } catch (e) {} };
+  // 네이버 로그인 확인값·돌아갈 자리: 팝업이 돌아올 때 opener와 sessionStorage를 잃어서(네이버 화면의 COOP) 탭끼리 같이 보는 localStorage에 둔다
+  const lget = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+  const lset = (k, v) => { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} };
+  // 다른 탭·팝업에서 로그인이 끝나면 이 탭도 바로 로그인된 화면으로
+  window.addEventListener('storage', (e) => { if (e.key === 'aw_btok' || e.key === 'aw_bnick') route(); });
   let cfg = null;
   async function getCfg() { if (!cfg) { try { cfg = await (await fetch(API + '/free/config')).json(); } catch (e) { cfg = {}; } } return cfg; }
   async function signin(path, body, box) {
@@ -156,7 +161,7 @@
       tok(r.token); nick(r.nickname || ''); suggest = r.suggest || ''; route();
     } catch (e) { if (box) box.querySelector('.lmsg').textContent = T.lfail; }
   }
-  window.awNaverBack = (code, st) => { const want = sget('aw_bstate'); sset('aw_bstate', null); if (!code || !st || st !== want) { alert(T.lfail); return; } signin('/board/naver', { code, state: st }); };
+  window.awNaverBack = (code, st) => { const want = lget('aw_bstate'); lset('aw_bstate', null); if (!code || !st || st !== want) { alert(T.lfail); return; } signin('/board/naver', { code, state: st }); };
   function loginBox() {
     const box = $('loginT').content.firstElementChild.cloneNode(true);
     box.querySelector('.lmsg1').textContent = T.signin;
@@ -166,7 +171,7 @@
         const nb = box.querySelector('.nbtn'); nb.hidden = false;
         nb.onclick = () => {
           const st = 'b' + Array.from(crypto.getRandomValues(new Uint8Array(15)), (x) => x.toString(16).padStart(2, '0')).join('');
-          sset('aw_bstate', st); sset('aw_bback', location.search);
+          lset('aw_bstate', st); lset('aw_bback', location.search);
           const back = location.origin + location.pathname.replace(/board\.html$/, 'login.html');
           const url = 'https://nid.naver.com/oauth2.0/authorize?' + new URLSearchParams({ response_type: 'code', client_id: c.naverId, redirect_uri: back, state: st });
           const w = window.open(url, 'awnaver', 'width=480,height=720'); if (!w) location.href = url;
@@ -319,11 +324,12 @@
   }
   // 네이버 로그인이 같은 탭으로 돌아온 경우(login.html이 board.html?bcode=로 보냄)
   if (Q.get('bcode')) {
-    const c = Q.get('bcode'), st = Q.get('bstate'), back = sget('aw_bback') || ('?lang=' + L);
-    sset('aw_bback', null); history.replaceState(null, '', location.pathname + back);
-    const want = sget('aw_bstate'); sset('aw_bstate', null);
-    if (c && st && st === want) { fetch(API + '/board/naver', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code: c, state: st }) }).then((r) => r.json()).then((r) => { if (r.ok) { tok(r.token); nick(r.nickname || ''); } location.reload(); }).catch(() => location.reload()); }
-    else route();
+    const c = Q.get('bcode'), st = Q.get('bstate'), back = lget('aw_bback') || ('?lang=' + L + '&write=1');
+    lset('aw_bback', null); history.replaceState(null, '', location.pathname + back);
+    const want = lget('aw_bstate'); lset('aw_bstate', null);
+    const done = () => { try { if (window.opener || history.length <= 2) window.close(); } catch (e) {} location.reload(); };
+    if (c && st && st === want) { fetch(API + '/board/naver', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code: c, state: st }) }).then((r) => r.json()).then((r) => { if (r.ok) { tok(r.token); nick(r.nickname || ''); } else alert(T.lfail); done(); }).catch(() => { alert(T.lfail); done(); }); }
+    else { alert(T.lfail); route(); }
   } else route();
 </script>
 </body>
