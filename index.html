@@ -385,6 +385,7 @@
       <p class="eyebrow">설치</p>
       <h2>쓰는 기기에 맞게 설치하세요</h2>
       <p class="sub" style="margin-bottom:0">설치하고 네이버웹툰·카카오웹툰 회차를 열면 바로 돌아갑니다.</p>
+      <p class="sub" style="margin:12px auto 0;font-size:17px"><a href="https://blog.naver.com/lovesj201/224492113995" target="_blank" rel="noopener" style="color:var(--accent,#3b3fb6);text-decoration:underline">사진으로 보는 설치 방법 (네이버 블로그) ›</a></p>
 
       <div class="plats" id="pc" hidden>
         <div class="plat">
@@ -532,7 +533,7 @@
 
   // 스토어 버튼: 주소가 있으면 스토어로, 없으면 설치 칸으로
   if (CWS_URL) document.querySelectorAll('.store-cws').forEach(a => a.href = CWS_URL);
-  if (AMO_URL && isAndroid) document.querySelectorAll('.store-amo').forEach(a => a.href = AMO_URL);
+  if (AMO_URL && isAndroid && isFirefox) document.querySelectorAll('.store-amo').forEach(a => a.href = AMO_URL);
   if (!CWS_URL) { const a = $('addCws'); a.removeAttribute('href'); a.classList.add('off'); a.querySelector('b').textContent = '준비 중'; }
   // 폰판(AMO) 나오기 전: 폰 버튼은 "출시 예정", 폰용·폰+PC 구매는 잠금. AMO_URL만 넣으면 풀린다(buy.html의 PHONE_READY도 true로).
   if (!AMO_URL) {

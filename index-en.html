@@ -532,7 +532,7 @@
 
   // store buttons: go to the store if a URL is set, otherwise to the install section
   if (CWS_URL) document.querySelectorAll('.store-cws').forEach(a => a.href = CWS_URL);
-  if (AMO_URL && isAndroid) document.querySelectorAll('.store-amo').forEach(a => a.href = AMO_URL);
+  if (AMO_URL && isAndroid && isFirefox) document.querySelectorAll('.store-amo').forEach(a => a.href = AMO_URL);
   if (!CWS_URL) { const a = $('addCws'); a.removeAttribute('href'); a.classList.add('off'); a.querySelector('b').textContent = 'Coming soon'; }
   // before the phone (AMO) release: phone buttons say "Coming soon", phone and phone+PC purchase locked. Setting AMO_URL unlocks them (also set PHONE_READY in buy-en.html).
   if (!AMO_URL) {
