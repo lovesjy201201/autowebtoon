@@ -531,6 +531,8 @@
   .abtn{display:block;width:100%;box-sizing:border-box;text-align:center;padding:16px;border:0;border-radius:14px;background:#3B3FC4;color:#fff;font:700 17px inherit;text-decoration:none;cursor:pointer}
   @media (min-width:700px){.aflow{align-items:center}.acard{border-radius:20px}}
   .acard ol{margin:0 0 18px;padding-left:22px;font-size:15px;line-height:1.6;color:#191f28}.acard ol li{margin-bottom:4px}.acard p{margin-bottom:10px}
+  .abtn[hidden],.aok[hidden]{display:none}
+  .aok{display:block;width:100%;box-sizing:border-box;padding:15px;border:2px solid #3B3FC4;border-radius:14px;background:#fff;color:#3B3FC4;font:700 17px inherit;cursor:pointer}
   .alink{display:block;width:100%;margin-top:10px;padding:8px;border:0;background:none;color:#8b95a1;font:inherit;font-size:14px;cursor:pointer}
 </style>
 <div class="aflow" id="aflow" hidden>
@@ -619,10 +621,18 @@
   aflow.querySelector('.adots').innerHTML = '<i></i>'.repeat(LAST);
   function aShow(n) {   // n이 3이면 어느 기기든 '설치됐어요'(PC는 2번째 칸)
     if (n >= 3) n = LAST;
+    // 규칙(사장님 2026-11-27): 단계마다 1·2·3을 먼저 읽게 — 처음엔 '1·2·3 숙지했어요' 확인 단추만, 누르면 바로 그 단계 일(스토어 열기 등)을 한다
+    aflow.querySelectorAll('.aok').forEach(b => { b.hidden = false; b.nextElementSibling.hidden = true; });
     aflow.hidden = false; if (F === 'a') ls('aw_astep', n === LAST ? 'done' : String(n));   // 3(설치됐어요)은 한 번만 저절로 뜬다
     aflow.querySelectorAll('section').forEach(s => { s.hidden = stepOf(s) !== String(n); });
     aflow.querySelectorAll('.adots i').forEach((d, i) => d.classList.toggle('on', i < n));
   }
+  aflow.querySelectorAll('section .abtn').forEach(a => {
+    const ok = document.createElement('button');
+    ok.type = 'button'; ok.className = 'aok'; ok.textContent = '위 1·2·3 숙지했어요';
+    ok.addEventListener('click', () => { ok.hidden = true; a.hidden = false; a.click(); });   // 숙지 누르면 바로 그 단계로(스토어 열기 등), 돌아오면 단계 단추가 남아 있음
+    a.before(ok);
+  });
   aflow.querySelectorAll('[data-to]').forEach(b => b.addEventListener('click', () => aShow(Number(b.dataset.to))));
   $('aClose').addEventListener('click', () => { aflow.hidden = true; });
   // 확장이 처음 깔리면 ?installed=1 로 이 페이지를 연다(background.js) → 어느 기기든 '설치됐어요! 웹툰 보러 가기'
