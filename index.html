@@ -738,6 +738,29 @@
   if ($('strip')) demo($('strip'), $('fill'), $('hudText'), [10, 0, 5, 9], 0);
   if ($('strip2')) demo($('strip2'), $('fill2'), $('now2'), [9, 8, 0, 5, 4, 2, 10], 0);
 </script>
+<!-- 점검 공지(사장님 2026-11-27): 크롬 웹 스토어만 그대로. 아이폰·안드로이드·파이어폭스로 가는 단추는 '점검 중' 창. 끝나면 이 덩어리를 지운다 -->
+<style>
+  .mbar{background:#191f28;color:#fff;text-align:center;font-size:14px;line-height:1.4;padding:9px 16px}
+  .mwrap{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:16px}
+  .mwrap[hidden]{display:none}
+  .mcard{width:100%;max-width:420px;background:#fff;color:#191f28;border-radius:20px;padding:24px 20px;box-sizing:border-box}
+  .mcard h3{margin:0 0 10px;font-size:20px}.mcard p{margin:0 0 18px;font-size:16px;line-height:1.6;color:#4e5968}
+  .mcard button{display:block;width:100%;padding:15px;border:0;border-radius:14px;background:#3B3FC4;color:#fff;font:700 17px inherit;cursor:pointer}
+</style>
+<div class="mwrap" id="maint" hidden role="dialog" aria-modal="true"><div class="mcard"><h3>아이폰·안드로이드는 점검 중이에요</h3><p>더 쉽게 쓰실 수 있게 고치고 있어요. 점검이 끝나면 이 페이지에서 바로 받을 수 있어요.<br>지금은 <b>PC 크롬</b>에서 바로 쓸 수 있어요.</p><button type="button" id="maintOk">확인</button></div></div>
+<script>(function(){
+  var ua=navigator.userAgent, phone=/Android|iPhone|iPad|iPod/i.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  var bar=document.createElement('div'); bar.className='mbar'; bar.textContent='공지 · 아이폰·안드로이드는 점검 중이에요. PC 크롬은 지금 쓸 수 있어요.'; document.body.insertBefore(bar, document.body.firstChild);
+  var fl=document.getElementById('fxLine'); if(fl)fl.hidden=true;
+  var w=document.getElementById('maint'); document.getElementById('maintOk').onclick=function(){w.hidden=true};
+  function stop(e){e.preventDefault();e.stopImmediatePropagation();w.hidden=false}
+  document.addEventListener('click',function(e){
+    var a=e.target.closest&&e.target.closest('a,button'); if(!a)return;
+    var h=a.getAttribute('href')||'';
+    if(/apps\.apple\.com|addons\.mozilla\.org|play\.google\.com|^intent:|^kakaotalk:/.test(h)||a.classList.contains('store-amo')||a.classList.contains('store-ios')||a.id==='addFx'||a.id==='openFx'||a.id==='qrOpen')return stop(e);
+    if(phone&&(a.id==='ctaStart'||a.closest('.aflow')&&a.id!=='aClose'))return stop(e);
+  },true);
+})();</script>
 <script>/* 설치 단추 누른 수 세기(사장님만 봄): 브라우저마다 하루에 단추 하나당 한 번. 자동 브라우저·?me=1 사장님 브라우저는 안 셈 */
 document.addEventListener('click',function(e){try{var a=e.target.closest&&e.target.closest('a[href]');if(!a)return;var h=a.href,b='';
 if(/chromewebstore\.google\.com/.test(h))b='cws';else if(/addons\.mozilla\.org/.test(h))b='amo';else if(/^intent:/.test(h))b='fxopen';else if(/play\.google\.com\/.*org\.mozilla\.firefox/.test(h))b='fxget';else if(/apps\.apple\.com/.test(h))b='ios';
