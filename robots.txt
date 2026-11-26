@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://autowebtoon.com/sitemap.xml
