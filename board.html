@@ -68,6 +68,7 @@
   textarea { resize:vertical; }
   .f label { display:block; font-size:14px; color:var(--sub); margin:12px 0 4px; }
   .f .nm { max-width:240px; }
+  .f input.big { font-size:19px; font-weight:700; padding:12px 14px; margin-bottom:10px; }
   .bar { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:10px; flex-wrap:wrap; }
   .count { color:var(--muted); font-size:13px; }
   .msg { font-size:14px; margin:8px 0 0; min-height:1em; }
@@ -112,7 +113,7 @@
     empty: 'No posts yet. Be the first to write one.', nores: 'No posts found.', loading: 'Loading…', loadfail: 'Could not load the board.',
     fTitle: 'Title', fAll: 'Title + text', search: 'Search', searchPh: 'Search words',
     views: 'Views', comments: 'Comments', back: 'Back to list', del: 'Delete', delAsk: 'Delete this? It cannot be undone.',
-    nickT: 'Choose a nickname', nickHelp: '2–12 letters or numbers. It is shown on your posts and comments.', nickPh: 'Nickname', nickOk: 'Save', nickAs: 'Posting as', nickChange: 'change', badnick: 'Use 2–12 letters, numbers or _ (some words are not allowed).', taken: 'That nickname is taken. Try another.', nonick: 'Please choose a nickname first.', tTitle: 'Title', tText: 'Text', post: 'Post', cancel: 'Cancel', cmtPh: 'Write a comment', cmtSend: 'Comment',
+    nickT: 'Choose a nickname', nickHelp: '2–12 letters or numbers. It is shown on your posts and comments.', nickPh: 'Nickname', nickOk: 'Save', nickAs: 'Posting as', nickChange: 'change', badnick: 'Use 2–12 letters, numbers or _ (some words are not allowed).', taken: 'That nickname is taken. Try another.', nonick: 'Please choose a nickname first.', tTitle: 'Title', tText: 'Text', post: 'Post', cancel: 'Cancel', cmtPh: 'Write a comment', titlePh: 'Title', textPh: 'Write your post here', cmtSend: 'Comment',
     signin: 'Sign in to write. Anyone can read without signing in.', naver: 'Sign in with Naver', out: 'Sign out', lfail: 'Could not sign in. Please try again.',
     short: 'Please write a little more.', link: 'Posts with links (http, www, .com…) cannot be posted.', limit: 'Daily limit reached (5 posts, 20 comments a day).',
     login: 'Please sign in again.', gone: 'This post was deleted.', notmine: 'You can only delete your own posts.', fail: 'Something went wrong. Please try again.',
@@ -122,7 +123,7 @@
     empty: '아직 글이 없어요. 처음으로 남겨 주세요.', nores: '찾는 글이 없어요.', loading: '불러오는 중…', loadfail: '게시판을 불러오지 못했어요.',
     fTitle: '제목', fAll: '제목+내용', search: '찾기', searchPh: '찾을 말을 넣어 주세요',
     views: '조회', comments: '댓글', back: '목록으로', del: '지우기', delAsk: '지울까요? 되돌릴 수 없어요.',
-    nickT: '닉네임 정하기', nickHelp: '한글·영문·숫자 2~12자. 내 글과 댓글에 이 닉네임이 찍혀요.', nickPh: '닉네임', nickOk: '정하기', nickAs: '닉네임', nickChange: '바꾸기', badnick: '한글·영문·숫자·_ 2~12자로 정해 주세요 (못 쓰는 말이 있어요).', taken: '이미 있는 닉네임이에요. 다른 걸로 해 주세요.', nonick: '먼저 닉네임을 정해 주세요.', tTitle: '제목', tText: '내용', post: '올리기', cancel: '취소', cmtPh: '댓글을 써 주세요', cmtSend: '댓글 달기',
+    nickT: '닉네임 정하기', nickHelp: '한글·영문·숫자 2~12자. 내 글과 댓글에 이 닉네임이 찍혀요.', nickPh: '닉네임', nickOk: '정하기', nickAs: '닉네임', nickChange: '바꾸기', badnick: '한글·영문·숫자·_ 2~12자로 정해 주세요 (못 쓰는 말이 있어요).', taken: '이미 있는 닉네임이에요. 다른 걸로 해 주세요.', nonick: '먼저 닉네임을 정해 주세요.', tTitle: '제목', tText: '내용', post: '올리기', cancel: '취소', cmtPh: '댓글을 써 주세요', titlePh: '제목을 써 주세요', textPh: '내용을 써 주세요', cmtSend: '댓글 달기',
     signin: '글과 댓글을 쓰려면 로그인해 주세요. 읽기는 로그인 없이 돼요.', naver: '네이버로 로그인', out: '로그아웃', lfail: '로그인하지 못했어요. 다시 해 주세요.',
     short: '조금만 더 써 주세요.', link: '주소(http·www·.com 등)가 든 글은 올릴 수 없어요.', limit: '오늘은 더 쓸 수 없어요 (하루 글 5개, 댓글 20개).',
     login: '다시 로그인해 주세요.', gone: '지워진 글이에요.', notmine: '내가 쓴 글만 지울 수 있어요.', fail: '잘 안 됐어요. 다시 해 주세요.',
@@ -307,7 +308,8 @@
     const msg = el('p', 'msg bad'); const bar = el('div', 'bar'); const right = el('span');
     const cancel = el('a', 'btn ghost', T.cancel); cancel.href = link({}); const sb = el('button', 'btn', T.post);
     right.append(cancel, ' ', sb); bar.append(cnt, right);
-    fm.append(asLine(), lab(T.tTitle), ti, lab(T.tText), tx, hp, bar, msg);
+    ti.placeholder = T.titlePh; tx.placeholder = T.textPh; ti.className = 'big';
+    fm.append(ti, tx, hp, bar, msg, asLine());
     fm.onsubmit = async (e) => {
       e.preventDefault(); sb.disabled = true; msg.textContent = '';
       const r = await send('/board', { title: ti.value, text: tx.value, website: hpi.value, lang: L });
