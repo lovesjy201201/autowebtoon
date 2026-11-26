@@ -632,15 +632,21 @@
     <section data-f="n" data-s="1"><h3>1. Open in a browser</h3><p>You can't install inside this app. Move to Chrome.</p>
       <ol><li>⋮ menu &gt; [Open in browser] or [Open in Chrome]</li><li>No menu? [Copy link] &gt; paste into Chrome</li></ol>
       <button type="button" class="abtn" id="nCopy">Copy link</button></section>
+    <section data-f="i" data-s="1"><h3>1. Get the AutoWebtoon app</h3><p>On iPhone, get the app and turn it on in Safari.</p>
+      <ol><li>[Get it on the App Store] &gt; [Get] &gt; back to Safari</li></ol>
+      <a class="abtn" id="iGet" href="https://apps.apple.com/app/id6838214464">Get it on the App Store</a><button type="button" class="alink" data-to="2">I already have the app</button></section>
+    <section data-f="i" data-s="2"><h3>2. Turn it on in Safari</h3><p>Turn it on once after you get the app.</p>
+      <ol><li>[Settings] &gt; [Apps] &gt; [Safari] &gt; [Extensions] &gt; [AutoWebtoon] on</li><li>Website permissions [Allow] &gt; back to Safari</li></ol>
+      <a class="abtn" href="https://www.webtoons.com/en/originals">Done</a></section>
     <button type="button" class="alink" id="aClose">Close</button>
   </div>
 </div>
 <script>(function(){
   var AMO='https://addons.mozilla.org/en-US/android/addon/autowebtoon/', FX='org.mozilla.firefox', FXP='https://play.google.com/store/apps/details?id='+FX;
-  var ua=navigator.userAgent, isAndroid=/Android/i.test(ua), isFx=/Firefox\//.test(ua), inApp=/KAKAOTALK|NAVER\(inapp|Instagram|FBAN|FBAV|Line\/|DaumApps|everytimeApp/i.test(ua);
-  if(!isAndroid)return;
+  var ua=navigator.userAgent, isAndroid=/Android/i.test(ua), isIOS=/iPhone|iPad|iPod/i.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1), isFx=/Firefox\//.test(ua), inApp=/KAKAOTALK|NAVER\(inapp|Instagram|FBAN|FBAV|Line\/|DaumApps|everytimeApp/i.test(ua);
+  if(!isAndroid&&!isIOS)return;
   var $=function(i){return document.getElementById(i)}, fl=$('aflow'), QS=new URLSearchParams(location.search), page=location.origin+location.pathname;
-  var F=inApp?(/KAKAOTALK/i.test(ua)?'k':'n'):'a', LAST=F==='a'?3:1;
+  var F=isIOS?'i':inApp?(/KAKAOTALK/i.test(ua)?'k':'n'):'a', LAST=F==='a'?3:F==='i'?2:1;
   var ls=function(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}};
   fl.querySelector('.adots').innerHTML=new Array(LAST+1).join('<i></i>');
   function show(n){
@@ -661,6 +667,7 @@
   var startUrl=page+'?start=1';
   $('kOpen').href='kakaotalk://web/openExternal?url='+encodeURIComponent(startUrl);
   $('nCopy').addEventListener('click',function(e){try{navigator.clipboard.writeText(startUrl).then(function(){e.target.textContent='Copied. Paste it into Chrome'})}catch(_){e.target.textContent=startUrl}});
+  if(isIOS){var leftApp=false;$('iGet').addEventListener('click',function(){leftApp=true});document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible'&&leftApp){leftApp=false;show(2)}});document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('.store-ios');if(!a||a.closest('.aflow')||document.getElementById('maint'))return;e.preventDefault();e.stopImmediatePropagation();show(1)},true);$('aClose').addEventListener('click',function(){fl.hidden=true});return;}
   $('aFxGet').href=FXP;
   var left=false; $('aFxGet').addEventListener('click',function(){left=true});
   function back(){if(isFx&&ls('aw_astep')==='amo')done()}
