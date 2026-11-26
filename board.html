@@ -223,7 +223,7 @@
   async function showList() {
     const p = Q.get('p') || '1', q = Q.get('q') || '', f = Q.get('f') === 'a' ? 'a' : 't';
     let d;
-    try { d = await (await fetch(API + '/board?' + new URLSearchParams({ p, q, f }), { cache: 'no-store' })).json(); } catch (e) { d = null; }
+    try { d = await (await fetch(API + '/board?' + new URLSearchParams({ p, q, f, lang: L }), { cache: 'no-store' })).json(); } catch (e) { d = null; }
     app.textContent = '';
     const top = el('div', 'top'); const h = el('h1', '', T.board);
     if (d && d.ok) h.append(el('small', '', '(' + (d.total + d.notices.length).toLocaleString() + ')'));
