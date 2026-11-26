@@ -287,6 +287,11 @@
       <p>컷마다 화면에 맞춰 세우고, 대사를 다 읽을 만큼 기다렸다가 알아서 넘겨 줍니다.</p>
       <div class="ctas">
         <a class="cta" id="ctaStart" href="#install">10회차 무료로 시작하기 →</a>
+        <dialog id="fxNote" style="border:0;border-radius:16px;padding:22px 20px;max-width:320px;width:calc(100% - 32px);background:#fff;color:#191f28;text-align:left">
+          <p style="margin:0 0 16px;font-size:16px;line-height:1.55;font-weight:600;color:#191f28;opacity:1;text-shadow:none">폰 크롬에서는 오토웹툰이 안 돌아가서, 파이어폭스 브라우저로 열어요. 파이어폭스가 없으면 플레이 스토어에서 먼저 받아요.</p>
+          <a id="fxNoteGo" href="#" style="display:block;text-align:center;padding:14px;border-radius:12px;background:#3B3FC4;color:#fff;font-weight:700;text-decoration:none">파이어폭스로 열기</a>
+          <button type="button" onclick="this.closest('dialog').close()" style="display:block;width:100%;margin-top:8px;padding:10px;border:0;background:none;color:#8b95a1;font:inherit">닫기</button>
+        </dialog>
         <a class="cta2" href="https://www.youtube.com/@autowebtoon/shorts" target="_blank" rel="noopener">▶ 사용법 영상</a>
       </div>
       <p class="where">PC 크롬 · 안드로이드 파이어폭스 · 아이폰 사파리에서 써요 · <a href="#install">설치 방법</a></p>
@@ -573,7 +578,12 @@
   if (cta) {
     if (isIOS) cta.href = 'https://apps.apple.com/app/id6838214464';
     else if (isAndroid && isFirefox && AMO_URL) cta.href = AMO_URL;
-    else if (isAndroid && !inApp) cta.href = $('openFx').href;
+    else if (isAndroid && !inApp) {
+      // 안드로이드 크롬: 말없이 파이어폭스로 튀면 "이게 뭐지" 한다(사장님 2026-11-27) → 한 줄 설명 뒤 [파이어폭스로 열기]
+      cta.href = '#';
+      cta.addEventListener('click', (e) => { e.preventDefault(); $('fxNote').showModal(); });
+      $('fxNoteGo').href = $('openFx').href;
+    }
     else if (isAndroid) cta.href = '#install';
     else if (CWS_URL) cta.href = CWS_URL;
   }
