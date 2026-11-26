@@ -761,7 +761,7 @@
 <div class="mwrap" id="maint" hidden role="dialog" aria-modal="true"><div class="mcard"><h3>아이폰은 점검 중이에요</h3><p>더 쉽게 쓰실 수 있게 고치고 있어요. 점검이 끝나면 이 페이지에서 바로 받을 수 있어요.<br>지금은 <b>PC 크롬</b>과 <b>안드로이드 파이어폭스</b>에서 바로 쓸 수 있어요.</p><button type="button" id="maintOk">확인</button></div></div>
 <script>(function(){
   var ua=navigator.userAgent, phone=/iPhone|iPad|iPod/i.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
-  var bar=document.createElement('div'); bar.className='mbar'; bar.textContent='공지 · 아이폰은 점검 중이에요. PC 크롬·안드로이드는 지금 쓸 수 있어요.'; document.body.insertBefore(bar, document.body.firstChild);
+  var bar=document.createElement('div'); bar.className='mbar'; bar.innerHTML='공지 · 아이폰은 점검 중이에요. PC 크롬·안드로이드는 지금 쓸 수 있어요. · <a href="board.html?lang=ko" style="color:#fff;font-weight:700;text-decoration:underline">자유게시판 이벤트 중</a>'; document.body.insertBefore(bar, document.body.firstChild);
     var w=document.getElementById('maint'); document.getElementById('maintOk').onclick=function(){w.hidden=true};
   function stop(e){e.preventDefault();e.stopImmediatePropagation();w.hidden=false}
   document.addEventListener('click',function(e){
