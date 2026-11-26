@@ -286,7 +286,7 @@
       <h1>누워서 보는 웹툰,<br>이제 손 안 대고</h1>
       <p>컷마다 화면에 맞춰 세우고, 대사를 다 읽을 만큼 기다렸다가 알아서 넘겨 줍니다.</p>
       <div class="ctas">
-        <a class="cta" href="login.html">10회차 무료로 시작하기 →</a>
+        <a class="cta" id="ctaStart" href="#install">10회차 무료로 시작하기 →</a>
         <a class="cta2" href="https://www.youtube.com/@autowebtoon/shorts" target="_blank" rel="noopener">▶ 사용법 영상</a>
       </div>
       <p class="where">PC 크롬 · 안드로이드 파이어폭스 · 아이폰 사파리에서 써요 · <a href="#install">설치 방법</a></p>
@@ -566,6 +566,16 @@
   } else {
     $('pc').hidden = false;
     try { new QRCode($('qr'), { text: location.href.replace(/#.*$/, ''), width: 96, height: 96, correctLevel: QRCode.CorrectLevel.M }); } catch (e) {}
+  }
+  // '10회차 무료로 시작하기'(사장님 2026-11-26): 로그인 말고 바로 설치. 안드로이드 크롬 → 파이어폭스로 이 페이지 열기(없으면 플레이 스토어 파이어폭스),
+  // 안드로이드 파이어폭스 → 부가기능, 아이폰 → 앱스토어, PC → 크롬 웹 스토어. 로그인은 설치한 뒤 확장 안에서 한 번만.
+  const cta = $('ctaStart');
+  if (cta) {
+    if (isIOS) cta.href = 'https://apps.apple.com/app/id6838214464';
+    else if (isAndroid && isFirefox && AMO_URL) cta.href = AMO_URL;
+    else if (isAndroid && !inApp) cta.href = $('openFx').href;
+    else if (isAndroid) cta.href = '#install';
+    else if (CWS_URL) cta.href = CWS_URL;
   }
   $('copy').addEventListener('click', async (e) => {
     try { await navigator.clipboard.writeText(location.href.replace(/#.*$/, '')); e.target.textContent = '복사했어요. 파이어폭스 주소창에 붙여 넣으세요'; }
