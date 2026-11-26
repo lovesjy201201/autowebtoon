@@ -532,15 +532,13 @@
 </style>
 <div class="aflow" id="aflow" hidden>
   <div class="acard">
-    <div class="adots"><i></i><i></i><i></i><i></i></div>
+    <div class="adots"><i></i><i></i><i></i></div>
     <section data-s="1"><h3>1. 파이어폭스 받기</h3><p>오토웹툰은 파이어폭스에서 작동을 해요. 파이어폭스를 받고 이 화면으로 돌아오세요.</p>
       <a class="abtn" id="aFxGet" href="#">파이어폭스 받기</a><button type="button" class="alink" data-to="2">이미 있어요</button></section>
-    <section data-s="2"><h3>2. 오토웹툰 설치</h3><p>파이어폭스에서 설치 화면이 열려요. 'Firefox에 추가' → '추가'를 누른 뒤, 뒤로 가기를 누르면 다음 안내가 나와요.</p>
+    <section data-s="2"><h3>2. 오토웹툰 설치</h3><p>파이어폭스에서 설치 화면이 열려요. 'Firefox에 추가' → '추가'를 누르면 다음 안내가 바로 떠요.</p>
       <a class="abtn" id="aInstall" href="#">오토웹툰 설치</a></section>
-    <section data-s="3"><h3>3. 켜졌는지 확인</h3><p>파이어폭스 오른쪽 위 메뉴(⋮) → 부가 기능에서 오토웹툰이 켜져 있으면 돼요.</p>
-      <button type="button" class="abtn" data-to="4">켜져 있어요</button></section>
-    <section data-s="4"><h3>4. 웹툰 보러 가기</h3><p>회차가 열리면 화면을 한 번 누르면 시작해요. 처음 10회차는 무료예요.</p>
-      <a class="abtn" href="https://m.comic.naver.com/webtoon/detail?titleId=769209&amp;no=1">화산귀환 1화 보기</a></section>
+    <section data-s="3"><h3>설치됐어요! 웹툰 보러 가기</h3><p>회차가 열리면 화면을 한 번 누르면 시작해요. 처음 10회차는 무료예요.</p>
+      <a class="abtn" id="aToon" href="https://m.comic.naver.com/webtoon/detail?titleId=769209&amp;no=1">화산귀환 1화 보기</a></section>
     <button type="button" class="alink" id="aClose">닫기</button>
   </div>
 </div>
@@ -601,12 +599,18 @@
   const aflow = $('aflow');
   const ls = (k, v) => { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch { return null; } };
   function aShow(n) {
-    aflow.hidden = false; ls('aw_astep', String(n));
+    aflow.hidden = false; ls('aw_astep', n === 3 ? 'done' : String(n));   // 3(설치됐어요)은 한 번만 저절로 뜬다
     aflow.querySelectorAll('section').forEach(s => { s.hidden = s.dataset.s !== String(n); });
     aflow.querySelectorAll('.adots i').forEach((d, i) => d.classList.toggle('on', i < n));
   }
   aflow.querySelectorAll('[data-to]').forEach(b => b.addEventListener('click', () => aShow(Number(b.dataset.to))));
   $('aClose').addEventListener('click', () => { aflow.hidden = true; });
+  // 확장이 처음 깔리면 ?installed=1 로 이 페이지를 연다(background.js) → 어느 기기든 '설치됐어요! 웹툰 보러 가기'
+  if (new URLSearchParams(location.search).get('installed') === '1') {
+    if (!isAndroid && !isIOS) $('aToon').href = 'https://comic.naver.com/webtoon/detail?titleId=769209&no=1';
+    history.replaceState(null, '', location.pathname);
+    aShow(3);
+  }
   if (isAndroid) {
     const QS = new URLSearchParams(location.search);
     const page = location.origin + location.pathname;

@@ -599,5 +599,15 @@ if(/chromewebstore\.google\.com/.test(h))b='cws';else if(/addons\.mozilla\.org/.
 if(!b||navigator.webdriver||localStorage.getItem('aw_me')==='1')return;var d=new Date(Date.now()+324e5).toISOString().slice(0,10),k='aw_t_'+b;if(localStorage.getItem(k)===d)return;localStorage.setItem(k,d);
 var r='';try{var x=JSON.parse(localStorage.getItem('aw_ref')||'null');if(x&&Date.now()-x.t<2592e6)r=x.r}catch(_){}
 navigator.sendBeacon('https://autowebtoon-key.lovesjy201.workers.dev/tap?b='+b+'&ref='+encodeURIComponent(r))}catch(_){}},true);</script>
+<!-- 확장이 처음 깔리면 ?installed=1 로 연다(background.js) → '설치됐어요! 웹툰 보러 가기' (사장님 2026-11-27) -->
+<div id="awInst" style="position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.55);display:none;align-items:flex-end;justify-content:center">
+  <div style="width:100%;max-width:480px;background:#fff;color:#191f28;border-radius:20px 20px 0 0;padding:22px 20px 26px;box-sizing:border-box">
+    <h3 style="margin:0 0 8px;font-size:20px;color:#191f28">Installed! Go read a webtoon</h3>
+    <p style="margin:0 0 18px;font-size:16px;line-height:1.55;color:#4e5968">When the episode opens, tap the page once to start. Your first 10 episodes are free.</p>
+    <a id="awInstGo" href="https://www.webtoons.com/en/action/eleceed/episode-1/viewer?title_no=1571&amp;episode_no=1" style="display:block;text-align:center;padding:16px;border-radius:14px;background:#3B3FC4;color:#fff;font-weight:700;text-decoration:none">Read Eleceed episode 1</a>
+    <button type="button" onclick="document.getElementById('awInst').style.display='none'" style="display:block;width:100%;margin-top:10px;padding:8px;border:0;background:none;color:#8b95a1;font:inherit;font-size:14px">Close</button>
+  </div>
+</div>
+<script>if(new URLSearchParams(location.search).get('installed')==='1'){var w=document.getElementById('awInst');w.style.display='flex';history.replaceState(null,'',location.pathname)}</script>
 </body>
 </html>
