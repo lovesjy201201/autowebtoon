@@ -588,5 +588,11 @@
   if ($('strip')) demo($('strip'), $('fill'), $('hudText'), [15, 0, 11, 16], 0);
   if ($('strip2')) demo($('strip2'), $('fill2'), $('now2'), [16, 17, 0, 9, 11, 9, 14], 0);
 </script>
+<script>/* 설치 단추 누른 수 세기(사장님만 봄): 브라우저마다 하루에 단추 하나당 한 번. 자동 브라우저·?me=1 사장님 브라우저는 안 셈 */
+document.addEventListener('click',function(e){try{var a=e.target.closest&&e.target.closest('a[href]');if(!a)return;var h=a.href,b='';
+if(/chromewebstore\.google\.com/.test(h))b='cws';else if(/addons\.mozilla\.org/.test(h))b='amo';else if(/^intent:/.test(h))b='fxopen';else if(/play\.google\.com\/.*org\.mozilla\.firefox/.test(h))b='fxget';else if(/apps\.apple\.com/.test(h))b='ios';
+if(!b||navigator.webdriver||localStorage.getItem('aw_me')==='1')return;var d=new Date(Date.now()+324e5).toISOString().slice(0,10),k='aw_t_'+b;if(localStorage.getItem(k)===d)return;localStorage.setItem(k,d);
+var r='';try{var x=JSON.parse(localStorage.getItem('aw_ref')||'null');if(x&&Date.now()-x.t<2592e6)r=x.r}catch(_){}
+navigator.sendBeacon('https://autowebtoon-key.lovesjy201.workers.dev/tap?b='+b+'&ref='+encodeURIComponent(r))}catch(_){}},true);</script>
 </body>
 </html>
