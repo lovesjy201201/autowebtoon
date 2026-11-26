@@ -581,7 +581,8 @@
     else if (isAndroid && !inApp) {
       // 안드로이드 크롬: 말없이 파이어폭스로 튀면 "이게 뭐지" 한다(사장님 2026-11-27) → 한 줄 설명 뒤 [파이어폭스로 열기]
       cta.href = '#';
-      cta.addEventListener('click', (e) => { e.preventDefault(); $('fxNote').showModal(); });
+      // 한 줄 보여 주고 저절로 넘어간다(사장님 "그 전에 한 줄만 남기라고"). 단추는 안 넘어갔을 때 다시 누르는 용
+      cta.addEventListener('click', (e) => { e.preventDefault(); $('fxNote').showModal(); setTimeout(() => $('fxNoteGo').click(), 1800); });
       // 파이어폭스에서 홈페이지 말고 바로 설치 화면(AMO)이 뜨게(사장님 "설치가 떠야지"). 파이어폭스가 없으면 플레이 스토어
       $('fxNoteGo').href = AMO_URL ? 'intent://' + AMO_URL.replace(/^https?:\/\//, '') + '#Intent;scheme=https;package=' + FX_PACKAGE
         + ';S.browser_fallback_url=' + encodeURIComponent(FX_PLAY) + ';end' : $('openFx').href;
