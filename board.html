@@ -211,6 +211,9 @@
     catch (e) { return { ok: false }; }
   }
 
+  const delList = () => { try { const x = JSON.parse(localStorage.getItem('aw_bdel') || '[]'); return x.filter((e) => Date.now() - e.t < 3 * 60e3).map((e) => e.id); } catch (e) { return []; } };
+  const markDel = (id) => { try { const x = JSON.parse(localStorage.getItem('aw_bdel') || '[]').filter((e) => Date.now() - e.t < 3 * 60e3); x.push({ id, t: Date.now() }); localStorage.setItem('aw_bdel', JSON.stringify(x)); } catch (e) {} };
+
   // ---- 목록 ----
   async function showList() {
     const p = Q.get('p') || '1', q = Q.get('q') || '', f = Q.get('f') === 'a' ? 'a' : 't';
@@ -222,7 +225,9 @@
     const w = el('a', 'btn', '✎ ' + T.write); w.href = link({ write: '1' });
     top.append(h, w); app.append(top);
     if (!d || !d.ok) { app.append(el('p', 'empty', T.loadfail)); return; }
-    const rows = [...d.notices.map((x) => ({ ...x, notice: true })), ...d.posts];
+    // 저장소 목록은 1분쯤 늦게 바뀐다 → 방금 지운 글은 목록이 따라올 때까지 이 브라우저에서 빼고 보여 준다
+    const gone = delList();
+    const rows = [...d.notices.map((x) => ({ ...x, notice: true })), ...d.posts].filter((r) => !gone.includes(r.id));
     if (!rows.length) app.append(el('p', 'empty', q ? T.nores : T.empty));
     for (const r of rows) {
       const a = el('a', 'row' + (r.notice ? ' notice' : '')); a.href = link({ id: r.id });
@@ -268,7 +273,7 @@
     const meta = el('div', 'meta');
     meta.append(el('span', '', (p.notice ? T.admin : (p.name || T.guest)) + ' · ' + day(p.t)));
     const right = el('span', '', T.views + ' ' + p.views + ' · ' + T.comments + ' ' + d.comments.length);
-    if (p.mine) { const del = el('button', 'btn bad', T.del); del.onclick = async () => { if (!confirm(T.delAsk)) return; const r = await send('/board/delete', { id }); if (r.ok) location.href = link({}); else alert(T[r.reason] || T.fail); }; right.append(' ', del); }
+    if (p.mine) { const del = el('button', 'btn bad', T.del); del.onclick = async () => { if (!confirm(T.delAsk)) return; const r = await send('/board/delete', { id }); if (r.ok) { markDel(id); location.href = link({}); } else alert(T[r.reason] || T.fail); }; right.append(' ', del); }
     meta.append(right);
     art.append(h2, meta, el('div', 'body', p.text));
     // 댓글
