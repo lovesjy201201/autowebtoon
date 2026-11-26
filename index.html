@@ -289,7 +289,7 @@
         <a class="cta" id="ctaStart" href="#install">10회차 무료로 시작하기 →</a>
         <dialog id="fxNote" style="border:0;border-radius:16px;padding:22px 20px;max-width:320px;width:calc(100% - 32px);background:#fff;color:#191f28;text-align:left">
           <p style="margin:0 0 16px;font-size:16px;line-height:1.55;font-weight:600;color:#191f28;opacity:1;text-shadow:none">오토웹툰은 파이어폭스에서 작동을 해요.</p>
-          <a id="fxNoteGo" href="#" style="display:block;text-align:center;padding:14px;border-radius:12px;background:#3B3FC4;color:#fff;font-weight:700;text-decoration:none">파이어폭스로 열기</a>
+          <a id="fxNoteGo" href="#" style="display:block;text-align:center;padding:14px;border-radius:12px;background:#3B3FC4;color:#fff;font-weight:700;text-decoration:none">파이어폭스에서 설치하기</a>
           <button type="button" onclick="this.closest('dialog').close()" style="display:block;width:100%;margin-top:8px;padding:10px;border:0;background:none;color:#8b95a1;font:inherit">닫기</button>
         </dialog>
         <a class="cta2" href="https://www.youtube.com/@autowebtoon/shorts" target="_blank" rel="noopener">▶ 사용법 영상</a>
@@ -582,7 +582,9 @@
       // 안드로이드 크롬: 말없이 파이어폭스로 튀면 "이게 뭐지" 한다(사장님 2026-11-27) → 한 줄 설명 뒤 [파이어폭스로 열기]
       cta.href = '#';
       cta.addEventListener('click', (e) => { e.preventDefault(); $('fxNote').showModal(); });
-      $('fxNoteGo').href = $('openFx').href;
+      // 파이어폭스에서 홈페이지 말고 바로 설치 화면(AMO)이 뜨게(사장님 "설치가 떠야지"). 파이어폭스가 없으면 플레이 스토어
+      $('fxNoteGo').href = AMO_URL ? 'intent://' + AMO_URL.replace(/^https?:\/\//, '') + '#Intent;scheme=https;package=' + FX_PACKAGE
+        + ';S.browser_fallback_url=' + encodeURIComponent(FX_PLAY) + ';end' : $('openFx').href;
     }
     else if (isAndroid) cta.href = '#install';
     else if (CWS_URL) cta.href = CWS_URL;
