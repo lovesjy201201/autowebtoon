@@ -20,10 +20,33 @@
   a { color:inherit; text-decoration:none; }
   button { font:inherit; cursor:pointer; }
   [hidden] { display:none !important; }
+  /* 윗줄: 홈페이지(index.html)와 같은 모양 */
   header { border-bottom:1px solid var(--line); }
-  header .in { max-width:860px; margin:0 auto; padding:14px 16px; display:flex; align-items:center; gap:10px; }
-  header img { width:30px; height:30px; border-radius:8px; }
-  header a { font-weight:700; }
+  header .wrap { max-width:1200px; margin:0 auto; padding:0 24px; height:64px; display:flex; align-items:center; }
+  .logo { display:flex; align-items:center; gap:8px; font-weight:700; font-size:19px; letter-spacing:-.01em; white-space:nowrap; }
+  .logo img { width:28px; height:28px; border-radius:7px; }
+  header nav { display:flex; gap:36px; margin:0 auto; }
+  header nav a { color:var(--sub); font-size:15px; font-weight:500; }
+  header nav a:hover { color:var(--ink); }
+  .boardlink { margin-right:14px; font-size:14px; font-weight:600; white-space:nowrap; }
+  .boardlink:hover { text-decoration:underline; }
+  .lang { display:inline-flex; align-items:center; gap:6px; margin-right:16px; font-size:13px; color:var(--muted); white-space:nowrap; }
+  .lang b { color:var(--ink); font-weight:600; }
+  .lang a { color:var(--sub); }
+  .lang a:hover { color:var(--ink); text-decoration:underline; }
+  .pill { display:inline-flex; align-items:center; height:36px; padding:0 16px; border-radius:10px; background:var(--soft); font-size:14px; font-weight:600; white-space:nowrap; }
+  .pill:hover { background:var(--line); }
+  @media (max-width:899px) {
+    header nav { display:none; }
+    .boardlink { margin-left:auto; padding-left:12px; margin-right:10px; font-size:13px; }
+    .lang b, .lang > span { display:none; }
+    .lang { margin-right:10px; font-size:12px; gap:4px; }
+  }
+  @media (max-width:420px) {
+    header .wrap { padding:0 16px; }
+    .logo { font-size:17px; gap:6px; }
+    .pill { padding:0 12px; }
+  }
   main { max-width:860px; margin:0 auto; padding:24px 16px 80px; }
 
   .top { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:0 0 14px; border-bottom:2px solid var(--ink); }
@@ -95,7 +118,13 @@
 </style>
 </head>
 <body>
-<header><div class="in"><img src="icon-128.png" alt=""><a id="home" href="index.html">오토웹툰</a></div></header>
+<header><div class="wrap">
+  <a class="logo" id="home" href="index.html"><img src="icon-128.png" alt=""><span id="brand">오토웹툰</span></a>
+  <nav id="nav"></nav>
+  <a class="boardlink" id="hboard"></a>
+  <span class="lang" id="hlang"></span>
+  <a class="pill" id="hinstall"></a>
+</div></header>
 <main id="app"><p class="empty" id="loading">불러오는 중…</p></main>
 <footer><div class="in"><span id="foot"></span> · <a id="priv" href="privacy.html"></a></div></footer>
 
@@ -137,7 +166,19 @@
   const $ = (id) => document.getElementById(id);
   const app = $('app');
   document.documentElement.lang = L; document.title = T.title;
-  $('home').textContent = T.home; $('home').href = en ? 'index-en.html' : 'index.html';
+  // 윗줄: 홈페이지 메뉴 그대로. 언어를 바꾸면 그 언어 게시판으로
+  const HOME = en ? 'index-en.html' : 'index.html';
+  $('brand').textContent = T.home; $('home').href = HOME;
+  for (const [t, h] of en ? [['How it works', '#how'], ['Install', '#install'], ['FAQ', '#faq']]
+      : [['사용법', 'https://www.youtube.com/@autowebtoon/shorts'], ['작동 방식', '#how'], ['설치', '#install'], ['자주 묻는 질문', '#faq']]) {
+    const a = document.createElement('a'); a.textContent = t; a.href = h[0] === '#' ? HOME + h : h;
+    if (h[0] !== '#') { a.target = '_blank'; a.rel = 'noopener'; }
+    $('nav').append(a);
+  }
+  $('hboard').textContent = en ? 'Board' : '자유게시판'; $('hboard').href = 'board.html?lang=' + L;
+  $('hlang').innerHTML = en ? '<a href="board.html?lang=ko" lang="ko">한국어</a><span aria-hidden="true">·</span><b>English</b>'
+    : '<b>한국어</b><span aria-hidden="true">·</span><a href="board.html?lang=en" lang="en">English</a>';
+  $('hinstall').textContent = en ? 'Install' : '설치하기'; $('hinstall').href = HOME + '#install';
   $('foot').textContent = T.foot; $('priv').textContent = T.priv;
   const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
   const link = (params) => { const u = new URLSearchParams({ lang: L, ...params }); return 'board.html?' + u; };
