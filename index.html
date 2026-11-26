@@ -286,7 +286,7 @@
       <h1>누워서 보는 웹툰,<br>이제 손 안 대고</h1>
       <p>컷마다 화면에 맞춰 세우고, 대사를 다 읽을 만큼 기다렸다가 알아서 넘겨 줍니다.</p>
       <div class="ctas">
-        <a class="cta" id="ctaStart" href="#install">10회차 무료로 시작하기 →</a>
+        <a class="cta" id="ctaStart" href="#install">설치 후 시작하기 →</a>
         <a class="cta2" href="https://www.youtube.com/@autowebtoon/shorts" target="_blank" rel="noopener">▶ 사용법 영상</a>
       </div>
       <p id="fxLine" hidden style="margin:12px 0 0;font-weight:700">오토웹툰은 파이어폭스에서 작동을 해요.</p>
@@ -520,7 +520,8 @@
   </div>
 </footer>
 
-<!-- 안드로이드 단계 창(사장님 2026-11-27): 1 파이어폭스 받기 → 2 오토웹툰 설치 → 3 켜졌는지 확인 → 4 웹툰 보러 가기. 한 창에 할 일 하나 -->
+<!-- 설치 단계 창(사장님 2026-11-27 "설치 후 시작하기를 단계별로 창이 뜨면서 바로"): '설치 후 시작하기'를 누르면 기기별로 한 창에 할 일 하나.
+     안드로이드(a): 1 파이어폭스 받기 → 2 오토웹툰 설치 → 3 설치됐어요 · 아이폰(i): 1 앱 받기 → 2 사파리에서 켜기 → 3 웹툰 보기 · PC(p): 1 크롬에 추가 → 2 설치됐어요 -->
 <style>
   .aflow{position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center}
   .aflow[hidden]{display:none}
@@ -528,16 +529,30 @@
   .adots{display:flex;gap:6px;margin-bottom:14px}.adots i{width:28px;height:4px;border-radius:2px;background:#e5e8eb}.adots i.on{background:#3B3FC4}
   .acard h3{margin:0 0 8px;font-size:20px;color:#191f28}.acard p{margin:0 0 18px;font-size:16px;line-height:1.55;color:#4e5968}
   .abtn{display:block;width:100%;box-sizing:border-box;text-align:center;padding:16px;border:0;border-radius:14px;background:#3B3FC4;color:#fff;font:700 17px inherit;text-decoration:none;cursor:pointer}
+  @media (min-width:700px){.aflow{align-items:center}.acard{border-radius:20px}}
+  .acard ol{margin:0 0 18px;padding-left:22px;font-size:15px;line-height:1.6;color:#191f28}.acard ol li{margin-bottom:4px}.acard p{margin-bottom:10px}
   .alink{display:block;width:100%;margin-top:10px;padding:8px;border:0;background:none;color:#8b95a1;font:inherit;font-size:14px;cursor:pointer}
 </style>
 <div class="aflow" id="aflow" hidden>
   <div class="acard">
-    <div class="adots"><i></i><i></i><i></i></div>
-    <section data-s="1"><h3>1. 파이어폭스 받기</h3><p>오토웹툰은 파이어폭스에서 작동을 해요. 파이어폭스를 받고 이 화면으로 돌아오세요.</p>
-      <a class="abtn" id="aFxGet" href="#">파이어폭스 받기</a><button type="button" class="alink" data-to="2">이미 있어요</button></section>
-    <section data-s="2"><h3>2. 오토웹툰 설치</h3><p>파이어폭스에서 설치 화면이 열려요. 'Firefox에 추가' → '추가'를 누르면 다음 안내가 바로 떠요.</p>
+    <div class="adots"></div>
+    <section data-f="a" data-s="1"><h3>1. 파이어폭스 받기</h3><p>오토웹툰은 폰에서 파이어폭스 브라우저로 작동해요.</p>
+      <ol><li>아래 [파이어폭스 받기]를 누르면 플레이 스토어가 열려요.</li><li>[설치]를 누르고 다 깔릴 때까지 기다려요.</li><li>뒤로 가기로 이 화면에 돌아오면 2단계가 저절로 떠요.</li></ol>
+      <a class="abtn" id="aFxGet" href="#">파이어폭스 받기</a><button type="button" class="alink" data-to="2">파이어폭스가 이미 있어요</button></section>
+    <section data-f="a" data-s="2"><h3>2. 오토웹툰 설치</h3><p>이제 파이어폭스에 오토웹툰을 넣어요.</p>
+      <ol><li>아래 [오토웹툰 설치]를 누르면 파이어폭스가 열리고 설치 화면이 떠요.</li><li>[Firefox에 추가]를 누르고, 묻는 창에서 [추가]를 눌러요.</li><li>설치가 끝나면 마지막 안내가 저절로 떠요.</li></ol>
       <a class="abtn" id="aInstall" href="#">오토웹툰 설치</a></section>
-    <section data-s="3"><h3>설치됐어요! 웹툰 보러 가기</h3><p>회차가 열리면 화면을 한 번 누르면 시작해요. 처음 10회차는 무료예요.</p>
+    <section data-f="i" data-s="1"><h3>1. 오토웹툰 앱 받기</h3><p>아이폰은 앱을 받아 사파리에서 켜요.</p>
+      <ol><li>아래 [App Store에서 받기]를 누르면 앱스토어가 열려요.</li><li>[받기]를 누르고 다 깔릴 때까지 기다려요.</li><li>사파리로 돌아오면 2단계가 저절로 떠요.</li></ol>
+      <a class="abtn" id="iGet" href="https://apps.apple.com/app/id6838214464">App Store에서 받기</a><button type="button" class="alink" data-to="2">앱을 이미 받았어요</button></section>
+    <section data-f="i" data-s="2"><h3>2. 사파리에서 켜기</h3><p>앱을 받은 다음 한 번만 켜 주면 돼요.</p>
+      <ol><li>아이폰 [설정] → [앱] → [Safari] → [확장 프로그램]으로 가요.</li><li>[오토웹툰]을 눌러 켜요.</li><li>아래 웹사이트 권한을 [허용]으로 바꾸고 사파리로 돌아와요.</li></ol>
+      <button type="button" class="abtn" data-to="3">다 켰어요</button></section>
+    <section data-f="p" data-s="1"><h3>1. 크롬에 오토웹툰 추가</h3><p>PC는 크롬에서 작동해요.</p>
+      <ol><li>아래 [오토웹툰 설치]를 누르면 크롬 웹 스토어가 새 탭으로 열려요.</li><li>[Chrome에 추가]를 누르고, 묻는 창에서 [확장 프로그램 추가]를 눌러요.</li><li>설치가 끝나면 마지막 안내가 저절로 떠요.</li></ol>
+      <a class="abtn" id="pAdd" href="#" target="_blank" rel="noopener">오토웹툰 설치</a></section>
+    <section data-f="a i" data-s="3" data-f2="p" data-s2="2"><h3>설치됐어요! 웹툰 보러 가기</h3><p>이제 웹툰을 열기만 하면 돼요.</p>
+      <ol><li>아래 [화산귀환 1화 보기]를 누르면 1화가 열려요.</li><li>처음 한 번 구글·네이버 로그인 창이 뜨면 로그인해요. 10회차까지 무료예요.</li><li>만화를 한 번 누르면 자동으로 넘어가고, 다시 누르면 멈춰요.</li></ol>
       <a class="abtn" id="aToon" href="https://m.comic.naver.com/webtoon/detail?titleId=769209&amp;no=1">화산귀환 1화 보기</a></section>
     <button type="button" class="alink" id="aClose">닫기</button>
   </div>
@@ -598,9 +613,14 @@
   //   크롬과 파이어폭스는 저장소가 따로라 단계는 각 브라우저 localStorage에 적는다.
   const aflow = $('aflow');
   const ls = (k, v) => { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch { return null; } };
-  function aShow(n) {
-    aflow.hidden = false; ls('aw_astep', n === 3 ? 'done' : String(n));   // 3(설치됐어요)은 한 번만 저절로 뜬다
-    aflow.querySelectorAll('section').forEach(s => { s.hidden = s.dataset.s !== String(n); });
+  const F = isIOS ? 'i' : isAndroid ? 'a' : 'p';   // 어느 기기 단계 창인지
+  const LAST = F === 'p' ? 2 : 3;                  // 마지막 '설치됐어요'(PC는 2단계)
+  const stepOf = (s) => (s.dataset.f || '').split(' ').includes(F) ? s.dataset.s : s.dataset.f2 === F ? s.dataset.s2 : null;
+  aflow.querySelector('.adots').innerHTML = '<i></i>'.repeat(LAST);
+  function aShow(n) {   // n이 3이면 어느 기기든 '설치됐어요'(PC는 2번째 칸)
+    if (n >= 3) n = LAST;
+    aflow.hidden = false; if (F === 'a') ls('aw_astep', n === LAST ? 'done' : String(n));   // 3(설치됐어요)은 한 번만 저절로 뜬다
+    aflow.querySelectorAll('section').forEach(s => { s.hidden = stepOf(s) !== String(n); });
     aflow.querySelectorAll('.adots i').forEach((d, i) => d.classList.toggle('on', i < n));
   }
   aflow.querySelectorAll('[data-to]').forEach(b => b.addEventListener('click', () => aShow(Number(b.dataset.to))));
@@ -635,12 +655,20 @@
     }
   }
 
-  // '10회차 무료로 시작하기'(사장님 2026-11-26): 로그인 말고 바로 설치. 안드로이드 크롬 → 파이어폭스로 이 페이지 열기(없으면 플레이 스토어 파이어폭스),
+  // 아이폰: 앱스토어 다녀오면 저절로 2(사파리에서 켜기)
+  if (isIOS) {
+    let leftForApp = false;
+    $('iGet').addEventListener('click', () => { leftForApp = true; });
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && leftForApp) { leftForApp = false; aShow(2); } });
+  }
+  if (CWS_URL) $('pAdd').href = CWS_URL;
+
+  // '설치 후 시작하기'(사장님 2026-11-27): 어느 기기든 누르면 단계 창이 뜬다(옛 이름 '10회차 무료로 시작하기'). 로그인 말고 바로 설치. 안드로이드 크롬 → 파이어폭스로 이 페이지 열기(없으면 플레이 스토어 파이어폭스),
   // 안드로이드 파이어폭스 → 부가기능, 아이폰 → 앱스토어, PC → 크롬 웹 스토어. 로그인은 설치한 뒤 확장 안에서 한 번만.
   const cta = $('ctaStart');
   if (cta) {
-    if (isIOS) cta.href = 'https://apps.apple.com/app/id6838214464';
-    else if (isAndroid && isFirefox && AMO_URL) cta.href = AMO_URL;
+    if (isIOS || !isAndroid) { cta.href = '#'; cta.addEventListener('click', (e) => { e.preventDefault(); aShow(1); }); }
+    else if (isAndroid && isFirefox && AMO_URL) {}   // 위에서 단계 창 2로 연결함
     else if (isAndroid && !inApp) {
       // 안드로이드 크롬: 단추 아래 '오토웹툰은 파이어폭스에서 작동을 해요' 한 줄, 누르면 단계 창 1부터(아래 aflow).
       $('fxLine').hidden = false;
@@ -648,7 +676,6 @@
       cta.addEventListener('click', (e) => { e.preventDefault(); aShow(1); });
     }
     else if (isAndroid) cta.href = '#install';
-    else if (CWS_URL) cta.href = CWS_URL;
   }
   $('copy').addEventListener('click', async (e) => {
     try { await navigator.clipboard.writeText(location.href.replace(/#.*$/, '')); e.target.textContent = '복사했어요. 파이어폭스 주소창에 붙여 넣으세요'; }
