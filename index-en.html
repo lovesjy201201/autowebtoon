@@ -702,7 +702,7 @@
 <div class="mwrap" id="maint" hidden role="dialog" aria-modal="true"><div class="mcard"><h3>iPhone is under maintenance</h3><p>We are making setup easier. When it is done you can get it right here.<br>For now, AutoWebtoon works in <b>Chrome on PC</b> and <b>Firefox on Android</b>.</p><button type="button" id="maintOk">OK</button></div></div>
 <script>(function(){
   var ua=navigator.userAgent, phone=/iPhone|iPad|iPod/i.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
-  var bar=document.createElement('div'); bar.className='mbar'; bar.textContent='Notice · iPhone is under maintenance. Chrome on PC and Android work now.'; document.body.insertBefore(bar, document.body.firstChild);
+  var bar=document.createElement('div'); bar.className='mbar'; bar.innerHTML='Notice · iPhone is under maintenance. Chrome on PC and Android work now. · <a href="board.html?lang=en" style="color:#fff;font-weight:700;text-decoration:underline;white-space:nowrap">Free board event now on</a>'; document.body.insertBefore(bar, document.body.firstChild);
   var w=document.getElementById('maint'); document.getElementById('maintOk').onclick=function(){w.hidden=true};
   function stop(e){e.preventDefault();e.stopImmediatePropagation();w.hidden=false}
   document.addEventListener('click',function(e){
