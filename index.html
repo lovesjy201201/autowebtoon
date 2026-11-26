@@ -566,13 +566,10 @@
       <a class="abtn" id="iGet" href="https://apps.apple.com/app/id6838214464">App Store에서 받기</a><button type="button" class="alink" data-to="2">앱을 이미 받았어요</button></section>
     <section data-f="i" data-s="2"><h3>2. 사파리에서 켜기</h3><p>앱을 받은 다음 한 번만 켜 주면 돼요.</p>
       <ol><li>[설정] &gt; [앱] &gt; [Safari] &gt; [확장 프로그램] &gt; [오토웹툰] 켜기</li><li>웹사이트 권한 [허용] &gt; 사파리로 돌아오기</li></ol>
-      <button type="button" class="abtn" data-to="3">다 켰어요</button></section>
+      <a class="abtn" href="https://m.comic.naver.com/webtoon/detail?titleId=769209&amp;no=1">다 켰어요</a></section>
     <section data-f="p" data-s="1"><h3>1. 크롬에 오토웹툰 추가</h3><p>PC는 크롬에서 작동해요.</p>
       <ol><li>[오토웹툰 설치] &gt; [Chrome에 추가] &gt; [확장 프로그램 추가]</li></ol>
       <a class="abtn" id="pAdd" href="#" target="_blank" rel="noopener">오토웹툰 설치</a></section>
-    <section data-f="i" data-s="3" data-f2="p" data-s2="2" data-f3="a" data-s3="4"><h3>설치됐어요! 웹툰 보러 가기</h3><p>이제 웹툰을 열기만 하면 돼요.</p>
-      <ol><li>[화산귀환 1화 보기] &gt; 로그인 (10회차까지 무료)</li><li>만화를 누르면 자동으로 넘어가요. 다시 누르면 멈춰요</li></ol>
-      <a class="abtn" id="aToon" href="https://m.comic.naver.com/webtoon/detail?titleId=769209&amp;no=1">화산귀환 1화 보기</a></section>
     <button type="button" class="alink" id="aClose">닫기</button>
   </div>
 </div>
@@ -635,14 +632,16 @@
   // 어느 기기 단계 창인지: 아이폰 i · 안드로이드 a · 안드로이드 카카오톡 안 k · 안드로이드 그 밖의 앱 안(네이버·인스타 등) n · PC p
   // (사장님 2026-11-27) 앱 안 브라우저에서는 설치가 안 되므로 '크롬으로 옮겨 가기' 한 장만 띄우고, 크롬에서 ?start=1 로 열려 1단계부터 이어진다
   const F = isIOS ? 'i' : isAndroid ? (inApp ? (/KAKAOTALK/i.test(ua) ? 'k' : 'n') : 'a') : 'p';
-  const LAST = F === 'p' ? 2 : (F === 'k' || F === 'n') ? 1 : F === 'a' ? 4 : 3;   // 마지막 장(안드로이드 4, 아이폰 3, PC 2, 앱 안 1)
+  const LAST = F === 'a' ? 3 : F === 'i' ? 2 : 1;   // 단계 수(안드로이드 3, 아이폰 2, PC·앱 안 1). 설치가 끝나면 창 없이 바로 웹툰으로(사장님 2026-11-27)
+  const TOON = (isAndroid || isIOS) ? 'https://m.comic.naver.com/webtoon/detail?titleId=769209&no=1' : 'https://comic.naver.com/webtoon/detail?titleId=769209&no=1';
   const stepOf = (s) => (s.dataset.f || '').split(' ').includes(F) ? s.dataset.s : s.dataset.f2 === F ? s.dataset.s2 : s.dataset.f3 === F ? s.dataset.s3 : null;
   aflow.querySelector('.adots').innerHTML = '<i></i>'.repeat(LAST);
-  function aShow(n) {   // n이 'done'이면 어느 기기든 '설치됐어요'(마지막 장)
-    if (n === 'done' || n > LAST) n = LAST;
+  function aShow(n) {   // n이 'done'이면 설치 끝 → 창 없이 바로 화산귀환 1화
+    if (n === 'done') { ls('aw_astep', 'done'); location.href = TOON; return; }
+    if (n > LAST) n = LAST;
     // 규칙(사장님 2026-11-27): 단계마다 1·2·3을 먼저 읽게 — 처음엔 '1·2·3 숙지했어요' 확인 단추만, 누르면 바로 그 단계 일(스토어 열기 등)을 한다
     aflow.querySelectorAll('.aok').forEach(b => { b.hidden = false; b.nextElementSibling.hidden = true; });
-    aflow.hidden = false; if (F === 'a') ls('aw_astep', n === LAST ? 'done' : String(n));   // 3(설치됐어요)은 한 번만 저절로 뜬다
+    aflow.hidden = false; if (F === 'a') ls('aw_astep', String(n));
     aflow.querySelectorAll('section').forEach(s => { s.hidden = stepOf(s) !== String(n); });
     aflow.querySelectorAll('.adots i').forEach((d, i) => d.classList.toggle('on', i < n));
   }
@@ -661,11 +660,10 @@
   });
   aflow.querySelectorAll('[data-to]').forEach(b => b.addEventListener('click', () => aShow(Number(b.dataset.to))));
   $('aClose').addEventListener('click', () => { aflow.hidden = true; });
-  // 확장이 처음 깔리면 ?installed=1 로 이 페이지를 연다(background.js) → 어느 기기든 '설치됐어요! 웹툰 보러 가기'
+  // 확장이 처음 깔리면 ?installed=1 로 이 페이지를 연다(background.js) → 창 없이 바로 화산귀환 1화
   if (new URLSearchParams(location.search).get('installed') === '1') {
-    if (!isAndroid && !isIOS) $('aToon').href = 'https://comic.naver.com/webtoon/detail?titleId=769209&no=1';
     history.replaceState(null, '', location.pathname);
-    aShow('done');
+    location.replace(TOON);
   }
   if (isAndroid) {
     const QS = new URLSearchParams(location.search);
