@@ -116,6 +116,7 @@
     const code = QS.get('code'), st = QS.get('state');
     let op = null; try { op = window.opener && !window.opener.closed && window.opener.awNaverBack ? window.opener : null; } catch {}
     if (op) { op.awNaverBack(code, st); window.close(); return; }
+    if (st && st[0] === 'b' && st.length === 31) { location.replace('board.html?bcode=' + encodeURIComponent(code || '') + '&bstate=' + encodeURIComponent(st)); return; }   // 게시판 로그인(같은 탭)
     const want = ss('aw_nstate');
     ss('aw_nstate', null);
     history.replaceState(null, '', location.pathname + (EN ? '?lang=en' : ''));

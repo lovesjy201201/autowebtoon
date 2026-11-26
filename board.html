@@ -4,122 +4,327 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>오토웹툰 자유게시판</title>
-<meta name="description" content="오토웹툰 만든 사람에게 묻고 싶은 것, 고쳤으면 하는 것, 잘 안 되는 작품을 남겨 주세요.">
+<meta name="description" content="오토웹툰 자유게시판 — 잘 안 되는 작품, 고쳤으면 하는 것, 궁금한 것을 남겨 주세요.">
 <link rel="icon" href="icon-128.png">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
-  :root { --bg:#fff; --soft:#f4f4f6; --line:#e8e8ec; --ink:#191f28; --sub:#4e5968; --muted:#8b95a1; --accent:#3B3FC4; --accent-ink:#fff; --bad:#c33; }
+  :root { --bg:#fff; --soft:#f4f4f6; --line:#e8e8ec; --ink:#191f28; --sub:#4e5968; --muted:#8b95a1; --accent:#3B3FC4; --accent-ink:#fff; --bad:#c33; --notice:#fff4e5; --notice-ink:#b25e00; }
   @media (prefers-color-scheme: dark) {
-    :root { --bg:#101013; --soft:#1a1a1f; --line:#2a2a31; --ink:#f2f3f5; --sub:#b0b8c1; --muted:#8b95a1; --accent:#7f83f2; --accent-ink:#0f1020; --bad:#f07070; }
+    :root { --bg:#101013; --soft:#1a1a1f; --line:#2a2a31; --ink:#f2f3f5; --sub:#b0b8c1; --muted:#8b95a1; --accent:#7f83f2; --accent-ink:#0f1020; --bad:#f07070; --notice:#2a2215; --notice-ink:#f0b060; }
   }
   * { box-sizing:border-box; }
   body { margin:0; background:var(--bg); color:var(--ink); -webkit-font-smoothing:antialiased; word-break:keep-all;
-    font:400 17px/1.65 "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
-  a { color:var(--accent); }
+    font:400 16px/1.6 "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+  a { color:inherit; text-decoration:none; }
+  button { font:inherit; cursor:pointer; }
+  [hidden] { display:none !important; }
   header { border-bottom:1px solid var(--line); }
-  header .in { max-width:720px; margin:0 auto; padding:14px 16px; display:flex; align-items:center; gap:10px; }
+  header .in { max-width:860px; margin:0 auto; padding:14px 16px; display:flex; align-items:center; gap:10px; }
   header img { width:30px; height:30px; border-radius:8px; }
-  header a { color:var(--ink); text-decoration:none; font-weight:700; }
-  main { max-width:720px; margin:0 auto; padding:32px 16px 80px; }
-  h1 { font-size:30px; line-height:1.3; margin:0 0 8px; letter-spacing:-.02em; }
-  .lead { color:var(--sub); margin:0 0 28px; }
-  form { background:var(--soft); border-radius:16px; padding:18px; margin:0 0 36px; }
-  input[type=text], textarea { width:100%; font:inherit; color:var(--ink); background:var(--bg); border:1px solid var(--line); border-radius:10px; padding:10px 12px; }
-  input[type=text] { margin:0 0 10px; max-width:260px; }
-  textarea { min-height:110px; resize:vertical; }
-  .row { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:10px; flex-wrap:wrap; }
-  .count { color:var(--muted); font-size:14px; }
-  button { font:inherit; font-weight:700; background:var(--accent); color:var(--accent-ink); border:0; border-radius:10px; padding:10px 22px; cursor:pointer; }
-  button:disabled { opacity:.5; cursor:default; }
-  .msg { font-size:15px; margin:10px 0 0; min-height:1em; }
+  header a { font-weight:700; }
+  main { max-width:860px; margin:0 auto; padding:24px 16px 80px; }
+
+  .top { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:0 0 14px; border-bottom:2px solid var(--ink); }
+  .top h1 { font-size:22px; margin:0; letter-spacing:-.01em; }
+  .top h1 small { color:var(--muted); font-weight:400; font-size:15px; margin-left:4px; }
+  .btn { display:inline-flex; align-items:center; gap:6px; background:var(--accent); color:var(--accent-ink); border:0; border-radius:8px; padding:9px 16px; font-weight:700; }
+  .btn.ghost { background:var(--soft); color:var(--ink); }
+  .btn.bad { background:transparent; color:var(--bad); padding:6px 8px; font-weight:500; font-size:14px; }
+
+  .row { display:flex; align-items:center; gap:14px; padding:14px 4px; border-bottom:1px solid var(--line); }
+  .row:hover { background:var(--soft); }
+  .row .main { flex:1; min-width:0; }
+  .row .ti { font-size:17px; font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .row .ti .cc { color:var(--accent); font-weight:700; font-size:15px; margin-left:4px; }
+  .row .meta { color:var(--muted); font-size:14px; margin-top:2px; }
+  .row .meta .no { display:inline-block; min-width:20px; padding:0 5px; margin-right:6px; border-radius:4px; background:var(--soft); color:var(--sub); font-size:12px; text-align:center; }
+  .row .stat { color:var(--muted); font-size:14px; white-space:nowrap; display:flex; gap:12px; }
+  .row .stat svg { width:16px; height:16px; vertical-align:-3px; margin-right:3px; }
+  .row.notice { background:var(--notice); }
+  .badge { display:inline-block; font-size:12px; font-weight:700; color:var(--notice-ink); border:1px solid currentColor; border-radius:4px; padding:0 6px; margin-right:6px; vertical-align:2px; }
+  .admin { color:var(--accent); border-color:var(--accent); }
+  .empty { color:var(--muted); padding:40px 0; text-align:center; }
+
+  .pager { display:flex; justify-content:center; gap:6px; margin:28px 0 22px; flex-wrap:wrap; }
+  .pager a, .pager span { min-width:36px; height:36px; display:inline-flex; align-items:center; justify-content:center; border:1px solid var(--line); border-radius:6px; font-size:14px; color:var(--sub); }
+  .pager .on { background:var(--accent); color:var(--accent-ink); border-color:var(--accent); font-weight:700; }
+  .pager .off { opacity:.35; }
+  .search { display:flex; justify-content:center; gap:8px; flex-wrap:wrap; }
+  .search select, .search input { font:inherit; color:var(--ink); background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:9px 12px; }
+  .search input { width:260px; max-width:100%; }
+
+  .post h2 { font-size:22px; margin:18px 0 6px; line-height:1.4; overflow-wrap:anywhere; }
+  .post .meta { color:var(--muted); font-size:14px; padding-bottom:14px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; }
+  .post .body { white-space:pre-wrap; overflow-wrap:anywhere; padding:22px 0 30px; min-height:120px; border-bottom:1px solid var(--line); font-size:17px; line-height:1.75; }
+  .cmts h3 { font-size:16px; margin:22px 0 6px; }
+  .cmt { padding:12px 0; border-bottom:1px solid var(--line); }
+  .cmt .meta { color:var(--muted); font-size:13px; display:flex; justify-content:space-between; align-items:center; }
+  .cmt .meta b { color:var(--ink); font-weight:600; margin-right:6px; }
+  .cmt .text { white-space:pre-wrap; overflow-wrap:anywhere; margin-top:2px; }
+  .cmt.byadmin { background:var(--soft); padding:12px; border-radius:8px; border-bottom:0; margin:6px 0; }
+
+  .card { background:var(--soft); border-radius:12px; padding:16px; margin:16px 0; }
+  input[type=text], textarea { width:100%; font:inherit; color:var(--ink); background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:10px 12px; }
+  textarea { resize:vertical; }
+  .f label { display:block; font-size:14px; color:var(--sub); margin:12px 0 4px; }
+  .f .nm { max-width:240px; }
+  .bar { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:10px; flex-wrap:wrap; }
+  .count { color:var(--muted); font-size:13px; }
+  .msg { font-size:14px; margin:8px 0 0; min-height:1em; }
   .msg.bad { color:var(--bad); }
   .hp { position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
-  .post { border-bottom:1px solid var(--line); padding:18px 0; }
-  .meta { color:var(--muted); font-size:14px; }
-  .text { white-space:pre-wrap; margin:4px 0 0; overflow-wrap:anywhere; }
-  .reply { margin:12px 0 0 0; padding:12px 14px; background:var(--soft); border-radius:12px; border-left:3px solid var(--accent); }
-  .reply .meta { color:var(--accent); font-weight:700; }
-  .empty { color:var(--muted); }
-  footer { border-top:1px solid var(--line); color:var(--muted); font-size:14px; }
-  footer .in { max-width:720px; margin:0 auto; padding:22px 16px 36px; }
+  .login p { margin:0 0 12px; }
+  .gbtn { min-height:44px; margin:0 0 10px; }
+  .nbtn { display:flex; align-items:center; gap:10px; background:#03C75A; color:#fff; border:0; border-radius:22px; padding:10px 20px; width:300px; max-width:100%; justify-content:center; font-weight:600; }
+  .out { color:var(--muted); font-size:13px; }
+  footer { border-top:1px solid var(--line); color:var(--muted); font-size:13px; }
+  footer .in { max-width:860px; margin:0 auto; padding:20px 16px 36px; }
+  footer a { text-decoration:underline; }
+  @media (max-width:600px) {
+    .row { flex-wrap:wrap; gap:4px 12px; }
+    .row .stat { width:100%; padding-left:0; font-size:13px; }
+    .row .ti { white-space:normal; }
+    .top h1 { font-size:20px; }
+  }
 </style>
 </head>
 <body>
 <header><div class="in"><img src="icon-128.png" alt=""><a id="home" href="index.html">오토웹툰</a></div></header>
-<main>
-  <h1 id="h">자유게시판</h1>
-  <p class="lead" id="lead">만든 사람에게 하고 싶은 말을 남겨 주세요. 잘 안 되는 작품, 고쳤으면 하는 것, 궁금한 것 다 좋아요. 읽고 답글 달게요.</p>
+<main id="app"><p class="empty" id="loading">불러오는 중…</p></main>
+<footer><div class="in"><span id="foot"></span> · <a id="priv" href="privacy.html"></a></div></footer>
 
-  <form id="f" autocomplete="off">
-    <input type="text" id="name" maxlength="20" placeholder="이름 (안 써도 돼요)">
-    <div class="hp" aria-hidden="true"><input type="text" id="website" tabindex="-1"></div>
-    <textarea id="text" maxlength="500" placeholder="여기에 써 주세요" required></textarea>
-    <div class="row"><span class="count" id="count">0 / 500</span><button id="send" type="submit">올리기</button></div>
-    <p class="msg" id="msg"></p>
-  </form>
+<template id="loginT">
+  <div class="card login">
+    <p class="lmsg1"></p>
+    <div class="gbtn"></div>
+    <button type="button" class="nbtn" hidden><b>N</b> <span class="nlabel"></span></button>
+    <p class="msg bad lmsg"></p>
+  </div>
+</template>
 
-  <div id="list"><p class="empty" id="loading">불러오는 중…</p></div>
-</main>
-<footer><div class="in"><span id="foot">주소(링크)가 든 글은 올라가지 않아요. 남을 해치는 글은 지울 수 있어요.</span> · <a id="priv" href="privacy.html">개인정보</a></div></footer>
 <script>
-  const API = 'https://autowebtoon-key.lovesjy201.workers.dev/board';
-  const q = new URLSearchParams(location.search);
-  const en = q.get('lang') === 'en' || (q.get('lang') !== 'ko' && !/^ko/i.test(navigator.language || ''));
+  const API = 'https://autowebtoon-key.lovesjy201.workers.dev';
+  const Q = new URLSearchParams(location.search);
+  const en = Q.get('lang') === 'en' || (Q.get('lang') !== 'ko' && !/^ko/i.test(navigator.language || ''));
+  const L = en ? 'en' : 'ko';
   const T = en ? {
-    title: 'AutoWebtoon board', h: 'Board', home: 'AutoWebtoon',
-    lead: 'Leave a message for the developer: a series that does not work well, something you want changed, or a question. I read everything and reply here.',
-    name: 'Name (optional)', text: 'Write here', send: 'Post', guest: 'Guest', dev: 'Developer reply',
-    foot: 'Posts with links are blocked. Posts that hurt others may be removed.', priv: 'Privacy',
-    empty: 'No posts yet. Be the first.', loading: 'Loading…', ok: 'Posted. Thank you!', fail: 'Could not post. Please try again later.',
-    short: 'Please write a little more.', link: 'Posts with links (http, www, .com…) cannot be posted.', limit: 'You can post up to 5 times a day.', loadfail: 'Could not load the board.'
+    title: 'AutoWebtoon board', board: 'Board', home: 'AutoWebtoon', write: 'Write', notice: 'Notice', admin: 'Admin', guest: 'Guest',
+    empty: 'No posts yet. Be the first to write one.', nores: 'No posts found.', loading: 'Loading…', loadfail: 'Could not load the board.',
+    fTitle: 'Title', fAll: 'Title + text', search: 'Search', searchPh: 'Search words',
+    views: 'Views', comments: 'Comments', back: 'Back to list', del: 'Delete', delAsk: 'Delete this? It cannot be undone.',
+    nickT: 'Choose a nickname', nickHelp: '2–12 letters or numbers. It is shown on your posts and comments.', nickPh: 'Nickname', nickOk: 'Save', nickAs: 'Posting as', nickChange: 'change', badnick: 'Use 2–12 letters, numbers or _ (some words are not allowed).', taken: 'That nickname is taken. Try another.', nonick: 'Please choose a nickname first.', tTitle: 'Title', tText: 'Text', post: 'Post', cancel: 'Cancel', cmtPh: 'Write a comment', cmtSend: 'Comment',
+    signin: 'Sign in to write. Anyone can read without signing in.', naver: 'Sign in with Naver', out: 'Sign out', lfail: 'Could not sign in. Please try again.',
+    short: 'Please write a little more.', link: 'Posts with links (http, www, .com…) cannot be posted.', limit: 'Daily limit reached (5 posts, 20 comments a day).',
+    login: 'Please sign in again.', gone: 'This post was deleted.', notmine: 'You can only delete your own posts.', fail: 'Something went wrong. Please try again.',
+    foot: 'Posts with links are blocked. Posts that hurt others may be removed.', priv: 'Privacy'
   } : {
-    title: '오토웹툰 자유게시판', h: '자유게시판', home: '오토웹툰',
-    lead: document.getElementById('lead').textContent,
-    name: '이름 (안 써도 돼요)', text: '여기에 써 주세요', send: '올리기', guest: '손님', dev: '만든 사람 답글',
-    foot: document.getElementById('foot').textContent, priv: '개인정보',
-    empty: '아직 글이 없어요. 처음으로 남겨 주세요.', loading: '불러오는 중…', ok: '올렸어요. 고맙습니다!', fail: '못 올렸어요. 조금 뒤에 다시 해 주세요.',
-    short: '조금만 더 써 주세요.', link: '주소(http·www·.com 등)가 든 글은 올릴 수 없어요.', limit: '하루에 5개까지 쓸 수 있어요.', loadfail: '게시판을 불러오지 못했어요.'
+    title: '오토웹툰 자유게시판', board: '자유게시판', home: '오토웹툰', write: '글쓰기', notice: '공지', admin: '운영자', guest: '손님',
+    empty: '아직 글이 없어요. 처음으로 남겨 주세요.', nores: '찾는 글이 없어요.', loading: '불러오는 중…', loadfail: '게시판을 불러오지 못했어요.',
+    fTitle: '제목', fAll: '제목+내용', search: '찾기', searchPh: '찾을 말을 넣어 주세요',
+    views: '조회', comments: '댓글', back: '목록으로', del: '지우기', delAsk: '지울까요? 되돌릴 수 없어요.',
+    nickT: '닉네임 정하기', nickHelp: '한글·영문·숫자 2~12자. 내 글과 댓글에 이 닉네임이 찍혀요.', nickPh: '닉네임', nickOk: '정하기', nickAs: '닉네임', nickChange: '바꾸기', badnick: '한글·영문·숫자·_ 2~12자로 정해 주세요 (못 쓰는 말이 있어요).', taken: '이미 있는 닉네임이에요. 다른 걸로 해 주세요.', nonick: '먼저 닉네임을 정해 주세요.', tTitle: '제목', tText: '내용', post: '올리기', cancel: '취소', cmtPh: '댓글을 써 주세요', cmtSend: '댓글 달기',
+    signin: '글과 댓글을 쓰려면 로그인해 주세요. 읽기는 로그인 없이 돼요.', naver: '네이버로 로그인', out: '로그아웃', lfail: '로그인하지 못했어요. 다시 해 주세요.',
+    short: '조금만 더 써 주세요.', link: '주소(http·www·.com 등)가 든 글은 올릴 수 없어요.', limit: '오늘은 더 쓸 수 없어요 (하루 글 5개, 댓글 20개).',
+    login: '다시 로그인해 주세요.', gone: '지워진 글이에요.', notmine: '내가 쓴 글만 지울 수 있어요.', fail: '잘 안 됐어요. 다시 해 주세요.',
+    foot: '주소(링크)가 든 글은 올라가지 않아요. 남을 해치는 글은 지울 수 있어요.', priv: '개인정보'
   };
   const $ = (id) => document.getElementById(id);
-  if (en) {
-    document.documentElement.lang = 'en'; document.title = T.title;
-    $('h').textContent = T.h; $('lead').textContent = T.lead; $('home').textContent = T.home; $('home').href = 'index-en.html';
-    $('name').placeholder = T.name; $('text').placeholder = T.text; $('send').textContent = T.send;
-    $('foot').textContent = T.foot; $('priv').textContent = T.priv; $('loading').textContent = T.loading;
-  }
-  const when = (t) => { const d = new Date(t); return d.toLocaleDateString(en ? 'en-US' : 'ko-KR', { month: 'short', day: 'numeric' }) + ' ' + d.toLocaleTimeString(en ? 'en-US' : 'ko-KR', { hour: '2-digit', minute: '2-digit' }); };
-  function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
-  let mine = null;   // 방금 쓴 글: 서버 목록은 반영이 1분쯤 늦어서, 목록에 없으면 맨 위에 붙여 보여 준다
-  async function load() {
+  const app = $('app');
+  document.documentElement.lang = L; document.title = T.title;
+  $('home').textContent = T.home; $('home').href = en ? 'index-en.html' : 'index.html';
+  $('foot').textContent = T.foot; $('priv').textContent = T.priv;
+  const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+  const link = (params) => { const u = new URLSearchParams({ lang: L, ...params }); return 'board.html?' + u; };
+  const day = (t) => { const d = new Date(t), now = new Date(); return d.toDateString() === now.toDateString()
+      ? d.toLocaleTimeString(en ? 'en-US' : 'ko-KR', { hour: '2-digit', minute: '2-digit' })
+      : d.toLocaleDateString(en ? 'en-US' : 'ko-KR', { year: 'numeric', month: 'numeric', day: 'numeric' }); };
+  const EYE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>';
+  const BUB = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a8 8 0 0 1-11.6 7.1L3 21l1.9-6.4A8 8 0 1 1 21 12z"/></svg>';
+
+  // ---- 로그인(구글·네이버). 게시판 토큰은 이 브라우저에 30일 ----
+  function tok(v) { try { if (v === undefined) { const x = JSON.parse(localStorage.getItem('aw_btok') || 'null'); return x && Date.now() - x.t < 29 * 864e5 ? x.k : ''; } if (v) localStorage.setItem('aw_btok', JSON.stringify({ k: v, t: Date.now() })); else { localStorage.removeItem('aw_btok'); localStorage.removeItem('aw_bnick'); } } catch (e) { return ''; } return v; }
+  const nick = (v) => { try { if (v === undefined) return localStorage.getItem('aw_bnick') || ''; v ? localStorage.setItem('aw_bnick', v) : localStorage.removeItem('aw_bnick'); } catch (e) { return ''; } };
+  let suggest = '';
+  const sget = (k) => { try { return sessionStorage.getItem(k); } catch (e) { return null; } };
+  const sset = (k, v) => { try { v == null ? sessionStorage.removeItem(k) : sessionStorage.setItem(k, v); } catch (e) {} };
+  let cfg = null;
+  async function getCfg() { if (!cfg) { try { cfg = await (await fetch(API + '/free/config')).json(); } catch (e) { cfg = {}; } } return cfg; }
+  async function signin(path, body, box) {
     try {
-      const r = await fetch(API, { cache: 'no-store' }); const d = await r.json();
-      const list = $('list'); list.textContent = '';
-      const posts = d.posts || [];
-      if (mine && !posts.some((p) => p.id === mine.id)) posts.unshift(mine);
-      if (!posts.length) { list.append(el('p', 'empty', T.empty)); return; }
-      for (const p of posts) {
-        const box = el('div', 'post');
-        box.append(el('div', 'meta', (p.name || T.guest) + ' · ' + when(p.t)), el('div', 'text', p.text));
-        if (p.reply) { const rp = el('div', 'reply'); rp.append(el('div', 'meta', T.dev), el('div', 'text', p.reply)); box.append(rp); }
-        list.append(box);
+      const r = await (await fetch(API + path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })).json();
+      if (!r.ok) { if (box) box.querySelector('.lmsg').textContent = T.lfail; return; }
+      tok(r.token); nick(r.nickname || ''); suggest = r.suggest || ''; route();
+    } catch (e) { if (box) box.querySelector('.lmsg').textContent = T.lfail; }
+  }
+  window.awNaverBack = (code, st) => { const want = sget('aw_bstate'); sset('aw_bstate', null); if (!code || !st || st !== want) { alert(T.lfail); return; } signin('/board/naver', { code, state: st }); };
+  function loginBox() {
+    const box = $('loginT').content.firstElementChild.cloneNode(true);
+    box.querySelector('.lmsg1').textContent = T.signin;
+    box.querySelector('.nlabel').textContent = T.naver;
+    getCfg().then((c) => {
+      if (c.naverId) {
+        const nb = box.querySelector('.nbtn'); nb.hidden = false;
+        nb.onclick = () => {
+          const st = 'b' + Array.from(crypto.getRandomValues(new Uint8Array(15)), (x) => x.toString(16).padStart(2, '0')).join('');
+          sset('aw_bstate', st); sset('aw_bback', location.search);
+          const back = location.origin + location.pathname.replace(/board\.html$/, 'login.html');
+          const url = 'https://nid.naver.com/oauth2.0/authorize?' + new URLSearchParams({ response_type: 'code', client_id: c.naverId, redirect_uri: back, state: st });
+          const w = window.open(url, 'awnaver', 'width=480,height=720'); if (!w) location.href = url;
+        };
       }
-    } catch (e) { $('list').textContent = ''; $('list').append(el('p', 'empty', T.loadfail)); }
+      if (c.clientId) {
+        const draw = () => {
+          google.accounts.id.initialize({ client_id: c.clientId, callback: (res) => signin('/board/google', { credential: res.credential }, box), ux_mode: 'popup' });
+          google.accounts.id.renderButton(box.querySelector('.gbtn'), { theme: 'filled_blue', size: 'large', shape: 'pill', text: 'signin_with', locale: L, width: 300 });
+        };
+        if (window.google && google.accounts) draw();
+        else { const sc = document.createElement('script'); sc.src = 'https://accounts.google.com/gsi/client'; sc.async = true; sc.onload = draw; document.head.appendChild(sc); }
+      }
+    });
+    return box;
   }
-  $('text').addEventListener('input', () => { $('count').textContent = $('text').value.length + ' / 500'; });
-  $('f').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const msg = $('msg'); msg.className = 'msg'; msg.textContent = '';
-    $('send').disabled = true;
-    try {
-      const r = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: $('name').value, text: $('text').value, website: $('website').value, lang: en ? 'en' : 'ko' }) });
-      const d = await r.json().catch(() => ({}));
-      if (d.ok) { mine = { id: d.id, name: $('name').value.trim(), text: $('text').value.trim(), t: Date.now(), reply: '' }; msg.textContent = T.ok; $('text').value = ''; $('count').textContent = '0 / 500'; load(); }
-      else { msg.className = 'msg bad'; msg.textContent = T[d.reason] || T.fail; }
-    } catch (err) { msg.className = 'msg bad'; msg.textContent = T.fail; }
-    $('send').disabled = false;
-  });
-  load();
+
+  function nickBox() {
+    const fm = el('form', 'card f'); fm.autocomplete = 'off';
+    const ip = el('input', 'nm'); ip.type = 'text'; ip.maxLength = 12; ip.placeholder = T.nickPh; ip.value = nick() || suggest;
+    const msg = el('p', 'msg bad'); const bar = el('div', 'bar'); const sb = el('button', 'btn', T.nickOk);
+    bar.append(outLink(), sb);
+    fm.append(el('b', '', T.nickT), el('p', 'count', T.nickHelp), ip, bar, msg);
+    fm.onsubmit = async (e) => { e.preventDefault(); sb.disabled = true; const r = await send('/board/nick', { nick: ip.value.trim() }); sb.disabled = false; if (r.ok) { nick(r.nickname); route(); } else { msg.textContent = T[r.reason] || T.fail; if (r.reason === 'login') route(); } };
+    setTimeout(() => ip.focus(), 0);
+    return fm;
+  }
+  function asLine() {
+    const p = el('span', 'count', T.nickAs + ' '); p.append(el('b', '', nick()), ' · ');
+    const a = el('a', 'out', T.nickChange); a.href = '#'; a.onclick = (e) => { e.preventDefault(); const box = nickBox(); app.prepend(box); };
+    p.append(a, ' · ', outLink()); return p;
+  }
+  function outLink() { const a = el('a', 'out', T.out); a.href = '#'; a.onclick = (e) => { e.preventDefault(); tok(null); route(); }; return a; }
+  async function send(path, body) {
+    try { const r = await fetch(API + path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token: tok(), ...body }) }); const d = await r.json().catch(() => ({})); if (d.reason === 'login') tok(null); if (d.reason === 'nonick') nick(null); return d; }
+    catch (e) { return { ok: false }; }
+  }
+
+  // ---- 목록 ----
+  async function showList() {
+    const p = Q.get('p') || '1', q = Q.get('q') || '', f = Q.get('f') === 'a' ? 'a' : 't';
+    let d;
+    try { d = await (await fetch(API + '/board?' + new URLSearchParams({ p, q, f }), { cache: 'no-store' })).json(); } catch (e) { d = null; }
+    app.textContent = '';
+    const top = el('div', 'top'); const h = el('h1', '', T.board);
+    if (d && d.ok) h.append(el('small', '', '(' + (d.total + d.notices.length).toLocaleString() + ')'));
+    const w = el('a', 'btn', '✎ ' + T.write); w.href = link({ write: '1' });
+    top.append(h, w); app.append(top);
+    if (!d || !d.ok) { app.append(el('p', 'empty', T.loadfail)); return; }
+    const rows = [...d.notices.map((x) => ({ ...x, notice: true })), ...d.posts];
+    if (!rows.length) app.append(el('p', 'empty', q ? T.nores : T.empty));
+    for (const r of rows) {
+      const a = el('a', 'row' + (r.notice ? ' notice' : '')); a.href = link({ id: r.id });
+      const m = el('div', 'main'); const ti = el('div', 'ti');
+      if (r.notice) ti.append(el('span', 'badge', T.notice));
+      ti.append(r.title); if (r.cc) ti.append(el('span', 'cc', '[' + r.cc + ']'));
+      const meta = el('div', 'meta'); if (!r.notice) meta.append(el('span', 'no', r.no));
+      meta.append((r.notice ? T.admin : (r.name || T.guest)) + ' · ' + day(r.t));
+      m.append(ti, meta);
+      const st = el('div', 'stat'); st.innerHTML = '<span>' + EYE + r.views + '</span>' + (r.cc ? '<span>' + BUB + r.cc + '</span>' : '');
+      a.append(m, st); app.append(a);
+    }
+    // 쪽 번호 (10개씩)
+    if (d.pages > 1) {
+      const pg = el('div', 'pager'), start = Math.floor((d.page - 1) / 10) * 10 + 1, end = Math.min(d.pages, start + 9);
+      const go = (n, label, cls) => { if (n < 1 || n > d.pages) { pg.append(el('span', 'off', label)); return; } const a = el('a', cls || '', label); a.href = link({ p: n, ...(q ? { q, f } : {}) }); pg.append(a); };
+      go(start - 1, '‹');
+      for (let i = start; i <= end; i++) i === d.page ? pg.append(el('span', 'on', i)) : go(i, i);
+      go(end + 1, '›');
+      app.append(pg);
+    } else app.append(el('div', 'pager'));
+    // 찾기
+    const fm = el('form', 'search'); const sel = el('select'); sel.name = 'f';
+    for (const [v, t] of [['t', T.fTitle], ['a', T.fAll]]) { const o = el('option', '', t); o.value = v; if (v === f) o.selected = true; sel.append(o); }
+    const inp = el('input'); inp.name = 'q'; inp.value = q; inp.placeholder = T.searchPh; inp.maxLength = 40;
+    const b = el('button', 'btn ghost', T.search);
+    fm.append(sel, inp, b);
+    fm.onsubmit = (e) => { e.preventDefault(); location.href = link(inp.value.trim() ? { q: inp.value.trim(), f: sel.value } : {}); };
+    app.append(fm);
+  }
+
+  // ---- 글 보기 ----
+  async function showPost(id) {
+    const seen = sget('aw_bv_' + id);
+    let d;
+    try { d = await (await fetch(API + '/board/post?' + new URLSearchParams({ id, v: seen ? '0' : '1' }), { cache: 'no-store', headers: tok() ? { 'X-Board-Token': tok() } : {} })).json(); } catch (e) { d = null; }
+    sset('aw_bv_' + id, '1');
+    app.textContent = '';
+    const top = el('div', 'top'); const h = el('h1', '', T.board); const bk = el('a', 'btn ghost', T.back); bk.href = link({}); top.append(h, bk); app.append(top);
+    if (!d || !d.ok) { app.append(el('p', 'empty', d && d.reason === 'gone' ? T.gone : T.loadfail)); return; }
+    const p = d.post, art = el('div', 'post');
+    const h2 = el('h2'); if (p.notice) h2.append(el('span', 'badge', T.notice)); h2.append(p.title);
+    const meta = el('div', 'meta');
+    meta.append(el('span', '', (p.notice ? T.admin : (p.name || T.guest)) + ' · ' + day(p.t)));
+    const right = el('span', '', T.views + ' ' + p.views + ' · ' + T.comments + ' ' + d.comments.length);
+    if (p.mine) { const del = el('button', 'btn bad', T.del); del.onclick = async () => { if (!confirm(T.delAsk)) return; const r = await send('/board/delete', { id }); if (r.ok) location.href = link({}); else alert(T[r.reason] || T.fail); }; right.append(' ', del); }
+    meta.append(right);
+    art.append(h2, meta, el('div', 'body', p.text));
+    // 댓글
+    const cs = el('div', 'cmts'); cs.append(el('h3', '', T.comments + ' ' + d.comments.length));
+    for (const c of d.comments) {
+      const box = el('div', 'cmt' + (c.admin ? ' byadmin' : ''));
+      const m = el('div', 'meta'); const who = el('span'); const nm = el('b');
+      if (c.admin) nm.append(el('span', 'badge admin', T.admin)); else nm.textContent = c.name || T.guest;
+      who.append(nm, day(c.t)); m.append(who);
+      if (c.mine) { const del = el('button', 'btn bad', T.del); del.onclick = async () => { if (!confirm(T.delAsk)) return; const r = await send('/board/delete', { id, cid: c.cid }); if (r.ok) route(); else alert(T[r.reason] || T.fail); }; m.append(del); }
+      box.append(m, el('div', 'text', c.text)); cs.append(box);
+    }
+    if (tok() && !nick()) cs.append(nickBox());
+    else if (tok()) {
+      const fm = el('form', 'card f');
+      const ta = el('textarea'); ta.rows = 3; ta.maxLength = 300; ta.placeholder = T.cmtPh;
+      const msg = el('p', 'msg bad'); const bar = el('div', 'bar'); const sb = el('button', 'btn', T.cmtSend);
+      bar.append(asLine(), sb); fm.append(ta, bar, msg);
+      fm.onsubmit = async (e) => { e.preventDefault(); sb.disabled = true; const r = await send('/board/comment', { id, text: ta.value }); sb.disabled = false; if (r.ok) route(); else { msg.textContent = T[r.reason] || T.fail; if (r.reason === 'login' || r.reason === 'nonick') route(); } };
+      cs.append(fm);
+    } else cs.append(loginBox());
+    art.append(cs); app.append(art);
+  }
+
+  // ---- 글쓰기 ----
+  function showWrite() {
+    app.textContent = '';
+    const top = el('div', 'top'); const h = el('h1', '', T.board + ' · ' + T.write); const bk = el('a', 'btn ghost', T.back); bk.href = link({}); top.append(h, bk); app.append(top);
+    if (!tok()) { app.append(loginBox()); return; }
+    if (!nick()) { app.append(nickBox()); return; }
+    const fm = el('form', 'card f'); fm.autocomplete = 'off';
+    const lab = (t) => el('label', '', t);
+    const ti = el('input'); ti.type = 'text'; ti.maxLength = 40; ti.required = true;
+    const tx = el('textarea'); tx.rows = 10; tx.maxLength = 1000; tx.required = true;
+    const hp = el('div', 'hp'); const hpi = el('input'); hpi.type = 'text'; hpi.tabIndex = -1; hp.append(hpi);
+    const cnt = el('span', 'count', '0 / 1000'); tx.oninput = () => { cnt.textContent = tx.value.length + ' / 1000'; };
+    const msg = el('p', 'msg bad'); const bar = el('div', 'bar'); const right = el('span');
+    const cancel = el('a', 'btn ghost', T.cancel); cancel.href = link({}); const sb = el('button', 'btn', T.post);
+    right.append(cancel, ' ', sb); bar.append(cnt, right);
+    fm.append(asLine(), lab(T.tTitle), ti, lab(T.tText), tx, hp, bar, msg);
+    fm.onsubmit = async (e) => {
+      e.preventDefault(); sb.disabled = true; msg.textContent = '';
+      const r = await send('/board', { title: ti.value, text: tx.value, website: hpi.value, lang: L });
+      sb.disabled = false;
+      if (r.ok) location.href = link({ id: r.id }); else { msg.textContent = T[r.reason] || T.fail; if (r.reason === 'login' || r.reason === 'nonick') showWrite(); }
+    };
+    app.append(fm); ti.focus();
+  }
+
+  function route() {
+    if (Q.get('id')) return showPost(Q.get('id'));
+    if (Q.get('write')) return showWrite();
+    return showList();
+  }
+  // 네이버 로그인이 같은 탭으로 돌아온 경우(login.html이 board.html?bcode=로 보냄)
+  if (Q.get('bcode')) {
+    const c = Q.get('bcode'), st = Q.get('bstate'), back = sget('aw_bback') || ('?lang=' + L);
+    sset('aw_bback', null); history.replaceState(null, '', location.pathname + back);
+    const want = sget('aw_bstate'); sset('aw_bstate', null);
+    if (c && st && st === want) { fetch(API + '/board/naver', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code: c, state: st }) }).then((r) => r.json()).then((r) => { if (r.ok) { tok(r.token); nick(r.nickname || ''); } location.reload(); }).catch(() => location.reload()); }
+    else route();
+  } else route();
 </script>
 </body>
 </html>
