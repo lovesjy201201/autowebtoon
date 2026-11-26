@@ -219,6 +219,10 @@
   const delList = () => { try { const x = JSON.parse(localStorage.getItem('aw_bdel') || '[]'); return x.filter((e) => Date.now() - e.t < 3 * 60e3).map((e) => e.id); } catch (e) { return []; } };
   const markDel = (id) => { try { const x = JSON.parse(localStorage.getItem('aw_bdel') || '[]').filter((e) => Date.now() - e.t < 3 * 60e3); x.push({ id, t: Date.now() }); localStorage.setItem('aw_bdel', JSON.stringify(x)); } catch (e) {} };
 
+  // 방금 올린 글: 올리면 바로 목록으로 가는데 목록은 1분쯤 늦게 바뀌므로, 목록이 따라올 때까지 이 브라우저에서 끼워 보여 준다
+  const newList = () => { try { return JSON.parse(localStorage.getItem('aw_bnew') || '[]').filter((e) => Date.now() - e.t < 3 * 60e3); } catch (e) { return []; } };
+  const markNew = (r) => { try { localStorage.setItem('aw_bnew', JSON.stringify([r, ...newList()])); } catch (e) {} };
+
   // ---- 목록 ----
   async function showList() {
     const p = Q.get('p') || '1', q = Q.get('q') || '', f = Q.get('f') === 'a' ? 'a' : 't';
@@ -226,13 +230,16 @@
     try { d = await (await fetch(API + '/board?' + new URLSearchParams({ p, q, f, lang: L }), { cache: 'no-store' })).json(); } catch (e) { d = null; }
     app.textContent = '';
     const top = el('div', 'top'); const h = el('h1', '', T.board);
-    if (d && d.ok) h.append(el('small', '', '(' + (d.total + d.notices.length).toLocaleString() + ')'));
+    // 저장소 목록은 1분쯤 늦게 바뀐다 → 방금 지운 글은 빼고, 방금 올린 글은 첫 쪽에 끼워서 보여 준다
+    const gone = delList(), ok = !!(d && d.ok);
+    const fresh = ok && d.page === 1 && !q ? newList().filter((n) => n.lang === L && !gone.includes(n.id) && !d.posts.some((x) => x.id === n.id)) : [];
+    if (ok) h.append(el('small', '', '(' + (d.total + d.notices.length + fresh.length).toLocaleString() + ')'));
     const w = el('a', 'btn', '✎ ' + T.write); w.href = link({ write: '1' });
     top.append(h, w); app.append(top);
-    if (!d || !d.ok) { app.append(el('p', 'empty', T.loadfail)); return; }
-    // 저장소 목록은 1분쯤 늦게 바뀐다 → 방금 지운 글은 목록이 따라올 때까지 이 브라우저에서 빼고 보여 준다
-    const gone = delList();
-    const rows = [...d.notices.map((x) => ({ ...x, notice: true })), ...d.posts].filter((r) => !gone.includes(r.id));
+    if (!ok) { app.append(el('p', 'empty', T.loadfail)); return; }
+    const last = Math.max(0, ...[...d.notices, ...d.posts].map((x) => x.no || 0));
+    const added = fresh.map((n, i) => ({ ...n, no: last + fresh.length - i, views: 0, cc: 0 }));
+    const rows = [...d.notices.map((x) => ({ ...x, notice: true })), ...added, ...d.posts].filter((r) => !gone.includes(r.id));
     if (!rows.length) app.append(el('p', 'empty', q ? T.nores : T.empty));
     for (const r of rows) {
       const a = el('a', 'row' + (r.notice ? ' notice' : '')); a.href = link({ id: r.id });
@@ -325,7 +332,9 @@
       e.preventDefault(); sb.disabled = true; msg.textContent = '';
       const r = await send('/board', { title: ti.value, text: tx.value, website: hpi.value, lang: L });
       sb.disabled = false;
-      if (r.ok) location.href = link({ id: r.id }); else { msg.textContent = T[r.reason] || T.fail; if (r.reason === 'login' || r.reason === 'nonick') showWrite(); }
+      // 올리면 바로 목록으로. 뒤로 가기를 눌러도 쓰던 칸으로 안 돌아오게 replace
+      if (r.ok) { if (r.id) markNew({ id: r.id, title: ti.value.replace(/\s+/g, ' ').trim(), name: nick(), t: Date.now(), lang: L }); location.replace(link({})); }
+      else { msg.textContent = T[r.reason] || T.fail; if (r.reason === 'login' || r.reason === 'nonick') showWrite(); }
     };
     app.append(fm); ti.focus();
   }
