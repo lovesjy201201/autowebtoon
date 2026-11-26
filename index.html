@@ -549,11 +549,11 @@
       <ol><li>아래 [파이어폭스 받기]를 누르면 플레이 스토어가 열려요.</li><li>다 깔리면 [열기]는 누르지 말고 <b>뒤로 가기</b>로 이 화면에 돌아와요. 2단계가 저절로 떠요.</li></ol>
       <a class="abtn" id="aFxGet" href="#">파이어폭스 받기</a><button type="button" class="alink" data-to="2">파이어폭스가 이미 있어요</button></section>
     <section data-f="a" data-s="2"><h3>2. 파이어폭스로 열기</h3><p>이제 이 페이지를 파이어폭스에서 열어요.</p>
-      <ol><li>아래 [파이어폭스로 열기]를 눌러요. 어느 앱으로 열지 고르는 창이 뜨면 크롬 말고 <b>[Firefox]</b>를 눌러요.</li><li>파이어폭스를 처음 열면 안내가 몇 장 나와요. [계속]·[나중에]만 눌러 넘겨요.</li><li>그러면 파이어폭스에서 3단계 안내가 떠요.</li></ol>
+      <ol><li>[파이어폭스로 열기] &gt; [계속] &gt; [취소] &gt; [나중에]</li></ol>
       <p class="awarn" id="aWrong" hidden>크롬에서 다시 열렸어요. 고르는 창에서 <b>[Firefox]</b>를 눌러야 해요.</p>
       <a class="abtn" id="aOpenFx" href="#">파이어폭스로 열기</a></section>
     <section data-f="a" data-s="3"><h3>3. 오토웹툰 설치</h3><p>파이어폭스에서 열렸어요. 이제 오토웹툰을 넣어요.</p>
-      <ol><li>아래 [오토웹툰 설치]를 누르면 설치 화면이 떠요.</li><li>[Firefox에 추가]를 누르고, 묻는 창에서 [추가]를 눌러요.</li><li>설치가 끝나면 마지막 안내가 저절로 떠요.</li></ol>
+      <ol><li>[Firefox에 추가] &gt; [추가]</li></ol>
       <a class="abtn" id="aInstall" href="#">오토웹툰 설치</a></section>
     <section data-f="k" data-s="1"><h3>1. 크롬으로 열기</h3><p>카카오톡 안에서는 오토웹툰을 설치할 수 없어요. 크롬으로 옮겨 가요.</p>
       <ol><li>아래 [크롬으로 열기]를 누르면 이 페이지가 크롬에서 열려요.</li><li>크롬에서 설치 안내가 이어서 떠요.</li><li>안 열리면 오른쪽 위 ⋮ 메뉴 → [다른 브라우저로 열기]를 눌러요.</li></ol>
@@ -654,7 +654,8 @@
   });
   aflow.querySelectorAll('section .abtn').forEach(a => {
     const ok = document.createElement('button');
-    ok.type = 'button'; ok.className = 'aok'; ok.textContent = '위 1·2·3 숙지했어요';
+    const nLi = a.closest('section').querySelectorAll('ol li').length;
+    ok.type = 'button'; ok.className = 'aok'; ok.textContent = nLi >= 3 ? '위 1·2·3 숙지했어요' : nLi === 2 ? '위 1·2 숙지했어요' : '위 내용 숙지했어요';
     ok.addEventListener('click', () => { ok.hidden = true; a.hidden = false; a.click(); });   // 숙지 누르면 바로 그 단계로(스토어 열기 등), 돌아오면 단계 단추가 남아 있음
     a.before(ok);
   });
