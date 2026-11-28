@@ -716,6 +716,8 @@
 })();</script>
 <script>/* 설치 단추 누른 수 세기(사장님만 봄): 브라우저마다 하루에 단추 하나당 한 번. 자동 브라우저·?me=1 사장님 브라우저는 안 셈 */
 document.addEventListener('click',function(e){try{var a=e.target.closest&&e.target.closest('a[href]');if(!a)return;var h=a.href,b='';
+/* 결제 페이지는 주소(github.io)가 달라 여기서 기억한 꼬리표를 못 읽는다 → 결제 링크 주소에 실어 보낸다 */
+if(/\/buy(-en)?\.html/.test(h)){try{var y=JSON.parse(localStorage.getItem('aw_ref')||'null');if(y&&Date.now()-y.t<2592e6){var u=new URL(h);if(!u.searchParams.get('ref')){u.searchParams.set('ref',y.r);a.href=u.href}}}catch(_){}return}
 if(/chromewebstore\.google\.com/.test(h))b='cws';else if(/addons\.mozilla\.org/.test(h))b='amo';else if(/^intent:/.test(h))b='fxopen';else if(/play\.google\.com\/.*org\.mozilla\.firefox/.test(h))b='fxget';else if(/apps\.apple\.com/.test(h))b='ios';
 if(!b||navigator.webdriver||localStorage.getItem('aw_me')==='1')return;var d=new Date(Date.now()+324e5).toISOString().slice(0,10),k='aw_t_'+b;if(localStorage.getItem(k)===d)return;localStorage.setItem(k,d);
 var r='';try{var x=JSON.parse(localStorage.getItem('aw_ref')||'null');if(x&&Date.now()-x.t<2592e6)r=x.r}catch(_){}

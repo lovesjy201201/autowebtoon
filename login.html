@@ -75,7 +75,8 @@
   const IOS = ss('aw_ios') === '1';
   // 안드로이드 앱 안(사장님 2026-11-27): 구글은 앱 안 화면 로그인을 막으므로 네이버만, 로그인 끝나면 바로 첫 웹툰
   const APP = /AutoWebtoonAndroid/.test(navigator.userAgent);
-  const FIRST = EN ? 'https://www.webtoons.com/en/action/eleceed/episode-1/viewer?title_no=1571&episode_no=1' : 'https://m.comic.naver.com/webtoon/detail?titleId=769209&no=1';
+  // 특정 작품 1화가 아니라 웹툰 목록으로 보낸다(사장님 2026-11-28 "목록으로")
+  const FIRST = EN ? 'https://www.webtoons.com/en/originals' : 'https://m.comic.naver.com/webtoon/weekday';
   if (IOS && !hasExt()) {
     $('h').textContent = EN ? 'Allow AutoWebtoon first' : '오토웹툰을 먼저 허용해 주세요';
     $('lead').textContent = EN ? 'Tap the "aA" (or puzzle) button left of the address bar → AutoWebtoon → Always Allow on Every Website, then reload this page.'
@@ -107,7 +108,7 @@
     // 끝났으면 로그인 버튼을 치워서 또 누를 일이 없게 한다
     if (root.dataset.awGot === '1') {
       $('gbtn').style.display = 'none'; $('nbtn').style.display = 'none'; $('lead').style.display = 'none'; try { google.accounts.id.cancel(); } catch {}
-      if (IOS || APP) { ss('aw_ios', null); say(EN ? 'Done! Opening a webtoon… tap the page to start.' : '됐어요! 웹툰을 엽니다… 화면을 누르면 시작해요.', 'ok'); setTimeout(() => { location.href = FIRST; }, 1500); return; }
+      if (IOS || APP) { ss('aw_ios', null); say(EN ? 'Done! Opening the webtoon list… pick an episode.' : '됐어요! 웹툰 목록을 엽니다… 보고 싶은 회차를 누르세요.', 'ok'); setTimeout(() => { location.href = FIRST; }, 1500); return; }
       // 이 페이지는 만화 탭에서 새 탭으로 열린 것이라 할 일이 끝나면 닫는다 (브라우저가 막으면 그대로 둔다)
       setTimeout(() => { try { window.close(); } catch {} }, 1500);
     }
