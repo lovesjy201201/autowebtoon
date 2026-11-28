@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <script>if(location.hostname==='lovesjy201201.github.io')location.replace('https://autowebtoon.com'+location.pathname.replace(/^\/autowebtoon/,'')+location.search+location.hash)</script>
-<script>/* 설치 뒤 갈 곳은 홈페이지를 시작한 언어를 따른다(사장님 2026-11-27): 한국어 페이지 → 네이버웹툰 목록, 영어 페이지 → WEBTOON 목록. 확장은 폰 언어로 index(-en).html?installed=1 을 열므로, 마지막에 본 페이지 언어(aw_lang)를 기억해 두고 그쪽으로 보낸다 */(function(){try{if(location.hostname==='lovesjy201201.github.io')return;var page=/index-en\.html/.test(location.pathname)?'en':'ko';var q=new URLSearchParams(location.search);if(q.get('installed')==='1'){var L=localStorage.getItem('aw_lang')||page;var m=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);window.__awGo=1;location.replace(L==='en'?'https://www.webtoons.com/en/originals':(m?'https://m.comic.naver.com/webtoon/weekday':'https://comic.naver.com/webtoon'));}else localStorage.setItem('aw_lang',page);}catch(e){}})()</script>
+<script>/* 설치 뒤 갈 곳은 홈페이지를 시작한 언어를 따른다(사장님 2026-11-27): 한국어 페이지 → 네이버웹툰 목록, 영어 페이지 → WEBTOON 목록. 확장은 폰 언어로 index(-en).html?installed=1 을 열므로, 마지막에 본 페이지 언어(aw_lang)를 기억해 두고 그쪽으로 보낸다 */(function(){try{if(location.hostname==='lovesjy201201.github.io')return;var page=/index-en\.html/.test(location.pathname)?'en':'ko';var q=new URLSearchParams(location.search);if(q.get('installed')==='1'){var L=localStorage.getItem('aw_lang')||page;localStorage.setItem('aw_astep','done');var m=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);window.__awGo=1;location.replace(L==='en'?'https://www.webtoons.com/en/originals':(m?'https://m.comic.naver.com/webtoon/weekday':'https://comic.naver.com/webtoon'));}else localStorage.setItem('aw_lang',page);}catch(e){}})()</script>
 <link rel="canonical" href="https://autowebtoon.com/">
 <meta name="naver-site-verification" content="57f37d37c7496d44449167199597776d75111756" />
 <link rel="alternate" hreflang="ko" href="https://autowebtoon.com/">
 <link rel="alternate" hreflang="en" href="https://autowebtoon.com/index-en.html">
 <meta property="og:url" content="https://autowebtoon.com/">
 <script>/* 광고·인플루언서 꼬리표(?ref=)를 30일 기억해 결제 때 같이 적는다 */try{var r=new URLSearchParams(location.search).get('ref');if(r&&/^[a-z0-9_-]{1,24}$/i.test(r))localStorage.setItem('aw_ref',JSON.stringify({r:r.toLowerCase(),t:Date.now()}))}catch(e){}</script>
-<script>/* 방문자 세기(사장님만 봄): 브라우저마다 하루 한 번. 들어온 곳(리퍼러) 같이 보냄. 자동 브라우저(webdriver)·?me=1로 표시한 우리 브라우저는 me=1로 보내 서버가 그 주소를 우리 주소로 기억·안 셈 */try{var q=new URLSearchParams(location.search);if(q.get('me')==='1')localStorage.setItem('aw_me','1');var d=new Date(Date.now()+324e5).toISOString().slice(0,10);var me=localStorage.getItem('aw_me')==='1';if(!navigator.webdriver&&localStorage.getItem('aw_v')!==d){var f='';try{f=new URL(document.referrer).hostname;if(f===location.hostname)f=''}catch(e){}localStorage.setItem('aw_v',d);navigator.sendBeacon('https://autowebtoon-key.lovesjy201.workers.dev/visit?p=ko&ref='+encodeURIComponent(q.get('ref')||'')+'&from='+encodeURIComponent(f)+(me?'&me=1':''))}}catch(e){}</script>
+<script>/* 방문자 세기(사장님만 봄): 브라우저마다 하루 한 번. 들어온 곳(리퍼러) 같이 보냄. 자동 브라우저(webdriver)·?me=1로 표시한 우리 브라우저는 me=1로 보내 서버가 그 주소를 우리 주소로 기억·안 셈 */try{var q=new URLSearchParams(location.search);if(q.get('me')==='1')localStorage.setItem('aw_me','1');var d=new Date(Date.now()+324e5).toISOString().slice(0,10);var me=localStorage.getItem('aw_me')==='1';if(!navigator.webdriver&&(q.get('me')==='1'||localStorage.getItem('aw_v')!==d)){var f='';try{f=new URL(document.referrer).hostname;if(f===location.hostname)f=''}catch(e){}localStorage.setItem('aw_v',d);navigator.sendBeacon('https://autowebtoon-key.lovesjy201.workers.dev/visit?p=ko&ref='+encodeURIComponent(q.get('ref')||'')+'&from='+encodeURIComponent(f)+(me?'&me=1':''))}}catch(e){}</script>
 <script>if (/[?&]lang=en(&|$)/.test(location.search)) location.replace('index-en.html' + location.hash);</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>오토웹툰(AutoWebtoon) - 웹툰 자동 스크롤 · 손 안 대고 보는 웹툰</title>
@@ -662,7 +662,7 @@
   aflow.querySelectorAll('[data-to]').forEach(b => b.addEventListener('click', () => aShow(Number(b.dataset.to))));
   $('aClose').addEventListener('click', () => { aflow.hidden = true; });
   // 확장이 처음 깔리면 ?installed=1 로 이 페이지를 연다(background.js) → 창 없이 바로 웹툰 목록
-  if (!window.__awGo && new URLSearchParams(location.search).get('installed') === '1') {
+  if (!window.__awGo && location.hostname !== 'lovesjy201201.github.io' && new URLSearchParams(location.search).get('installed') === '1') {
     history.replaceState(null, '', location.pathname);
     location.replace(TOON);
   }
@@ -673,19 +673,22 @@
     let leftForFx = false;
     $('aFxGet').addEventListener('click', () => { leftForFx = true; });
     // 파이어폭스: 3(설치)에서 [오토웹툰 설치]를 누르면 'amo'로 적어 두고, 설치하고 돌아오면 마지막 장(설치됐어요)
+    // 'amo' 표시는 설치 화면(AMO)에서 뒤로 돌아온 때만 쓴다. 새로 연 페이지에 남아 있으면 지운다(안 지우면 다음에 홈페이지를 열자마자 웹툰 목록으로 튕겼다)
+    const cameBack = ((performance.getEntriesByType && performance.getEntriesByType('navigation')[0]) || {}).type === 'back_forward';
+    if (!cameBack && ls('aw_astep') === 'amo') ls('aw_astep', '3');
     const backFromAmo = () => { if (isFirefox && ls('aw_astep') === 'amo') aShow('done'); };
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState !== 'visible') return;
       if (leftForFx) { leftForFx = false; aShow(2); }
       else backFromAmo();
     });
-    window.addEventListener('pageshow', backFromAmo);
+    window.addEventListener('pageshow', (e) => { if (e.persisted || cameBack) backFromAmo(); });
     if (isFirefox) {
       $('aInstall').href = AMO_URL;
       $('aInstall').addEventListener('click', () => ls('aw_astep', 'amo'));
       // 크롬 2단계에서 넘어왔으면(?go=fx, 옛 ?go=amo) 파이어폭스에서 3단계 창
       if (QS.get('go') === 'fx' || QS.get('go') === 'amo') { history.replaceState(null, '', page); aShow(3); }
-      else backFromAmo();
+      else if (cameBack) backFromAmo();
       $('ctaStart').addEventListener('click', (e) => { e.preventDefault(); aShow(3); });
     } else {
       // 고르는 창에서 크롬을 골라 이 페이지가 크롬에서 ?go=fx 로 다시 열린 경우: 2단계를 다시 띄우고 '파이어폭스를 골라야 해요'
